@@ -1,5 +1,5 @@
 (ns starkbank.boleto
-  "Used to generate new API-compatible key pairs."
+  "Used handle boletos."
   (:import [com.starkbank Boleto])
   (:use [starkbank.user]
         [clojure.walk]))
@@ -91,11 +91,21 @@
 (defn- clojure-query-to-java
   ([clojure-map]
     (let [{
-      limit "limit"}
-      (stringify-keys clojure-map)]
+        limit "limit"
+        after "after"
+        before "before"
+        status "status"
+        tags "tags"
+        ids "ids"
+      } (stringify-keys clojure-map)]
       (java.util.HashMap.
         {
           "limit" (if (nil? limit) nil (Integer. limit))
+          "after" after
+          "before" before
+          "status" status
+          "tags" (if (nil? tags) nil (into-array String tags))
+          "ids" (if (nil? ids) nil (into-array String ids))
         }
       ))))
 
@@ -113,6 +123,9 @@
 
 (defn query
   "queries boletos"
+  ([]
+    (map java-to-clojure (Boleto/query)))
+
   ([params]
     (def java-params (clojure-query-to-java params))
     (map java-to-clojure (Boleto/query java-params)))
@@ -156,3 +169,64 @@
       (Boleto/pdf
         id
         (#'starkbank.user/get-java-project project)))))
+
+
+(ns starkbank.boleto.log
+  "Used handle boleto logs."
+  (:import [com.starkbank Boleto$Log])
+  (:require [starkbank.boleto :as boleto])
+  (:use [starkbank.user]
+        [clojure.walk]))
+
+(defn- java-to-clojure
+  ([java-object]
+    {
+      :id (.id java-object)
+      :created (.created java-object)
+      :errors (into [] (.errors java-object))
+      :boleto (#'boleto/java-to-clojure (.boleto java-object))
+    }))
+
+(defn- clojure-query-to-java
+  ([clojure-map]
+    (let [{
+        limit "limit"
+        after "after"
+        before "before"
+        types "types"
+        boleto-ids "boleto-ids"
+      } (stringify-keys clojure-map)]
+      (java.util.HashMap.
+        {
+          "limit" (if (nil? limit) nil (Integer. limit))
+          "after" after
+          "before" before
+          "types" (if (nil? types) nil (into-array String types))
+          "boletoIds" (if (nil? boleto-ids) nil (into-array String boleto-ids))
+        }
+      ))))
+
+(defn gets
+  "gets boleto log"
+  ([id]
+    (java-to-clojure
+      (Boleto$Log/get id)))
+
+  ([id, project]
+    (java-to-clojure
+      (Boleto$Log/get
+        id
+        (#'starkbank.user/get-java-project project)))))
+
+(defn query
+  "queries boleto logs"
+  ([]
+    (map java-to-clojure (Boleto$Log/query)))
+
+  ([params]
+    (def java-params (clojure-query-to-java params))
+    (map java-to-clojure (Boleto$Log/query java-params)))
+
+  ([params, project] 
+    (def java-params (clojure-query-to-java params))
+    (map java-to-clojure (Boleto$Log/query java-params (#'starkbank.user/get-java-project project)))))

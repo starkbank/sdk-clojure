@@ -1,11 +1,12 @@
 (ns starkbank.boleto-test
   (:use [clojure.test])
   (:require [starkbank.boleto :as boleto]
+            [starkbank.boleto.log :as log]
             [starkbank.user-test :as user]
             [clojure.java.io :as io]))
 
-(deftest create-pdf-delete-boletos
-  (testing "create boletos"
+(deftest create-get-pdf-delete-boletos
+  (testing "create, get, pdf and delete boletos"
     (user/set-default-user-test)
     (def boletos (boleto/create
       [{
@@ -40,10 +41,17 @@
           }
         ]
       }]))
+    (boleto/gets (:id (first boletos)))
     (io/copy (boleto/pdf (:id (first boletos))) (io/file "temp/boleto.pdf"))
     (boleto/delete (:id (first boletos)))))
 
 (deftest query-boletos
-  (testing "query and get boletos"
+  (testing "query boletos"
     (user/set-default-user-test)
     (def boletos (take 200 (boleto/query {:limit 3})))))
+
+(deftest query-get-boleto-logs
+  (testing "query and get boleto logs"
+    (user/set-default-user-test)
+    (def boleto-logs (log/query {:limit 1}))
+    (def boleto-log (log/gets (:id (first boleto-logs))))))
