@@ -12,7 +12,7 @@
       :updated (.updated java-object)
     }))
 
-(defn gets
+(defn get
   "gets balance"
   ([] (->
     (Balance/get)

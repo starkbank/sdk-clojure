@@ -6,4 +6,4 @@
 (deftest get-balance
   (testing "get balance"
     (user/set-default-user-test)
-    (balance/gets)))
+    (balance/get)))

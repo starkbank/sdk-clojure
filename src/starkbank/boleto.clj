@@ -134,7 +134,7 @@
     (def java-params (clojure-query-to-java params))
     (map java-to-clojure (Boleto/query java-params (#'starkbank.user/get-java-project project)))))
 
-(defn gets
+(defn get
   "gets boleto"
   ([id]
     (java-to-clojure
@@ -206,7 +206,7 @@
         }
       ))))
 
-(defn gets
+(defn get
   "gets boleto log"
   ([id]
     (java-to-clojure

@@ -41,7 +41,7 @@
           }
         ]
       }]))
-    (boleto/gets (:id (first boletos)))
+    (boleto/get (:id (first boletos)))
     (io/copy (boleto/pdf (:id (first boletos))) (io/file "temp/boleto.pdf"))
     (boleto/delete (:id (first boletos)))))
 
@@ -54,4 +54,4 @@
   (testing "query and get boleto logs"
     (user/set-default-user-test)
     (def boleto-logs (log/query {:limit 1}))
-    (def boleto-log (log/gets (:id (first boleto-logs))))))
+    (def boleto-log (log/get (:id (first boleto-logs))))))
