@@ -55,10 +55,10 @@
     - `:subscriptions` [list of strings]: list of any non-empty combination of the available services. ex: [\"transfer\", \"boleto-payment\"]
 
   ## Parameters (optional):
-    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set-default-user has not been set.
 
   ## Return:
-    - Webhook struct with updated attributes"
+    - Webhook map with updated attributes"
   ([webhook-params]
     (def java-webhook-params (clojure-to-java webhook-params))
     (def created-java-webhook (Webhook/create java-webhook-params))
@@ -70,14 +70,14 @@
     (java-to-clojure created-java-webhook)))
 
 (defn query
-  "Receive a stream of Webhook subcription structs previously created in the Stark Bank API
+  "Receive a stream of Webhook subcription maps previously created in the Stark Bank API
 
   ## Options:
-    - `:limit` [integer, default nil]: maximum number of structs to be retrieved. Unlimited if nil. ex: 35
-    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+    - `:limit` [integer, default nil]: maximum number of maps to be retrieved. Unlimited if nil. ex: 35
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set-default-user has not been set.
 
   ## Return:
-    - stream of Webhook structs with updated attributes"
+    - stream of Webhook maps with updated attributes"
   ([]
     (map java-to-clojure (Webhook/query)))
 
@@ -90,16 +90,16 @@
     (map java-to-clojure (Webhook/query java-params (#'starkbank.user/get-java-project user)))))
 
 (defn get
-  "Receive a single Webhook subscription struct previously created in the Stark Bank API by passing its id
+  "Receive a single Webhook subscription map previously created in the Stark Bank API by passing its id
 
   ## Parameters (required):
-    - `id` [string]: struct unique id. ex: \"5656565656565656\"
+    - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set-default-user has not been set.
 
   ## Return:
-    - Webhook struct with updated attributes"
+    - Webhook map with updated attributes"
   ([id]
     (java-to-clojure
       (Webhook/get id)))
@@ -117,7 +117,7 @@
     - `id` [string]: Webhook unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set-default-user has not been set.
 
   ## Return:
     - deleted Webhook with updated attributes"

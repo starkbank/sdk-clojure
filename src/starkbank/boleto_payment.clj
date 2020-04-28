@@ -1,26 +1,26 @@
 (ns starkbank.boleto-payment
   "When you initialize a BoletoPayment, the entity will not be automatically
-  created in the Stark Bank API. The 'create' function sends the structs
-  to the Stark Bank API and returns the list of created structs.
+  created in the Stark Bank API. The 'create' function sends the maps
+  to the Stark Bank API and returns the list of created maps.
 
   ## Parameters (conditionally required):
-    - `:line` [string, default nil]: Number sequence that describes the payment. Either 'line' or 'bar_code' parameters are required. If both are sent, they must match. ex: "34191.09008 63571.277308 71444.640008 5 81960000000062"
-    - `:bar_code` [string, default nil]: Bar code number that describes the payment. Either 'line' or 'barCode' parameters are required. If both are sent, they must match. ex: "34195819600000000621090063571277307144464000"
+    - `:line` [string, default nil]: Number sequence that describes the payment. Either 'line' or 'bar-code' parameters are required. If both are sent, they must match. ex: \"34191.09008 63571.277308 71444.640008 5 81960000000062\"
+    - `:bar-code` [string, default nil]: Bar code number that describes the payment. Either 'line' or 'barCode' parameters are required. If both are sent, they must match. ex: \"34195819600000000621090063571277307144464000\"
 
   ## Parameters (required):
-    - `:tax_id` [string]: receiver tax ID (CPF or CNPJ) with or without formatting. ex: \"01234567890\" or \"20.018.183/0001-80\"
+    - `:tax-id` [string]: receiver tax ID (CPF or CNPJ) with or without formatting. ex: \"01234567890\" or \"20.018.183/0001-80\"
     - `:description` [string]: Text to be displayed in your statement (min. 10 characters). ex: \"payment ABC\"
 
   ## Parameters (optional):
-    - `:scheduled` [Date, DateTime or string, default today]: payment scheduled date. ex: ~D[2020-03-25]
+    - `:scheduled` [string, default today]: payment scheduled date. ex: ~D[2020-03-25]
     - `:tags` [list of strings]: list of strings for tagging
 
   ## Attributes (return-only):
     - `:id` [string, default nil]: unique id returned when payment is created. ex: \"5656565656565656\"
     - `:status` [string, default nil]: current payment status. ex: \"registered\" or \"paid\"
-    - `:amount` [int, default nil]: amount automatically calculated from line or bar_code. ex: 23456 (= R$ 234.56)
+    - `:amount` [int, default nil]: amount automatically calculated from line or bar-code. ex: 23456 (= R$ 234.56)
     - `:fee` [integer, default nil]: fee charged when a boleto payment is created. ex: 200 (= R$ 2.00)
-    - `:created` [DateTime, default nil]: creation datetime for the payment. ex: ~U[2020-03-26 19:32:35.418698Z]"
+    - `:created` [string, default nil]: creation datetime for the payment. ex: \"2020-03-26T19:32:35.418698+00:00\""
   (:import [com.starkbank BoletoPayment])
   (:use [starkbank.user]
         [clojure.walk]))
@@ -91,16 +91,16 @@
       ))))
 
 (defn create
-  "Send a list of BoletoPayment structs for creation in the Stark Bank API
+  "Send a list of BoletoPayment maps for creation in the Stark Bank API
 
   ## Parameters (required):
-    - `payments` [list of BoletoPayment structs]: list of BoletoPayment structs to be created in the API
+    - `payments` [list of BoletoPayment maps]: list of BoletoPayment maps to be created in the API
 
   ## Options:
-    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set-default-user has not been set.
 
   ## Return:
-    - list of BoletoPayment structs with updated attributes"
+    - list of BoletoPayment maps with updated attributes"
   ([payments]
     (def java-payments (map clojure-to-java payments))
     (def created-java-payments (BoletoPayment/create java-payments))
@@ -112,19 +112,19 @@
     (map java-to-clojure created-java-payments)))
 
 (defn query
-  "Receive a stream of BoletoPayment structs previously created in the Stark Bank API
+  "Receive a stream of BoletoPayment maps previously created in the Stark Bank API
 
   ## Options:
-    - `:limit` [integer, default nil]: maximum number of structs to be retrieved. Unlimited if nil. ex: 35
-    - `:after` [Date, DateTime or string, default nil]: date filter for structs created only after specified date. ex: Date(2020, 3, 10)
-    - `:before` [Date, DateTime or string, default nil]: date filter for structs created only before specified date. ex: Date(2020, 3, 10)
-    - `:tags` [list of strings, default nil]: tags to filter retrieved structs. ex: [\"tony\", \"stark\"]
+    - `:limit` [integer, default nil]: maximum number of maps to be retrieved. Unlimited if nil. ex: 35
+    - `:after` [string, default nil]: date filter for maps created only after specified date. ex: \"2020-3-10\"
+    - `:before` [string, default nil]: date filter for maps created only before specified date. ex: \"2020-3-10\"
+    - `:tags` [list of strings, default nil]: tags to filter retrieved maps. ex: [\"tony\", \"stark\"]
     - `:ids` [list of strings, default null]: list of ids to filter retrieved objects. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:status` [string, default nil]: filter for status of retrieved structs. ex: \"paid\"
-    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+    - `:status` [string, default nil]: filter for status of retrieved maps. ex: \"paid\"
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set-default-user has not been set.
 
   ## Return:
-    - stream of BoletoPayment structs with updated attributes"
+    - stream of BoletoPayment maps with updated attributes"
   ([]
     (map java-to-clojure (BoletoPayment/query)))
 
@@ -137,16 +137,16 @@
     (map java-to-clojure (BoletoPayment/query java-params (#'starkbank.user/get-java-project user)))))
 
 (defn get
-  "Receive a single BoletoPayment struct previously created by the Stark Bank API by passing its id
+  "Receive a single BoletoPayment map previously created by the Stark Bank API by passing its id
 
   ## Parameters (required):
-    - `id` [string]: struct unique id. ex: \"5656565656565656\"
+    - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set-default-user has not been set.
 
   ## Return:
-    - BoletoPayment struct with updated attributes"
+    - BoletoPayment map with updated attributes"
   ([id]
     (java-to-clojure
       (BoletoPayment/get id)))
@@ -164,10 +164,10 @@
     - `id` [string]: BoletoPayment unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set-default-user has not been set.
 
   ## Return:
-    - deleted BoletoPayment struct with updated attributes"
+    - deleted BoletoPayment map with updated attributes"
   ([id]
     (java-to-clojure
       (BoletoPayment/delete id)))
@@ -183,10 +183,10 @@
   Only valid for boleto payments with \"success\" status.
 
   ## Parameters (required):
-    - `id` [string]: struct unique id. ex: \"5656565656565656\"
+    - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set-default-user has not been set.
 
   ## Return:
     - BoletoPayment pdf file content"
@@ -212,7 +212,7 @@
     - `:payment` [BoletoPayment]: BoletoPayment entity to which the log refers to.
     - `:errors` [list of strings]: list of errors linked to this BoletoPayment event.
     - `:type` [string]: type of the BoletoPayment event which triggered the log creation. ex: \"registered\" or \"paid\"
-    - `:created` [DateTime]: creation datetime for the payment. ex: ~U[2020-03-26 19:32:35.418698Z]"
+    - `:created` [string]: creation datetime for the payment. ex: \"2020-03-26T19:32:35.418698+00:00\""
   (:import [com.starkbank BoletoPayment$Log])
   (:require [starkbank.boleto-payment :as payment])
   (:use [starkbank.user]
@@ -247,16 +247,16 @@
       ))))
 
 (defn get
-  "Receive a single Log struct previously created by the Stark Bank API by passing its id
+  "Receive a single Log map previously created by the Stark Bank API by passing its id
 
   ## Parameters (required):
-    - `id` [string]: struct unique id. ex: \"5656565656565656\"
+    - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set-default-user has not been set.
 
   ## Return:
-    - Log struct with updated attributes"
+    - Log map with updated attributes"
   ([id]
     (java-to-clojure
       (BoletoPayment$Log/get id)))
@@ -268,18 +268,18 @@
         (#'starkbank.user/get-java-project user)))))
 
 (defn query
-  "Receive a stream of Log structs previously created in the Stark Bank API
+  "Receive a stream of Log maps previously created in the Stark Bank API
 
   ## Options:
     - `:limit` [integer, default nil]: maximum number of entities to be retrieved. Unlimited if nil. ex: 35
-    - `:after` [Date, DateTime or string, default nil]: date filter for entities created only after specified date. ex: Date(2020, 3, 10)
-    - `:before` [Date, DateTime or string, default nil]: date filter for entities created only before specified date. ex: Date(2020, 3, 10)
+    - `:after` [string, default nil]: date filter for entities created only after specified date. ex: \"2020-3-10\"
+    - `:before` [string, default nil]: date filter for entities created only before specified date. ex: \"2020-3-10\"
     - `:types` [list of strings, default nil]: filter retrieved entities by event types. ex: \"paid\" or \"registered\"
-    - `:payment_ids` [list of strings, default nil]: list of BoletoPayment ids to filter retrieved entities. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+    - `:payment-ids` [list of strings, default nil]: list of BoletoPayment ids to filter retrieved entities. ex: [\"5656565656565656\", \"4545454545454545\"]
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set-default-user has not been set.
 
   ## Return:
-    - stream of Log structs with updated attributes"
+    - stream of Log maps with updated attributes"
   ([]
     (map java-to-clojure (BoletoPayment$Log/query)))
 

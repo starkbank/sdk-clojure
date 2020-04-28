@@ -1,15 +1,15 @@
 (ns starkbank.transfer
   "When you initialize a Transfer, the entity will not be automatically
-  created in the Stark Bank API. The 'create' function sends the structs
-  to the Stark Bank API and returns the list of created structs.
+  created in the Stark Bank API. The 'create' function sends the maps
+  to the Stark Bank API and returns the list of created maps.
 
   ## Parameters (required):
     - `:amount` [integer]: amount in cents to be transferred. ex: 1234 (= R$ 12.34)
     - `:name` [string]: receiver full name. ex: \"Anthony Edward Stark\"
-    - `:tax_id` [string]: receiver tax ID (CPF or CNPJ) with or without formatting. ex: \"01234567890\" or \"20.018.183/0001-80\"
-    - `:bank_code` [string]: receiver 1 to 3 digits of the bank institution in Brazil. ex: \"200\" or \"341\"
-    - `:branch_code` [string]: receiver bank account branch. Use '-' in case there is a verifier digit. ex: \"1357-9\"
-    - `:account_number` [string]: Receiver Bank Account number. Use '-' before the verifier digit. ex: \"876543-2\"
+    - `:tax-id` [string]: receiver tax ID (CPF or CNPJ) with or without formatting. ex: \"01234567890\" or \"20.018.183/0001-80\"
+    - `:bank-code` [string]: receiver 1 to 3 digits of the bank institution in Brazil. ex: \"200\" or \"341\"
+    - `:branch-code` [string]: receiver bank account branch. Use '-' in case there is a verifier digit. ex: \"1357-9\"
+    - `:account-number` [string]: Receiver Bank Account number. Use '-' before the verifier digit. ex: \"876543-2\"
 
   ## Parameters (optional):
     - `:tags` [list of strings]: list of strings for reference when searching for transfers. ex: [\"employees\", \"monthly\"]
@@ -18,9 +18,9 @@
     - `:id` [string, default nil]: unique id returned when Transfer is created. ex: \"5656565656565656\"
     - `:fee` [integer, default nil]: fee charged when transfer is created. ex: 200 (= R$ 2.00)
     - `:status` [string, default nil]: current boleto status. ex: \"registered\" or \"paid\"
-    - `:transaction_ids` [list of strings, default nil]: ledger transaction ids linked to this transfer (if there are two, second is the chargeback). ex: [\"19827356981273\"]
-    - `:created` [DateTime, default nil]: creation datetime for the transfer. ex: ~U[2020-03-26 19:32:35.418698Z]
-    - `:updated` [DateTime, default nil]: latest update datetime for the transfer. ex: ~U[2020-03-26 19:32:35.418698Z]"
+    - `:transaction-ids` [list of strings, default nil]: ledger transaction ids linked to this transfer (if there are two, second is the chargeback). ex: [\"19827356981273\"]
+    - `:created` [string, default nil]: creation datetime for the transfer. ex: \"2020-03-26T19:32:35.418698+00:00\"
+    - `:updated` [string, default nil]: latest update datetime for the transfer. ex: \"2020-03-26T19:32:35.418698+00:00\""
   (:import [com.starkbank Transfer])
   (:use [starkbank.user]
         [clojure.walk]))
@@ -92,16 +92,16 @@
       ))))
 
 (defn create
-  "Send a list of Transfer structs for creation in the Stark Bank API
+  "Send a list of Transfer maps for creation in the Stark Bank API
 
   ## Parameters (required):
-    - `transfers` [list of Transfer structs]: list of Transfer structs to be created in the API
+    - `transfers` [list of Transfer maps]: list of Transfer maps to be created in the API
 
   ## Options:
-    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set-default-user has not been set.
 
   ## Return:
-    - list of Transfer structs with updated attributes"
+    - list of Transfer maps with updated attributes"
   ([transfers]
     (def java-transfers (map clojure-to-java transfers))
     (def created-java-transfers (Transfer/create java-transfers))
@@ -113,20 +113,20 @@
     (map java-to-clojure created-java-transfers)))
 
 (defn query
-  "Receive a stream of Transfer structs previously created in the Stark Bank API
+  "Receive a stream of Transfer maps previously created in the Stark Bank API
 
   ## Options:
-    - `:limit` [integer, default nil]: maximum number of structs to be retrieved. Unlimited if nil. ex: 35
-    - `:after` [Date, DateTime or string, default nil]: date filter for structs created or updated only after specified date. ex: ~D[2020-03-25]
-    - `:before` [Date, DateTime or string, default nil]: date filter for structs created or updated only before specified date. ex: ~D[2020-03-25]
-    - `:transaction_ids` [list of strings, default nil]: list of transaction IDs linked to the desired transfers. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:status` [string, default nil]: filter for status of retrieved structs. ex: \"paid\" or \"registered\"
+    - `:limit` [integer, default nil]: maximum number of maps to be retrieved. Unlimited if nil. ex: 35
+    - `:after` [string, default nil]: date filter for maps created or updated only after specified date. ex: ~D[2020-03-25]
+    - `:before` [string, default nil]: date filter for maps created or updated only before specified date. ex: ~D[2020-03-25]
+    - `:transaction-ids` [list of strings, default nil]: list of transaction IDs linked to the desired transfers. ex: [\"5656565656565656\", \"4545454545454545\"]
+    - `:status` [string, default nil]: filter for status of retrieved maps. ex: \"paid\" or \"registered\"
     - `:sort` [string, default \"-created\"]: sort order considered in response. Valid options are \"created\", \"-created\", \"updated\" or \"-updated\".
-    - `:tags` [list of strings, default nil]: tags to filter retrieved structs. ex: [\"tony\", \"stark\"]
-    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+    - `:tags` [list of strings, default nil]: tags to filter retrieved maps. ex: [\"tony\", \"stark\"]
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set-default-user has not been set.
 
   ## Return:
-    - stream of Transfer structs with updated attributes"
+    - stream of Transfer maps with updated attributes"
   ([]
     (map java-to-clojure (Transfer/query)))
 
@@ -139,16 +139,16 @@
     (map java-to-clojure (Transfer/query java-params (#'starkbank.user/get-java-project user)))))
 
 (defn get
-  "Receive a single Transfer struct previously created in the Stark Bank API by passing its id
+  "Receive a single Transfer map previously created in the Stark Bank API by passing its id
 
   ## Parameters (required):
-    - `id` [string]: struct unique id. ex: \"5656565656565656\"
+    - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set-default-user has not been set.
 
   ## Return:
-    - Transfer struct with updated attributes"
+    - Transfer map with updated attributes"
   ([id]
     (java-to-clojure
       (Transfer/get id)))
@@ -164,10 +164,10 @@
   Only valid for transfers with \"processing\" or \"success\" status.
 
   ## Parameters (required):
-    - `id` [string]: struct unique id. ex: \"5656565656565656\"
+    - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set-default-user has not been set.
 
   ## Return:
     - Transfer pdf file content"
@@ -192,7 +192,7 @@
     - `:transfer` [Transfer]: Transfer entity to which the log refers to.
     - `:errors` [list of strings]: list of errors linked to this BoletoPayment event.
     - `:type` [string]: type of the Transfer event which triggered the log creation. ex: \"processing\" or \"success\"
-    - `:created` [DateTime]: creation datetime for the transfer. ex: ~U[2020-03-26 19:32:35.418698Z]"
+    - `:created` [string]: creation datetime for the transfer. ex: \"2020-03-26T19:32:35.418698+00:00\""
   (:import [com.starkbank Transfer$Log])
   (:require [starkbank.transfer :as transfer])
   (:use [starkbank.user]
@@ -227,16 +227,16 @@
       ))))
 
 (defn get
-  "Receive a single Log struct previously created by the Stark Bank API by passing its id
+  "Receive a single Log map previously created by the Stark Bank API by passing its id
 
   ## Parameters (required):
-    - `id` [string]: struct unique id. ex: \"5656565656565656\"
+    - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set-default-user has not been set.
 
   ## Return:
-    - Log struct with updated attributes"
+    - Log map with updated attributes"
   ([id]
     (java-to-clojure
       (Transfer$Log/get id)))
@@ -248,18 +248,18 @@
         (#'starkbank.user/get-java-project user)))))
 
 (defn query
-  "Receive a stream of Log structs previously created in the Stark Bank API
+  "Receive a stream of Log maps previously created in the Stark Bank API
 
   ## Options:
-    - `:limit` [integer, default nil]: maximum number of structs to be retrieved. Unlimited if nil. ex: 35
-    - `:after` [Date, DateTime or string, default nil]: date filter for structs created only after specified date. ex: Date(2020, 3, 10)
-    - `:before` [Date, DateTime or string, default nil]: date filter for structs created only before specified date. ex: Date(2020, 3, 10)
-    - `:types` [list of strings, default nil]: filter retrieved structs by types. ex: \"success\" or \"failed\"
-    - `:transfer_ids` [list of strings, default nil]: list of Transfer ids to filter retrieved structs. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+    - `:limit` [integer, default nil]: maximum number of maps to be retrieved. Unlimited if nil. ex: 35
+    - `:after` [string, default nil]: date filter for maps created only after specified date. ex: \"2020-3-10\"
+    - `:before` [string, default nil]: date filter for maps created only before specified date. ex: \"2020-3-10\"
+    - `:types` [list of strings, default nil]: filter retrieved maps by types. ex: \"success\" or \"failed\"
+    - `:transfer-ids` [list of strings, default nil]: list of Transfer ids to filter retrieved maps. ex: [\"5656565656565656\", \"4545454545454545\"]
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set-default-user has not been set.
 
   ## Return:
-    - stream of Log structs with updated attributes"
+    - stream of Log maps with updated attributes"
   ([]
     (map java-to-clojure (Transfer$Log/query)))
 
