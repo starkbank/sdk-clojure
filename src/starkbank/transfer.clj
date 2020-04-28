@@ -77,9 +77,9 @@
     (def created-java-transfers (Transfer/create java-transfers))
     (map java-to-clojure created-java-transfers))
 
-  ([transfers, project] 
+  ([transfers, user]
     (def java-transfers (map clojure-to-java transfers))
-    (def created-java-transfers (Transfer/create java-transfers (#'starkbank.user/get-java-project project)))
+    (def created-java-transfers (Transfer/create java-transfers (#'starkbank.user/get-java-project user)))
     (map java-to-clojure created-java-transfers)))
 
 (defn query
@@ -91,9 +91,9 @@
     (def java-params (clojure-query-to-java params))
     (map java-to-clojure (Transfer/query java-params)))
 
-  ([params, project] 
+  ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Transfer/query java-params (#'starkbank.user/get-java-project project)))))
+    (map java-to-clojure (Transfer/query java-params (#'starkbank.user/get-java-project user)))))
 
 (defn get
   "gets transfer"
@@ -101,11 +101,11 @@
     (java-to-clojure
       (Transfer/get id)))
 
-  ([id, project]
+  ([id, user]
     (java-to-clojure
       (Transfer/get
         id
-        (#'starkbank.user/get-java-project project)))))
+        (#'starkbank.user/get-java-project user)))))
 
 (defn pdf
   "gets transfer PDF"
@@ -113,11 +113,11 @@
     (clojure.java.io/input-stream
       (Transfer/pdf id)))
 
-  ([id, project]
+  ([id, user]
     (clojure.java.io/input-stream
       (Transfer/pdf
         id
-        (#'starkbank.user/get-java-project project)))))
+        (#'starkbank.user/get-java-project user)))))
 
 
 (ns starkbank.transfer.log
@@ -161,11 +161,11 @@
     (java-to-clojure
       (Transfer$Log/get id)))
 
-  ([id, project]
+  ([id, user]
     (java-to-clojure
       (Transfer$Log/get
         id
-        (#'starkbank.user/get-java-project project)))))
+        (#'starkbank.user/get-java-project user)))))
 
 (defn query
   "queries transfer logs"
@@ -176,6 +176,6 @@
     (def java-params (clojure-query-to-java params))
     (map java-to-clojure (Transfer$Log/query java-params)))
 
-  ([params, project] 
+  ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Transfer$Log/query java-params (#'starkbank.user/get-java-project project)))))
+    (map java-to-clojure (Transfer$Log/query java-params (#'starkbank.user/get-java-project user)))))

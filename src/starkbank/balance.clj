@@ -18,8 +18,8 @@
     (Balance/get)
     (java-to-clojure)))
 
-  ([project] (-> 
-    project
+  ([user] (-> 
+    user
     (#'starkbank.user/get-java-project)
     (Balance/get)
     (java-to-clojure))))

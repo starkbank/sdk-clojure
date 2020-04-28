@@ -109,9 +109,9 @@
     (def created-java-boletos (Boleto/create java-boletos))
     (map java-to-clojure created-java-boletos))
 
-  ([boletos, project] 
+  ([boletos, user] 
     (def java-boletos (map clojure-to-java boletos))
-    (def created-java-boletos (Boleto/create java-boletos (#'starkbank.user/get-java-project project)))
+    (def created-java-boletos (Boleto/create java-boletos (#'starkbank.user/get-java-project user)))
     (map java-to-clojure created-java-boletos)))
 
 (defn query
@@ -123,9 +123,9 @@
     (def java-params (clojure-query-to-java params))
     (map java-to-clojure (Boleto/query java-params)))
 
-  ([params, project] 
+  ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Boleto/query java-params (#'starkbank.user/get-java-project project)))))
+    (map java-to-clojure (Boleto/query java-params (#'starkbank.user/get-java-project user)))))
 
 (defn get
   "gets boleto"
@@ -133,11 +133,11 @@
     (java-to-clojure
       (Boleto/get id)))
 
-  ([id, project]
+  ([id, user]
     (java-to-clojure
       (Boleto/get
         id
-        (#'starkbank.user/get-java-project project)))))
+        (#'starkbank.user/get-java-project user)))))
 
 (defn delete
   "deletes boleto"
@@ -145,11 +145,11 @@
     (java-to-clojure
       (Boleto/delete id)))
 
-  ([id, project]
+  ([id, user]
     (java-to-clojure
       (Boleto/delete
         id
-        (#'starkbank.user/get-java-project project)))))
+        (#'starkbank.user/get-java-project user)))))
 
 (defn pdf
   "gets boleto PDF"
@@ -157,11 +157,11 @@
     (clojure.java.io/input-stream
       (Boleto/pdf id)))
 
-  ([id, project]
+  ([id, user]
     (clojure.java.io/input-stream
       (Boleto/pdf
         id
-        (#'starkbank.user/get-java-project project)))))
+        (#'starkbank.user/get-java-project user)))))
 
 
 (ns starkbank.boleto.log
@@ -205,11 +205,11 @@
     (java-to-clojure
       (Boleto$Log/get id)))
 
-  ([id, project]
+  ([id, user]
     (java-to-clojure
       (Boleto$Log/get
         id
-        (#'starkbank.user/get-java-project project)))))
+        (#'starkbank.user/get-java-project user)))))
 
 (defn query
   "queries boleto logs"
@@ -220,6 +220,6 @@
     (def java-params (clojure-query-to-java params))
     (map java-to-clojure (Boleto$Log/query java-params)))
 
-  ([params, project] 
+  ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Boleto$Log/query java-params (#'starkbank.user/get-java-project project)))))
+    (map java-to-clojure (Boleto$Log/query java-params (#'starkbank.user/get-java-project user)))))

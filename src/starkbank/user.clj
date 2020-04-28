@@ -19,8 +19,8 @@
 
 (defn set-default-user
   "sets a default user (project) to be automatically used in all requests"
-  ([project] 
-    (def java-project (get-java-project project))
+  ([user] 
+    (def java-project (get-java-project user))
     (set! (. com.starkbank.User  -defaultUser) java-project)
     ))
 

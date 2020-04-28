@@ -60,9 +60,9 @@
     (def java-params (clojure-query-to-java params))
     (map java-to-clojure (Event/query java-params)))
 
-  ([params, project] 
+  ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Event/query java-params (#'starkbank.user/get-java-project project)))))
+    (map java-to-clojure (Event/query java-params (#'starkbank.user/get-java-project user)))))
 
 (defn get
   "gets events"
@@ -70,11 +70,11 @@
     (java-to-clojure
       (Event/get id)))
 
-  ([id, project]
+  ([id, user]
     (java-to-clojure
       (Event/get
         id
-        (#'starkbank.user/get-java-project project)))))
+        (#'starkbank.user/get-java-project user)))))
 
 (defn delete
   "deletes events"
@@ -82,11 +82,11 @@
     (java-to-clojure
       (Event/delete id)))
 
-  ([id, project]
+  ([id, user]
     (java-to-clojure
       (Event/delete
         id
-        (#'starkbank.user/get-java-project project)))))
+        (#'starkbank.user/get-java-project user)))))
 
 (defn update
   "updates events"
@@ -94,12 +94,12 @@
     (java-to-clojure
       (Event/update id (clojure-update-to-java params))))
 
-  ([id, params, project]
+  ([id, params, user]
     (java-to-clojure
       (Event/update
         id
         (clojure-update-to-java params)
-        (#'starkbank.user/get-java-project project)))))
+        (#'starkbank.user/get-java-project user)))))
 
 (defn parse
   "parses events"
@@ -107,9 +107,9 @@
     (java-to-clojure
       (Event/parse content signature)))
 
-  ([content, signature, project]
+  ([content, signature, user]
     (java-to-clojure
       (Event/parse
         content
         signature
-        (#'starkbank.user/get-java-project project)))))
+        (#'starkbank.user/get-java-project user)))))

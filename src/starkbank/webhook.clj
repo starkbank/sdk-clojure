@@ -45,9 +45,9 @@
     (def created-java-webhook (Webhook/create java-webhook-params))
     (java-to-clojure created-java-webhook))
 
-  ([webhook-params, project] 
+  ([webhook-params, user]
     (def java-webhook-params (clojure-to-java webhook-params))
-    (def created-java-webhook (Webhook/create java-webhook-params (#'starkbank.user/get-java-project project)))
+    (def created-java-webhook (Webhook/create java-webhook-params (#'starkbank.user/get-java-project user)))
     (java-to-clojure created-java-webhook)))
 
 (defn query
@@ -59,9 +59,9 @@
     (def java-params (clojure-query-to-java params))
     (map java-to-clojure (Webhook/query java-params)))
 
-  ([params, project] 
+  ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Webhook/query java-params (#'starkbank.user/get-java-project project)))))
+    (map java-to-clojure (Webhook/query java-params (#'starkbank.user/get-java-project user)))))
 
 (defn get
   "gets webhook"
@@ -69,11 +69,11 @@
     (java-to-clojure
       (Webhook/get id)))
 
-  ([id, project]
+  ([id, user]
     (java-to-clojure
       (Webhook/get
         id
-        (#'starkbank.user/get-java-project project)))))
+        (#'starkbank.user/get-java-project user)))))
 
 (defn delete
   "deletes webhook"
@@ -81,8 +81,8 @@
     (java-to-clojure
       (Webhook/delete id)))
 
-  ([id, project]
+  ([id, user]
     (java-to-clojure
       (Webhook/delete
         id
-        (#'starkbank.user/get-java-project project)))))
+        (#'starkbank.user/get-java-project user)))))

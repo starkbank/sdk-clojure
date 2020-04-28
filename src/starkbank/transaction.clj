@@ -66,9 +66,9 @@
     (def created-java-transactions (Transaction/create java-transactions))
     (map java-to-clojure created-java-transactions))
 
-  ([transactions, project] 
+  ([transactions, user] 
     (def java-transactions (map clojure-to-java transactions))
-    (def created-java-transactions (Transaction/create java-transactions (#'starkbank.user/get-java-project project)))
+    (def created-java-transactions (Transaction/create java-transactions (#'starkbank.user/get-java-project user)))
     (map java-to-clojure created-java-transactions)))
 
 (defn query
@@ -80,9 +80,9 @@
     (def java-params (clojure-query-to-java params))
     (map java-to-clojure (Transaction/query java-params)))
 
-  ([params, project] 
+  ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Transaction/query java-params (#'starkbank.user/get-java-project project)))))
+    (map java-to-clojure (Transaction/query java-params (#'starkbank.user/get-java-project user)))))
 
 (defn get
   "gets transaction"
@@ -90,8 +90,8 @@
     (java-to-clojure
       (Transaction/get id)))
 
-  ([id, project]
+  ([id, user]
     (java-to-clojure
       (Transaction/get
         id
-        (#'starkbank.user/get-java-project project)))))
+        (#'starkbank.user/get-java-project user)))))

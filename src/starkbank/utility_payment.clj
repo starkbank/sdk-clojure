@@ -73,9 +73,9 @@
     (def created-java-payments (UtilityPayment/create java-payments))
     (map java-to-clojure created-java-payments))
 
-  ([payments, project] 
+  ([payments, user]
     (def java-payments (map clojure-to-java payments))
-    (def created-java-payments (UtilityPayment/create java-payments (#'starkbank.user/get-java-project project)))
+    (def created-java-payments (UtilityPayment/create java-payments (#'starkbank.user/get-java-project user)))
     (map java-to-clojure created-java-payments)))
 
 (defn query
@@ -87,9 +87,9 @@
     (def java-params (clojure-query-to-java params))
     (map java-to-clojure (UtilityPayment/query java-params)))
 
-  ([params, project] 
+  ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (UtilityPayment/query java-params (#'starkbank.user/get-java-project project)))))
+    (map java-to-clojure (UtilityPayment/query java-params (#'starkbank.user/get-java-project user)))))
 
 (defn get
   "gets utility payment"
@@ -97,11 +97,11 @@
     (java-to-clojure
       (UtilityPayment/get id)))
 
-  ([id, project]
+  ([id, user]
     (java-to-clojure
       (UtilityPayment/get
         id
-        (#'starkbank.user/get-java-project project)))))
+        (#'starkbank.user/get-java-project user)))))
 
 (defn delete
   "deletes utility payment"
@@ -109,11 +109,11 @@
     (java-to-clojure
       (UtilityPayment/delete id)))
 
-  ([id, project]
+  ([id, user]
     (java-to-clojure
       (UtilityPayment/delete
         id
-        (#'starkbank.user/get-java-project project)))))
+        (#'starkbank.user/get-java-project user)))))
 
 (defn pdf
   "gets utility payment PDF"
@@ -121,11 +121,11 @@
     (clojure.java.io/input-stream
       (UtilityPayment/pdf id)))
 
-  ([id, project]
+  ([id, user]
     (clojure.java.io/input-stream
       (UtilityPayment/pdf
         id
-        (#'starkbank.user/get-java-project project)))))
+        (#'starkbank.user/get-java-project user)))))
 
 
 (ns starkbank.utility-payment.log
@@ -169,11 +169,11 @@
     (java-to-clojure
       (UtilityPayment$Log/get id)))
 
-  ([id, project]
+  ([id, user]
     (java-to-clojure
       (UtilityPayment$Log/get
         id
-        (#'starkbank.user/get-java-project project)))))
+        (#'starkbank.user/get-java-project user)))))
 
 (defn query
   "queries utility payment logs"
@@ -184,6 +184,6 @@
     (def java-params (clojure-query-to-java params))
     (map java-to-clojure (UtilityPayment$Log/query java-params)))
 
-  ([params, project] 
+  ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (UtilityPayment$Log/query java-params (#'starkbank.user/get-java-project project)))))
+    (map java-to-clojure (UtilityPayment$Log/query java-params (#'starkbank.user/get-java-project user)))))

@@ -76,9 +76,9 @@
     (def created-java-payments (BoletoPayment/create java-payments))
     (map java-to-clojure created-java-payments))
 
-  ([payments, project] 
+  ([payments, user]
     (def java-payments (map clojure-to-java payments))
-    (def created-java-payments (BoletoPayment/create java-payments (#'starkbank.user/get-java-project project)))
+    (def created-java-payments (BoletoPayment/create java-payments (#'starkbank.user/get-java-project user)))
     (map java-to-clojure created-java-payments)))
 
 (defn query
@@ -90,9 +90,9 @@
     (def java-params (clojure-query-to-java params))
     (map java-to-clojure (BoletoPayment/query java-params)))
 
-  ([params, project] 
+  ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (BoletoPayment/query java-params (#'starkbank.user/get-java-project project)))))
+    (map java-to-clojure (BoletoPayment/query java-params (#'starkbank.user/get-java-project user)))))
 
 (defn get
   "gets boleto payment"
@@ -100,11 +100,11 @@
     (java-to-clojure
       (BoletoPayment/get id)))
 
-  ([id, project]
+  ([id, user]
     (java-to-clojure
       (BoletoPayment/get
         id
-        (#'starkbank.user/get-java-project project)))))
+        (#'starkbank.user/get-java-project user)))))
 
 (defn delete
   "deletes boleto payment"
@@ -112,11 +112,11 @@
     (java-to-clojure
       (BoletoPayment/delete id)))
 
-  ([id, project]
+  ([id, user]
     (java-to-clojure
       (BoletoPayment/delete
         id
-        (#'starkbank.user/get-java-project project)))))
+        (#'starkbank.user/get-java-project user)))))
 
 (defn pdf
   "gets boleto payment PDF"
@@ -124,11 +124,11 @@
     (clojure.java.io/input-stream
       (BoletoPayment/pdf id)))
 
-  ([id, project]
+  ([id, user]
     (clojure.java.io/input-stream
       (BoletoPayment/pdf
         id
-        (#'starkbank.user/get-java-project project)))))
+        (#'starkbank.user/get-java-project user)))))
 
 
 (ns starkbank.boleto-payment.log
@@ -172,11 +172,11 @@
     (java-to-clojure
       (BoletoPayment$Log/get id)))
 
-  ([id, project]
+  ([id, user]
     (java-to-clojure
       (BoletoPayment$Log/get
         id
-        (#'starkbank.user/get-java-project project)))))
+        (#'starkbank.user/get-java-project user)))))
 
 (defn query
   "queries boleto payment logs"
@@ -187,6 +187,6 @@
     (def java-params (clojure-query-to-java params))
     (map java-to-clojure (BoletoPayment$Log/query java-params)))
 
-  ([params, project] 
+  ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (BoletoPayment$Log/query java-params (#'starkbank.user/get-java-project project)))))
+    (map java-to-clojure (BoletoPayment$Log/query java-params (#'starkbank.user/get-java-project user)))))
