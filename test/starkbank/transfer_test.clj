@@ -5,7 +5,7 @@
             [starkbank.user-test :as user]
             [clojure.java.io :as io]))
 
-(deftest create-get-pdf-delete-transfers
+(deftest create-get-pdf-transfers
   (testing "create, get, pdf and delete transfers"
     (user/set-default-user-test)
     (def transfers (transfer/create
@@ -24,10 +24,14 @@
   (testing "query transfers"
     (user/set-default-user-test)
     (def transfers (take 200 (transfer/query {:limit 3 :status "success"})))
+    (is (= 3 (count transfers)))
+    (is (map? (first transfers)))
     (io/copy (transfer/pdf (:id (first transfers))) (io/file "temp/transfer.pdf"))))
 
 (deftest query-get-transfer-logs
   (testing "query and get transfer logs"
     (user/set-default-user-test)
     (def transfer-logs (log/query {:limit 1}))
-    (def transfer-log (log/get (:id (first transfer-logs))))))
+    (is (= 1 (count transfer-logs)))
+    (def transfer-log (log/get (:id (first transfer-logs))))
+    (is (map? transfer-log))))

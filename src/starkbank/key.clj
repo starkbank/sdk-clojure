@@ -6,7 +6,7 @@
   "creates keys"
   ([] 
     (def key-pair (Key/create))
-    {'public-pem (.-publicPem key-pair), 'private-pem (.-privatePem key-pair)})
+    {:public-pem (.-publicPem key-pair), :private-pem (.-privatePem key-pair)})
   ([path] 
     (def key-pair (Key/create path))
-    {'public-pem (.-publicPem key-pair), 'private-pem (.-privatePem key-pair)}))
+    {:public-pem (.-publicPem key-pair), :private-pem (.-privatePem key-pair)}))

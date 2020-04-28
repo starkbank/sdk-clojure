@@ -48,10 +48,16 @@
 (deftest query-boletos
   (testing "query boletos"
     (user/set-default-user-test)
-    (def boletos (take 200 (boleto/query {:limit 3})))))
+    (def boletos (take 200 (boleto/query {:limit 3})))
+    (is (= 3 (count boletos)))))
 
 (deftest query-get-boleto-logs
   (testing "query and get boleto logs"
     (user/set-default-user-test)
     (def boleto-logs (log/query {:limit 1}))
-    (def boleto-log (log/get (:id (first boleto-logs))))))
+    (is (= 1 (count boleto-logs)))
+    (def boleto-log (log/get (:id (first boleto-logs))))
+    (is (not (nil? (:id boleto-log))))
+    (is (not (nil? (:errors boleto-log))))
+    (is (string? (:created boleto-log)))
+    (is (map? (:boleto boleto-log)))))

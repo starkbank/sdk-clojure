@@ -24,10 +24,16 @@
 (deftest query-boleto-payments
   (testing "query boleto payments"
     (user/set-default-user-test)
-    (def payments (take 200 (payment/query {:limit 3})))))
+    (def payments (take 200 (payment/query {:limit 3})))
+    (is (= 3 (count payments)))))
 
 (deftest query-get-boleto-payment-logs
   (testing "query and get boleto payment logs"
     (user/set-default-user-test)
     (def payment-logs (log/query {:limit 1}))
-    (def payment-log (log/get (:id (first payment-logs))))))
+    (is (= 1 (count payment-logs)))
+    (def payment-log (log/get (:id (first payment-logs))))
+    (is (not (nil? (:id payment-log))))
+    (is (not (nil? (:errors payment-log))))
+    (is (string? (:created payment-log)))
+    (is (map? (:payment payment-log)))))

@@ -4,7 +4,7 @@
             [starkbank.user-test :as user]
             [clojure.java.io :as io]))
 
-(deftest create-get-pdf-delete-transactions
+(deftest create-get-transactions
   (testing "create, get, pdf and delete transactions"
     (user/set-default-user-test)
     (def transactions (transaction/create
@@ -15,9 +15,11 @@
         :receiver-id "5768064935133184"
         :tags ["testing" "clojure"]
       }]))
-    (println (transaction/get (:id (first transactions))))))
+    (def transaction (transaction/get (:id (first transactions))))
+    (is (not (nil? (:id transaction))))))
 
 (deftest query-transactions
   (testing "query transactions"
     (user/set-default-user-test)
-    (def transactions (take 200 (transaction/query {:limit 3})))))
+    (def transactions (take 200 (transaction/query {:limit 3})))
+    (is (= 3 (count transactions)))))
