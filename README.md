@@ -71,12 +71,12 @@ You can use one of following methods:
 2.2. Use our SDK:
 
 ```clojure
-(def key-pair (key/create))
+(def key-pair (starkbank.key/create))
 (def private-pem (:private-pem key-pair))
 (def public-pem (:public-pem key-pair))
 
 ;or, to also save .pem files in a specific path
-(def key-pair (key/create "file/keys/"))
+(def key-pair (starkbank.key/create "file/keys/"))
 (def private-pem (:private-pem key-pair))
 (def public-pem (:public-pem key-pair))
 ```
