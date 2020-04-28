@@ -7,38 +7,28 @@
 (defn- clojure-to-java
   ([clojure-map]
     (let [{
-      id "id"
       amount "amount"
       description "description"
       external-id "external-id"
       sender-id "sender-id"
       receiver-id "receiver-id"
       tags "tags"
-      fee "fee"
-      created "created"
-      source "source"}
-      (stringify-keys clojure-map)]
-
-      (defn- apply-java-hashmap [x] (java.util.HashMap. x))
+    }
+    (stringify-keys clojure-map)]
       
       (Transaction. (java.util.HashMap.
         {
-          "id" id
           "amount" (if (nil? amount) nil (Integer. amount))
           "description" description
           "externalId" external-id
           "senderId" sender-id
           "receiverId" receiver-id
           "tags" (if (nil? tags) nil (into-array String tags))
-          "fee" fee
-          "created" created
-          "source" source
         }
       )))))
 
 (defn- java-to-clojure
   ([java-object]
-    (defn- java-hashmap-to-map [x] (into {} x))
     {
       :id (.id java-object)
       :amount (.amount java-object)

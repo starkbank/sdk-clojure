@@ -7,7 +7,6 @@
 (defn- clojure-to-java
   ([clojure-map]
     (let [{
-      id "id"
       amount "amount"
       name "name"
       tax-id "tax-id"
@@ -24,18 +23,15 @@
       tags "tags"
       descriptions "descriptions"
       discounts "discounts"
-      fee "fee"
       line "line"
       bar-code "bar-code"
-      status "status"
-      created "created"}
-      (stringify-keys clojure-map)]
+    }
+    (stringify-keys clojure-map)]
 
       (defn- apply-java-hashmap [x] (java.util.HashMap. x))
       
       (Boleto. (java.util.HashMap.
         {
-          "id" id
           "amount" (if (nil? amount) nil (Integer. amount))
           "name" name
           "taxId" tax-id
@@ -52,11 +48,8 @@
           "tags" (if (nil? tags) nil (into-array String tags))
           "descriptions" (if (nil? descriptions) nil (java.util.ArrayList. (map apply-java-hashmap descriptions)))
           "discounts" (if (nil? discounts) nil (java.util.ArrayList. (map apply-java-hashmap discounts)))
-          "fee" fee
           "line" line
           "barCode" bar-code
-          "status" status
-          "created" created
         }
       )))))
 
