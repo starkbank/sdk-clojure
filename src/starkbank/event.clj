@@ -67,11 +67,8 @@
 (defn get
   "gets events"
   ([id]
-    (def event (Event/get id))
-    (println event)
-    (java-to-clojure event))
-    ; (java-to-clojure
-    ;   (Event/get id)))
+    (java-to-clojure
+      (Event/get id)))
 
   ([id, project]
     (java-to-clojure

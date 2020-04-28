@@ -23,3 +23,9 @@
     (def java-project (get-java-project project))
     (set! (. com.starkbank.User  -defaultUser) java-project)
     ))
+
+(defn- set-user-agent-override
+  ([] 
+    (set! (. com.starkbank.User  -userAgentOverride) (str "Clojure-" (clojure-version) "-SDK-0.1.0"))))
+
+(set-user-agent-override)
