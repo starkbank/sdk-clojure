@@ -1,5 +1,25 @@
 (ns starkbank.utility-payment
-  "Used handle utility payments."
+  "When you initialize a UtilityPayment, the entity will not be automatically
+  created in the Stark Bank API. The 'create' function sends the structs
+  to the Stark Bank API and returns the list of created structs.
+
+  ## Parameters (conditionally required):
+    - `:line` [string, default nil]: Number sequence that describes the payment. Either 'line' or 'bar_code' parameters are required. If both are sent, they must match. ex: \"34191.09008 63571.277308 71444.640008 5 81960000000062\"
+    - `:bar_code` [string, default nil]: Bar code number that describes the payment. Either 'line' or 'barCode' parameters are required. If both are sent, they must match. ex: \"34195819600000000621090063571277307144464000\"
+
+  ## Parameters (required):
+    - `:description` [string]: Text to be displayed in your statement (min. 10 characters). ex: \"payment ABC\"
+
+  ## Parameters (optional):
+    - `:scheduled` [Date, DateTime or string, default today]: payment scheduled date. ex: ~D[2020-03-25]
+    - `:tags` [list of strings]: list of strings for tagging
+
+  Attributes (return-only):
+    - `:id` [string, default nil]: unique id returned when payment is created. ex: \"5656565656565656\"
+    - `:status` [string, default nil]: current payment status. ex: \"registered\" or \"paid\"
+    - `:amount` [int, default nil]: amount automatically calculated from line or bar_code. ex: 23456 (= R$ 234.56)
+    - `:fee` [integer, default nil]: fee charged when a utility payment is created. ex: 200 (= R$ 2.00)
+    - `:created` [DateTime, default nil]: creation datetime for the payment. ex: ~U[2020-03-26 19:32:35.418698Z]"
   (:import [com.starkbank UtilityPayment])
   (:use [starkbank.user]
         [clojure.walk]))
@@ -67,7 +87,16 @@
       ))))
 
 (defn create
-  "creates utility payments"
+  "Send a list of UtilityPayment structs for creation in the Stark Bank API
+
+  ## Parameters (required):
+    - `payments` [list of UtilityPayment structs]: list of UtilityPayment structs to be created in the API
+
+  ## Options:
+    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+
+  ## Return:
+    - list of UtilityPayment structs with updated attributes"
   ([payments]
     (def java-payments (map clojure-to-java payments))
     (def created-java-payments (UtilityPayment/create java-payments))
@@ -79,7 +108,19 @@
     (map java-to-clojure created-java-payments)))
 
 (defn query
-  "queries utility payments"
+  "Receive a stream of UtilityPayment structs previously created in the Stark Bank API
+
+  ## Options:
+    - `:limit` [integer, default nil]: maximum number of structs to be retrieved. Unlimited if nil. ex: 35
+    - `:after` [Date, DateTime or string, default nil]: date filter for structs created only after specified date. ex: Date(2020, 3, 10)
+    - `:before` [Date, DateTime or string, default nil]: date filter for structs created only before specified date. ex: Date(2020, 3, 10)
+    - `:tags` [list of strings, default nil]: tags to filter retrieved structs. ex: [\"tony\", \"stark\"]
+    - `:ids` [list of strings, default nil]: list of ids to filter retrieved structs. ex: [\"5656565656565656\", \"4545454545454545\"]
+    - `:status` [string, default nil]: filter for status of retrieved structs. ex: \"paid\"
+    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+
+  ## Return:
+    - stream of UtilityPayment structs with updated attributes"
   ([]
     (map java-to-clojure (UtilityPayment/query)))
 
@@ -92,7 +133,16 @@
     (map java-to-clojure (UtilityPayment/query java-params (#'starkbank.user/get-java-project user)))))
 
 (defn get
-  "gets utility payment"
+  "Receive a single UtilityPayment struct previously created by the Stark Bank API by passing its id
+
+  ## Parameters (required):
+    - `id` [string]: struct unique id. ex: \"5656565656565656\"
+
+  ## Options:
+    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+
+  ## Return:
+    - UtilityPayment struct with updated attributes"
   ([id]
     (java-to-clojure
       (UtilityPayment/get id)))
@@ -104,7 +154,16 @@
         (#'starkbank.user/get-java-project user)))))
 
 (defn delete
-  "deletes utility payment"
+  "Delete a UtilityPayment entity previously created in the Stark Bank API
+
+  ## Parameters (required):
+    - `id` [string]: UtilityPayment unique id. ex: \"5656565656565656\"
+
+  ## Options:
+    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+
+  ## Return:
+    - deleted UtilityPayment with updated attributes"
   ([id]
     (java-to-clojure
       (UtilityPayment/delete id)))
@@ -116,7 +175,17 @@
         (#'starkbank.user/get-java-project user)))))
 
 (defn pdf
-  "gets utility payment PDF"
+  "Receive a single UtilityPayment pdf file generated in the Stark Bank API by passing its id.
+  Only valid for utility payments with \"success\" status.
+
+  ## Parameters (required):
+    - `id` [string]: struct unique id. ex: \"5656565656565656\"
+
+  ## Options:
+    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+
+  ## Return:
+    - UtilityPayment pdf file content"
   ([id]
     (clojure.java.io/input-stream
       (UtilityPayment/pdf id)))
@@ -129,7 +198,16 @@
 
 
 (ns starkbank.utility-payment.log
-  "Used handle utility payment logs."
+  "Every time a UtilityPayment entity is modified, a corresponding UtilityPayment.Log
+  is generated for the entity. This log is never generated by the user, but it can
+  be retrieved to check additional information on the UtilityPayment.
+
+  ## Attributes:
+    - `:id` [string]: unique id returned when the log is created. ex: \"5656565656565656\"
+    - `:payment` [UtilityPayment]: UtilityPayment entity to which the log refers to.
+    - `:errors` [list of strings]: list of errors linked to this BoletoPayment event.
+    - `:type` [string]: type of the UtilityPayment event which triggered the log creation. ex: \"registered\" or \"paid\"
+    - `:created` [DateTime]: creation datetime for the payment. ex: ~U[2020-03-26 19:32:35.418698Z]"
   (:import [com.starkbank UtilityPayment$Log])
   (:require [starkbank.utility-payment :as payment])
   (:use [starkbank.user]
@@ -164,7 +242,16 @@
       ))))
 
 (defn get
-  "gets utility payment log"
+  "Receive a single Log struct previously created by the Stark Bank API by passing its id
+
+  ## Parameters (required):
+    - `id` [string]: struct unique id. ex: \"5656565656565656\"
+
+  ## Options:
+    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+
+  ## Return:
+    - Log struct with updated attributes"
   ([id]
     (java-to-clojure
       (UtilityPayment$Log/get id)))
@@ -176,7 +263,18 @@
         (#'starkbank.user/get-java-project user)))))
 
 (defn query
-  "queries utility payment logs"
+  "Receive a stream of Log structs previously created in the Stark Bank API
+
+  ## Options:
+    - `:limit` [integer, default nil]: maximum number of entities to be retrieved. Unlimited if nil. ex: 35
+    - `:after` [Date, DateTime or string, default nil]: date filter for entities created only after specified date. ex: Date(2020, 3, 10)
+    - `:before` [Date, DateTime or string, default nil]: date filter for entities created only before specified date. ex: Date(2020, 3, 10)
+    - `:types` [list of strings, default nil]: filter retrieved entities by event types. ex: \"paid\" or \"registered\"
+    - `:payment_ids` [list of strings, default nil]: list of UtilityPayment ids to filter retrieved entities. ex: [\"5656565656565656\", \"4545454545454545\"]
+    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+
+  ## Return:
+    - stream of Log structs with updated attributes"
   ([]
     (map java-to-clojure (UtilityPayment$Log/query)))
 

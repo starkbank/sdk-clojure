@@ -1,5 +1,14 @@
 (ns starkbank.event
-  "Used handle eventss."
+  "An Event is the notification received from the subscription to the Webhook.
+  Events cannot be created, but may be retrieved from the Stark Bank API to
+  list all generated updates on entities.
+
+  ## Attributes:
+    - `:id` [string]: unique id returned when the log is created. ex: \"5656565656565656\"
+    - `:log` [Log]: a Log struct from one the subscription services (Transfer.Log, Boleto.Log, BoletoPayment.log or UtilityPayment.Log)
+    - `:created` [DateTime]: creation datetime for the notification event. ex: ~U[2020-03-26 19:32:35.418698Z]
+    - `:is_delivered` [bool]: true if the event has been successfully delivered to the user url. ex: false
+    - `:subscription` [string]: service that triggered this event. ex: \"transfer\", \"utility-payment\""
   (:import [com.starkbank Event])
   (:require [starkbank.user]
             [starkbank.transfer]
@@ -52,7 +61,17 @@
       ))))
 
 (defn query
-  "queries eventss"
+  "Receive a stream of notification Event structs previously created in the Stark Bank API
+
+  ## Options:
+    - `:limit` [integer, default nil]: maximum number of structs to be retrieved. Unlimited if nil. ex: 35
+    - `:after` [Date, DateTime or string, default nil]: date filter for structs created only after specified date. ex: ~D[2020-03-25]
+    - `:before` [Date, DateTime or string, default nil]: date filter for structs created only before specified date. ex: ~D[2020-03-25]
+    - `:is_delivered` [bool, default nil]: filter successfully delivered events. ex: true or false
+    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+
+  ## Return:
+    - stream of Event structs with updated attributes"
   ([]
     (map java-to-clojure (Event/query)))
 
@@ -65,7 +84,16 @@
     (map java-to-clojure (Event/query java-params (#'starkbank.user/get-java-project user)))))
 
 (defn get
-  "gets events"
+  "Receive a single notification Event struct previously created in the Stark Bank API by passing its id
+
+  ## Parameters (required):
+    - `id` [string]: struct unique id. ex: \"5656565656565656\"
+
+  ## Options:
+    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+
+  ## Return:
+    - Event struct with updated attributes"
   ([id]
     (java-to-clojure
       (Event/get id)))
@@ -77,7 +105,16 @@
         (#'starkbank.user/get-java-project user)))))
 
 (defn delete
-  "deletes events"
+  "Delete a list of notification Event entities previously created in the Stark Bank API
+
+  ## Parameters (required):
+    - `id` [string]: Event unique id. ex: \"5656565656565656\"
+
+  ## Options:
+    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+
+  ## Return:
+    - deleted Event struct with updated attributes"
   ([id]
     (java-to-clojure
       (Event/delete id)))
@@ -89,7 +126,18 @@
         (#'starkbank.user/get-java-project user)))))
 
 (defn update
-  "updates events"
+  "Update notification Event by passing id.
+    If is_delivered is true, the event will no longer be returned on queries with is_delivered=false.
+
+  ## Parameters (required):
+    - `id` [list of strings]: Event unique ids. ex: \"5656565656565656\"
+    - `:is_delivered` [bool]: If true and event hasn't been delivered already, event will be set as delivered. ex: true
+
+  ## Parameters (optional):
+    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+
+  ## Return:
+    - target Event with updated attributes"
   ([id, params]
     (java-to-clojure
       (Event/update id (clojure-update-to-java params))))
@@ -102,7 +150,21 @@
         (#'starkbank.user/get-java-project user)))))
 
 (defn parse
-  "parses events"
+  "Create a single Event struct received from event listening at subscribed user endpoint.
+  If the provided digital signature does not check out with the StarkBank public key, an \"invalidSignature\"
+  error will be returned.
+
+  ## Parameters (required):
+    - `content` [string]: response content from request received at user endpoint (not parsed)
+    - `signature` [string]: base-64 digital signature received at response header \"Digital-Signature\"
+
+  ## Parameters (optional):
+    - `cache_pid` [PID, default nil]: PID of the process that holds the public key cache, returned on previous parses. If not provided, a new cache process will be generated.
+    - `user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+
+  ## Return:
+    - Event struct with updated attributes
+    - Cache PID that holds the Stark Bank public key in order to avoid unnecessary requests to the API on future parses"
   ([content, signature]
     (java-to-clojure
       (Event/parse content signature)))

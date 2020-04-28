@@ -1,5 +1,5 @@
 (ns starkbank.core
-  "SDK to facilitate integrations with the StarkBank API."
+  "SDK to facilitate Clojure integrations with the StarkBank API."
   (:require [starkbank.key]
             [starkbank.balance]
             [starkbank.transaction]

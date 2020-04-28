@@ -1,5 +1,26 @@
 (ns starkbank.transfer
-  "Used handle transfers."
+  "When you initialize a Transfer, the entity will not be automatically
+  created in the Stark Bank API. The 'create' function sends the structs
+  to the Stark Bank API and returns the list of created structs.
+
+  ## Parameters (required):
+    - `:amount` [integer]: amount in cents to be transferred. ex: 1234 (= R$ 12.34)
+    - `:name` [string]: receiver full name. ex: \"Anthony Edward Stark\"
+    - `:tax_id` [string]: receiver tax ID (CPF or CNPJ) with or without formatting. ex: \"01234567890\" or \"20.018.183/0001-80\"
+    - `:bank_code` [string]: receiver 1 to 3 digits of the bank institution in Brazil. ex: \"200\" or \"341\"
+    - `:branch_code` [string]: receiver bank account branch. Use '-' in case there is a verifier digit. ex: \"1357-9\"
+    - `:account_number` [string]: Receiver Bank Account number. Use '-' before the verifier digit. ex: \"876543-2\"
+
+  ## Parameters (optional):
+    - `:tags` [list of strings]: list of strings for reference when searching for transfers. ex: [\"employees\", \"monthly\"]
+
+  Attributes (return-only):
+    - `:id` [string, default nil]: unique id returned when Transfer is created. ex: \"5656565656565656\"
+    - `:fee` [integer, default nil]: fee charged when transfer is created. ex: 200 (= R$ 2.00)
+    - `:status` [string, default nil]: current boleto status. ex: \"registered\" or \"paid\"
+    - `:transaction_ids` [list of strings, default nil]: ledger transaction ids linked to this transfer (if there are two, second is the chargeback). ex: [\"19827356981273\"]
+    - `:created` [DateTime, default nil]: creation datetime for the transfer. ex: ~U[2020-03-26 19:32:35.418698Z]
+    - `:updated` [DateTime, default nil]: latest update datetime for the transfer. ex: ~U[2020-03-26 19:32:35.418698Z]"
   (:import [com.starkbank Transfer])
   (:use [starkbank.user]
         [clojure.walk]))
@@ -71,7 +92,16 @@
       ))))
 
 (defn create
-  "creates transfers"
+  "Send a list of Transfer structs for creation in the Stark Bank API
+
+  ## Parameters (required):
+    - `transfers` [list of Transfer structs]: list of Transfer structs to be created in the API
+
+  ## Options:
+    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+
+  ## Return:
+    - list of Transfer structs with updated attributes"
   ([transfers]
     (def java-transfers (map clojure-to-java transfers))
     (def created-java-transfers (Transfer/create java-transfers))
@@ -83,7 +113,20 @@
     (map java-to-clojure created-java-transfers)))
 
 (defn query
-  "queries transfers"
+  "Receive a stream of Transfer structs previously created in the Stark Bank API
+
+  ## Options:
+    - `:limit` [integer, default nil]: maximum number of structs to be retrieved. Unlimited if nil. ex: 35
+    - `:after` [Date, DateTime or string, default nil]: date filter for structs created or updated only after specified date. ex: ~D[2020-03-25]
+    - `:before` [Date, DateTime or string, default nil]: date filter for structs created or updated only before specified date. ex: ~D[2020-03-25]
+    - `:transaction_ids` [list of strings, default nil]: list of transaction IDs linked to the desired transfers. ex: [\"5656565656565656\", \"4545454545454545\"]
+    - `:status` [string, default nil]: filter for status of retrieved structs. ex: \"paid\" or \"registered\"
+    - `:sort` [string, default \"-created\"]: sort order considered in response. Valid options are \"created\", \"-created\", \"updated\" or \"-updated\".
+    - `:tags` [list of strings, default nil]: tags to filter retrieved structs. ex: [\"tony\", \"stark\"]
+    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+
+  ## Return:
+    - stream of Transfer structs with updated attributes"
   ([]
     (map java-to-clojure (Transfer/query)))
 
@@ -96,7 +139,16 @@
     (map java-to-clojure (Transfer/query java-params (#'starkbank.user/get-java-project user)))))
 
 (defn get
-  "gets transfer"
+  "Receive a single Transfer struct previously created in the Stark Bank API by passing its id
+
+  ## Parameters (required):
+    - `id` [string]: struct unique id. ex: \"5656565656565656\"
+
+  ## Options:
+    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+
+  ## Return:
+    - Transfer struct with updated attributes"
   ([id]
     (java-to-clojure
       (Transfer/get id)))
@@ -108,7 +160,17 @@
         (#'starkbank.user/get-java-project user)))))
 
 (defn pdf
-  "gets transfer PDF"
+  "Receive a single Transfer pdf receipt file generated in the Stark Bank API by passing its id.
+  Only valid for transfers with \"processing\" or \"success\" status.
+
+  ## Parameters (required):
+    - `id` [string]: struct unique id. ex: \"5656565656565656\"
+
+  ## Options:
+    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+
+  ## Return:
+    - Transfer pdf file content"
   ([id]
     (clojure.java.io/input-stream
       (Transfer/pdf id)))
@@ -121,7 +183,16 @@
 
 
 (ns starkbank.transfer.log
-  "Used handle transfer logs."
+  "Every time a Transfer entity is modified, a corresponding Transfer.Log
+  is generated for the entity. This log is never generated by the
+  user.
+
+  ## Attributes:
+    - `:id` [string]: unique id returned when the log is created. ex: \"5656565656565656\"
+    - `:transfer` [Transfer]: Transfer entity to which the log refers to.
+    - `:errors` [list of strings]: list of errors linked to this BoletoPayment event.
+    - `:type` [string]: type of the Transfer event which triggered the log creation. ex: \"processing\" or \"success\"
+    - `:created` [DateTime]: creation datetime for the transfer. ex: ~U[2020-03-26 19:32:35.418698Z]"
   (:import [com.starkbank Transfer$Log])
   (:require [starkbank.transfer :as transfer])
   (:use [starkbank.user]
@@ -156,7 +227,16 @@
       ))))
 
 (defn get
-  "gets transfer log"
+  "Receive a single Log struct previously created by the Stark Bank API by passing its id
+
+  ## Parameters (required):
+    - `id` [string]: struct unique id. ex: \"5656565656565656\"
+
+  ## Options:
+    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+
+  ## Return:
+    - Log struct with updated attributes"
   ([id]
     (java-to-clojure
       (Transfer$Log/get id)))
@@ -168,7 +248,18 @@
         (#'starkbank.user/get-java-project user)))))
 
 (defn query
-  "queries transfer logs"
+  "Receive a stream of Log structs previously created in the Stark Bank API
+
+  ## Options:
+    - `:limit` [integer, default nil]: maximum number of structs to be retrieved. Unlimited if nil. ex: 35
+    - `:after` [Date, DateTime or string, default nil]: date filter for structs created only after specified date. ex: Date(2020, 3, 10)
+    - `:before` [Date, DateTime or string, default nil]: date filter for structs created only before specified date. ex: Date(2020, 3, 10)
+    - `:types` [list of strings, default nil]: filter retrieved structs by types. ex: \"success\" or \"failed\"
+    - `:transfer_ids` [list of strings, default nil]: list of Transfer ids to filter retrieved structs. ex: [\"5656565656565656\", \"4545454545454545\"]
+    - `:user` [Project]: Project struct returned from StarkBank.project(). Only necessary if default project has not been set in configs.
+
+  ## Return:
+    - stream of Log structs with updated attributes"
   ([]
     (map java-to-clojure (Transfer$Log/query)))
 
