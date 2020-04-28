@@ -1,11 +1,11 @@
 (ns starkbank.user-test
   (:use [clojure.test])
-  (:require [starkbank.user :as user]))
+  (:require [starkbank.user]))
 
 (deftest set-default-user-test
   (testing "Set default user"
     (-> 
-      (user/project
+      (starkbank.user/project
         "sandbox"
         "9999999999999999"
         "-----BEGIN EC PRIVATE KEY-----
@@ -13,4 +13,4 @@
         CqFEA0IABJlS4omSpIcq/MC1a39wProUxPlpcsirelSHOzGmwKJ4ZtYHhW7bYr1Y
         xX4Ae2b2ff/v/GNgn3nSsJ73QaUgn7s=
         -----END EC PRIVATE KEY-----")
-      (user/set-default-user))))
+      (starkbank.user/set-default-user))))

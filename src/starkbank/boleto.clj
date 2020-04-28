@@ -72,8 +72,8 @@
           "stateCode" state-code
           "zipCode" zip-code
           "due" due
-          "fine" fine
-          "interest" interest
+          "fine" (if (nil? fine) nil (double fine))
+          "interest" (if (nil? interest) nil (double interest))
           "overdueLimit" (if (nil? overdue-limit) nil (Integer. overdue-limit))
           "tags" (if (nil? tags) nil (into-array String tags))
           "descriptions" (if (nil? descriptions) nil (java.util.ArrayList. (map apply-java-hashmap descriptions)))
