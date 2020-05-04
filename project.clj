@@ -4,5 +4,5 @@
   :license {:name "MIT"
             :url "https://opensource.org/licenses/MIT"}
   :dependencies [[org.clojure/clojure "1.10.1"]]
-  :resource-paths ["resources/starkbank-0.1.4.jar"]
+  :resource-paths ["resources/starkbank-0.2.0.jar"]
   :repl-options {:init-ns starkbank.core})
