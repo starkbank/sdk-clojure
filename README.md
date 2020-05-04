@@ -114,7 +114,7 @@ You need a project for direct API integrations. To create one in Sandbox:
   -----END EC PRIVATE KEY-----
   ")
 
-(def user (starkbank.user/project
+(def project (starkbank.user/project
     "sandbox"
     "5671398416568321"
     private-key-content
@@ -122,7 +122,7 @@ You need a project for direct API integrations. To create one in Sandbox:
 
 ;the function output is just a map, so you can also do:
 
-(def user {
+(def project {
     :environment "sandbox"
     :id "5671398416568321"
     :private-key private-key-content
@@ -154,12 +154,12 @@ There are two ways to inform the user to the SDK:
 4.2 Set it as a default user in the `config/config.exs` file:
 
 ```clojure
-(-> 
-  (starkbank.user/project
-    "sandbox"
-    "9999999999999999"
-    private-key-content)
-  (starkbank.user/set-default-user))
+(def project {
+    :environment "sandbox"
+    :id "5671398416568321"
+    :private-key private-key-content
+  })
+(starkbank.user/set-default-user project)
 
 (def balance (starkbank.balance/get))
 ```
@@ -217,7 +217,6 @@ you have in other banks.
   :fine 5; 5%
   :interest 2.5; 2.5% per month
 }]))
-
 (println boletos)
 ```
 
@@ -268,7 +267,6 @@ You can get a stream of created boletos given some filters.
       :before (.format (new java.text.SimpleDateFormat "yyyy-MM-dd") (java.util.Date. (- (.getTime (java.util.Date.)) (* 1 86400 1000))))
       :limit 10
     }))
-
 (println boletos)
 ```
 
@@ -628,7 +626,7 @@ You can get a specific transaction by its id:
 (println transaction)
 ```
 
-### Create webhook subscription
+### Create a webhook subscription
 
 To create a webhook subscription and be notified whenever an event occurs, run:
 
