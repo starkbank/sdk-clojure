@@ -27,7 +27,6 @@
 (defn- clojure-to-java
   ([clojure-map]
     (let [{
-      amount "amount"
       description "description"
       line "line"
       bar-code "bar-code"
@@ -40,7 +39,6 @@
       
       (UtilityPayment. (java.util.HashMap.
         {
-          "amount" (if (nil? amount) nil (Integer. amount))
           "description" description
           "line" line
           "barCode" bar-code

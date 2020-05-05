@@ -53,8 +53,6 @@
       tags "tags"
       descriptions "descriptions"
       discounts "discounts"
-      line "line"
-      bar-code "bar-code"
     }
     (stringify-keys clojure-map)]
 
@@ -78,8 +76,6 @@
           "tags" (if (nil? tags) nil (into-array String tags))
           "descriptions" (if (nil? descriptions) nil (java.util.ArrayList. (map apply-java-hashmap descriptions)))
           "discounts" (if (nil? discounts) nil (java.util.ArrayList. (map apply-java-hashmap discounts)))
-          "line" line
-          "barCode" bar-code
         }
       )))))
 

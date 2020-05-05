@@ -28,7 +28,6 @@
 (defn- clojure-to-java
   ([clojure-map]
     (let [{
-      amount "amount"
       tax-id "tax-id"
       description "description"
       line "line"
@@ -42,7 +41,6 @@
       
       (BoletoPayment. (java.util.HashMap.
         {
-          "amount" (if (nil? amount) nil (Integer. amount))
           "taxId" tax-id
           "description" description
           "line" line

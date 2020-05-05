@@ -33,7 +33,6 @@
       amount "amount"
       description "description"
       external-id "external-id"
-      sender-id "sender-id"
       receiver-id "receiver-id"
       tags "tags"
     }
@@ -44,7 +43,6 @@
           "amount" (if (nil? amount) nil (Integer. amount))
           "description" description
           "externalId" external-id
-          "senderId" sender-id
           "receiverId" receiver-id
           "tags" (if (nil? tags) nil (into-array String tags))
         }
