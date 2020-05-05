@@ -15,8 +15,8 @@
     - `:tags` [list of strings]: list of strings for tagging
 
   Attributes (return-only):
-    - `:id` [string, default nil]: unique id returned when payment is created. ex: \"5656565656565656\"
-    - `:status` [string, default nil]: current payment status. ex: \"registered\" or \"paid\"
+    - `:id` [string, default nil]: unique id returned when the payment is created. ex: \"5656565656565656\"
+    - `:status` [string, default nil]: current payment status. ex: \"processing\" or \"success\"
     - `:amount` [int, default nil]: amount automatically calculated from line or bar-code. ex: 23456 (= R$ 234.56)
     - `:fee` [integer, default nil]: fee charged when a utility payment is created. ex: 200 (= R$ 2.00)
     - `:created` [string, default nil]: creation datetime for the payment. ex: \"2020-03-26T19:32:35.418698+00:00\""
@@ -116,7 +116,7 @@
     - `:before` [string, default nil]: date filter for maps created only before specified date. ex: \"2020-3-10\"
     - `:tags` [list of strings, default nil]: tags to filter retrieved maps. ex: [\"tony\", \"stark\"]
     - `:ids` [list of strings, default nil]: list of ids to filter retrieved maps. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:status` [string, default nil]: filter for status of retrieved maps. ex: \"paid\"
+    - `:status` [string, default nil]: filter for status of retrieved maps. ex: \"success\"
     - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set-default-user has not been set.
 
   ## Return:
@@ -205,9 +205,9 @@
   ## Attributes:
     - `:id` [string]: unique id returned when the log is created. ex: \"5656565656565656\"
     - `:payment` [UtilityPayment]: UtilityPayment entity to which the log refers to.
-    - `:errors` [list of strings]: list of errors linked to this BoletoPayment event.
-    - `:type` [string]: type of the UtilityPayment event which triggered the log creation. ex: \"registered\" or \"paid\"
-    - `:created` [string]: creation datetime for the payment. ex: \"2020-03-26T19:32:35.418698+00:00\""
+    - `:errors` [list of strings]: list of errors linked to this UtilityPayment event.
+    - `:type` [string]: type of the UtilityPayment event which triggered the log creation. ex: \"processing\" or \"success\"
+    - `:created` [string]: creation datetime for the log. ex: \"2020-03-26T19:32:35.418698+00:00\""
   (:import [com.starkbank UtilityPayment$Log])
   (:require [starkbank.utility-payment :as payment])
   (:use [starkbank.user]
@@ -269,7 +269,7 @@
     - `:limit` [integer, default nil]: maximum number of entities to be retrieved. Unlimited if nil. ex: 35
     - `:after` [string, default nil]: date filter for entities created only after specified date. ex: \"2020-3-10\"
     - `:before` [string, default nil]: date filter for entities created only before specified date. ex: \"2020-3-10\"
-    - `:types` [list of strings, default nil]: filter retrieved entities by event types. ex: \"paid\" or \"registered\"
+    - `:types` [list of strings, default nil]: filter retrieved entities by event types. ex: \"processing\" or \"success\"
     - `:payment-ids` [list of strings, default nil]: list of UtilityPayment ids to filter retrieved entities. ex: [\"5656565656565656\", \"4545454545454545\"]
     - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set-default-user has not been set.
 

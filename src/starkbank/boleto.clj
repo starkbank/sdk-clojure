@@ -18,14 +18,14 @@
     - `:due` [string, default today + 2 days]: Boleto due date in ISO format. ex: 2020-04-30
     - `:fine` [float, default 0.0]: Boleto fine for overdue payment in %. ex: 2.5
     - `:interest` [float, default 0.0]: Boleto monthly interest for overdue payment in %. ex: 5.2
-    - `:overdue-limit` [integer, default 59]: limit in days for automatic Boleto cancellation after due date. ex: 7 (max: 59)
+    - `:overdue-limit` [integer, default 59]: limit in days for payment after due date. ex: 7 (max: 59)
     - `:descriptions` [list of maps, default nil]: list of maps with :text (string) and :amount (int, optional) pairs
     - `:discounts` [list of maps, default nil]: list of maps with :percentage (float) and :date (string) pairs
     - `:tags` [list of strings]: list of strings for tagging
 
   ## Attributes (return-only):
-    - `:id` [string, default nil]: unique id returned when Boleto is created. ex: \"5656565656565656\"
-    - `:fee` [integer, default nil]: fee charged when Boleto is paid. ex: 200 (= R$ 2.00)
+    - `:id` [string, default nil]: unique id returned when the Boleto is created. ex: \"5656565656565656\"
+    - `:fee` [integer, default nil]: fee charged when the Boleto is paid. ex: 200 (= R$ 2.00)
     - `:line` [string, default nil]: generated Boleto line for payment. ex: \"34191.09008 63571.277308 71444.640008 5 81960000000062\"
     - `:bar-code` [string, default nil]: generated Boleto bar-code for payment. ex: \"34195819600000000621090063571277307144464000\"
     - `:status` [string, default nil]: current Boleto status. ex: \"registered\" or \"paid\"
@@ -253,7 +253,7 @@
     - `:boleto` [Boleto]: Boleto entity to which the log refers to.
     - `:errors` [list of strings]: list of errors linked to this Boleto event
     - `:type` [string]: type of the Boleto event which triggered the log creation. ex: \"registered\" or \"paid\"
-    - `:created` [string]: creation datetime for the boleto. ex: \"2020-03-26T19:32:35.418698+00:00\""
+    - `:created` [string]: creation datetime for the log. ex: \"2020-03-26T19:32:35.418698+00:00\""
   (:import [com.starkbank Boleto$Log])
   (:require [starkbank.boleto :as boleto])
   (:use [starkbank.user]

@@ -5,7 +5,7 @@
   can be retrieved to see the information available.
 
   ## Attributes (return-only):
-    - `:id` [string, default nil]: unique id returned when Boleto is created. ex: \"5656565656565656\"
+    - `:id` [string, default nil]: unique id returned when Balance is created. ex: \"5656565656565656\"
     - `:amount` [integer, default nil]: current balance amount of the workspace in cents. ex: 200 (= R$ 2.00)
     - `:currency` [string, default nil]: currency of the current workspace. Expect others to be added eventually. ex: \"BRL\"
     - `:updated` [string, default nil]: update datetime for the balance. ex: \"2020-03-26T19:32:35.418698+00:00\""

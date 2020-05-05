@@ -7,7 +7,7 @@
     - `:amount` [integer]: amount in cents to be transferred. ex: 1234 (= R$ 12.34)
     - `:name` [string]: receiver full name. ex: \"Anthony Edward Stark\"
     - `:tax-id` [string]: receiver tax ID (CPF or CNPJ) with or without formatting. ex: \"01234567890\" or \"20.018.183/0001-80\"
-    - `:bank-code` [string]: receiver 1 to 3 digits of the bank institution in Brazil. ex: \"200\" or \"341\"
+    - `:bank-code` [string]: 1 to 3 digits of the receiver bank institution in Brazil. ex: \"200\" or \"341\"
     - `:branch-code` [string]: receiver bank account branch. Use '-' in case there is a verifier digit. ex: \"1357-9\"
     - `:account-number` [string]: Receiver Bank Account number. Use '-' before the verifier digit. ex: \"876543-2\"
 
@@ -15,9 +15,9 @@
     - `:tags` [list of strings]: list of strings for reference when searching for transfers. ex: [\"employees\", \"monthly\"]
 
   Attributes (return-only):
-    - `:id` [string, default nil]: unique id returned when Transfer is created. ex: \"5656565656565656\"
-    - `:fee` [integer, default nil]: fee charged when transfer is created. ex: 200 (= R$ 2.00)
-    - `:status` [string, default nil]: current boleto status. ex: \"registered\" or \"paid\"
+    - `:id` [string, default nil]: unique id returned when the transfer is created. ex: \"5656565656565656\"
+    - `:fee` [integer, default nil]: fee charged when the transfer is created. ex: 200 (= R$ 2.00)
+    - `:status` [string, default nil]: current transfer status. ex: \"processing\" or \"success\"
     - `:transaction-ids` [list of strings, default nil]: ledger transaction ids linked to this transfer (if there are two, second is the chargeback). ex: [\"19827356981273\"]
     - `:created` [string, default nil]: creation datetime for the transfer. ex: \"2020-03-26T19:32:35.418698+00:00\"
     - `:updated` [string, default nil]: latest update datetime for the transfer. ex: \"2020-03-26T19:32:35.418698+00:00\""
@@ -120,7 +120,7 @@
     - `:after` [string, default nil]: date filter for maps created or updated only after specified date. ex: ~D[2020-03-25]
     - `:before` [string, default nil]: date filter for maps created or updated only before specified date. ex: ~D[2020-03-25]
     - `:transaction-ids` [list of strings, default nil]: list of transaction IDs linked to the desired transfers. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:status` [string, default nil]: filter for status of retrieved maps. ex: \"paid\" or \"registered\"
+    - `:status` [string, default nil]: filter for status of retrieved maps. ex: \"processing\" or \"success\"
     - `:sort` [string, default \"-created\"]: sort order considered in response. Valid options are \"created\", \"-created\", \"updated\" or \"-updated\".
     - `:tags` [list of strings, default nil]: tags to filter retrieved maps. ex: [\"tony\", \"stark\"]
     - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set-default-user has not been set.
@@ -192,7 +192,7 @@
     - `:transfer` [Transfer]: Transfer entity to which the log refers to.
     - `:errors` [list of strings]: list of errors linked to this BoletoPayment event.
     - `:type` [string]: type of the Transfer event which triggered the log creation. ex: \"processing\" or \"success\"
-    - `:created` [string]: creation datetime for the transfer. ex: \"2020-03-26T19:32:35.418698+00:00\""
+    - `:created` [string]: creation datetime for the log. ex: \"2020-03-26T19:32:35.418698+00:00\""
   (:import [com.starkbank Transfer$Log])
   (:require [starkbank.transfer :as transfer])
   (:use [starkbank.user]

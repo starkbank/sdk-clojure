@@ -17,12 +17,12 @@
     - `:tags` [list of strings]: list of strings for reference when searching transactions (may be empty). ex: [\"abc\", \"test\"]
 
   ## Attributes (return-only):
-    - `:id` [string, default nil]: unique id returned when Transaction is created. ex: \"7656565656565656\"
+    - `:id` [string, default nil]: unique id returned when the Transaction is created. ex: \"7656565656565656\"
     - `:sender-id` [string]: unique id of the sending workspace. ex: \"5656565656565656\"
-    - `:fee` [integer, default nil]: fee charged when transfer is created. ex: 200 (= R$ 2.00)
+    - `:fee` [integer, default nil]: fee charged when the transaction is created. ex: 200 (= R$ 2.00)
     - `:source` [string, default nil]: locator of the entity that generated the transaction. ex: \"charge/18276318736\" or \"transfer/19381639871263/chargeback\"
     - `:balance` [integer, default null]: account balance after transaction was processed. ex: 100000000 (= R$ 1,000,000.00)
-    - `:created` [string, default nil]: creation datetime for the boleto. ex: \"2020-03-26T19:32:35.418698+00:00\""
+    - `:created` [string, default nil]: creation datetime for the transaction. ex: \"2020-03-26T19:32:35.418698+00:00\""
   (:import [com.starkbank Transaction])
   (:use [starkbank.user]
         [clojure.walk]))
