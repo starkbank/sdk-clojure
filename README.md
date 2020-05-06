@@ -151,7 +151,7 @@ There are two ways to inform the user to the SDK:
 (def balance (starkbank.balance/get user))
 ```
 
-4.2 Set it as a default user in the `config/config.exs` file:
+4.2 Set it as a default user in the SDK:
 
 ```clojure
 (def project {
@@ -509,12 +509,10 @@ To search for utility payments using filters, run:
 ```clojure
 (def payments
   (starkbank.utility-payment/query
-    [
-      {
-        :tags ["electricity" "gas"]
-        :limit 10
-      }
-    ]))
+    {
+      :tags ["electricity" "gas"]
+      :limit 10
+    }))
 (println payments)
 ```
 

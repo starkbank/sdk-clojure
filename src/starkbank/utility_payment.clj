@@ -217,6 +217,7 @@
       :id (.id java-object)
       :created (.created java-object)
       :errors (into [] (.errors java-object))
+      :type (.type java-object)
       :payment (#'payment/java-to-clojure (.payment java-object))
     }))
 

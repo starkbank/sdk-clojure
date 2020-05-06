@@ -204,6 +204,7 @@
       :id (.id java-object)
       :created (.created java-object)
       :errors (into [] (.errors java-object))
+      :type (.type java-object)
       :transfer (#'transfer/java-to-clojure (.transfer java-object))
     }))
 

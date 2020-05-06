@@ -261,6 +261,7 @@
       :id (.id java-object)
       :created (.created java-object)
       :errors (into [] (.errors java-object))
+      :type (.type java-object)
       :boleto (#'boleto/java-to-clojure (.boleto java-object))
     }))
 
