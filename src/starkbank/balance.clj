@@ -9,6 +9,7 @@
     - `:amount` [integer, default nil]: current balance amount of the workspace in cents. ex: 200 (= R$ 2.00)
     - `:currency` [string, default nil]: currency of the current workspace. Expect others to be added eventually. ex: \"BRL\"
     - `:updated` [string, default nil]: update datetime for the balance. ex: \"2020-03-26T19:32:35.418698+00:00\""
+  (:refer-clojure :exclude [get set])
   (:import [com.starkbank Balance])
   (:use [starkbank.user]))
 

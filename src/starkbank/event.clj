@@ -9,6 +9,7 @@
     - `:created` [string]: creation datetime for the notification event. ex: \"2020-03-26T19:32:35.418698+00:00\"
     - `:is-delivered` [bool]: true if the event has been successfully delivered to the user url. ex: false
     - `:subscription` [string]: service that triggered this event. ex: \"transfer\", \"utility-payment\""
+  (:refer-clojure :exclude [get update])
   (:import [com.starkbank Event])
   (:require [starkbank.user]
             [starkbank.transfer]

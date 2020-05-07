@@ -21,6 +21,7 @@
     - `:amount` [int, default nil]: amount automatically calculated from line or bar-code. ex: 23456 (= R$ 234.56)
     - `:fee` [integer, default nil]: fee charged when a boleto payment is created. ex: 200 (= R$ 2.00)
     - `:created` [string, default nil]: creation datetime for the payment. ex: \"2020-03-26T19:32:35.418698+00:00\""
+  (:refer-clojure :exclude [get set])
   (:import [com.starkbank BoletoPayment])
   (:use [starkbank.user]
         [clojure.walk]))
@@ -211,6 +212,7 @@
     - `:errors` [list of strings]: list of errors linked to this BoletoPayment event.
     - `:type` [string]: type of the BoletoPayment event which triggered the log creation. ex: \"processing\" or \"success\"
     - `:created` [string]: creation datetime for the log. ex: \"2020-03-26T19:32:35.418698+00:00\""
+  (:refer-clojure :exclude [get set])
   (:import [com.starkbank BoletoPayment$Log])
   (:require [starkbank.boleto-payment :as payment])
   (:use [starkbank.user]

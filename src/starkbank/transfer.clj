@@ -21,6 +21,7 @@
     - `:transaction-ids` [list of strings, default nil]: ledger transaction ids linked to this transfer (if there are two, second is the chargeback). ex: [\"19827356981273\"]
     - `:created` [string, default nil]: creation datetime for the transfer. ex: \"2020-03-26T19:32:35.418698+00:00\"
     - `:updated` [string, default nil]: latest update datetime for the transfer. ex: \"2020-03-26T19:32:35.418698+00:00\""
+  (:refer-clojure :exclude [get set])
   (:import [com.starkbank Transfer])
   (:use [starkbank.user]
         [clojure.walk]))
@@ -193,6 +194,7 @@
     - `:errors` [list of strings]: list of errors linked to this BoletoPayment event.
     - `:type` [string]: type of the Transfer event which triggered the log creation. ex: \"processing\" or \"success\"
     - `:created` [string]: creation datetime for the log. ex: \"2020-03-26T19:32:35.418698+00:00\""
+  (:refer-clojure :exclude [get set])
   (:import [com.starkbank Transfer$Log])
   (:require [starkbank.transfer :as transfer])
   (:use [starkbank.user]

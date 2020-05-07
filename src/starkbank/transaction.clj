@@ -23,6 +23,7 @@
     - `:source` [string, default nil]: locator of the entity that generated the transaction. ex: \"charge/18276318736\" or \"transfer/19381639871263/chargeback\"
     - `:balance` [integer, default null]: account balance after transaction was processed. ex: 100000000 (= R$ 1,000,000.00)
     - `:created` [string, default nil]: creation datetime for the transaction. ex: \"2020-03-26T19:32:35.418698+00:00\""
+  (:refer-clojure :exclude [get set])
   (:import [com.starkbank Transaction])
   (:use [starkbank.user]
         [clojure.walk]))
