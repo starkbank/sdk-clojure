@@ -1,6 +1,5 @@
 pom.xml
 pom.xml.asc
-*.jar
 *.class
 /lib/
 /classes/
@@ -12,3 +11,4 @@ pom.xml.asc
 .lein-failures
 .nrepl-port
 .cpcache/
+/temp/
