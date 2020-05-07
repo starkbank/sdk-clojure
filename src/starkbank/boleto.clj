@@ -30,6 +30,7 @@
     - `:bar-code` [string, default nil]: generated Boleto bar-code for payment. ex: \"34195819600000000621090063571277307144464000\"
     - `:status` [string, default nil]: current Boleto status. ex: \"registered\" or \"paid\"
     - `:created` [string, default nil]: creation datetime for the Boleto. ex: \"2020-03-26T19:32:35.418698+00:00\""
+  (:refer-clojure :exclude [get set])
   (:import [com.starkbank Boleto])
   (:use [starkbank.user]
         [clojure.walk]))
@@ -250,6 +251,7 @@
     - `:errors` [list of strings]: list of errors linked to this Boleto event
     - `:type` [string]: type of the Boleto event which triggered the log creation. ex: \"registered\" or \"paid\"
     - `:created` [string]: creation datetime for the log. ex: \"2020-03-26T19:32:35.418698+00:00\""
+  (:refer-clojure :exclude [get set])
   (:import [com.starkbank Boleto$Log])
   (:require [starkbank.boleto :as boleto])
   (:use [starkbank.user]

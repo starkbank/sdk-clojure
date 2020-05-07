@@ -9,6 +9,7 @@
 
   ## Attributes:
     - `:id` [string, default nil]: unique id returned when the webhook is created. ex: \"5656565656565656\""
+  (:refer-clojure :exclude [get set])
   (:import [com.starkbank Webhook])
   (:use [starkbank.user]
         [clojure.walk]))

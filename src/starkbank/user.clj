@@ -1,5 +1,6 @@
 (ns starkbank.user
   "Used to generate new API-compatible key pairs."
+  (:refer-clojure :exclude [set])
   (:import [com.starkbank Project]))
 
 (defn project
