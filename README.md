@@ -71,6 +71,9 @@ You can use one of following methods:
 2.2. Use our SDK:
 
 ```clojure
+(ns my-lib.core
+  (:use starkbank.core))
+
 (def key-pair (starkbank.key/create))
 (def private-pem (:private-pem key-pair))
 (def public-pem (:public-pem key-pair))
@@ -101,6 +104,9 @@ You need a project for direct API integrations. To create one in Sandbox:
 3.5. Use the Project ID and private key to create the object below:
 
 ```clojure
+(ns my-lib.core
+  (:use starkbank.core))
+
 ;Get your private key from an environment variable or an encrypted database.
 ;This is only an example of a private key content. You should use your own key.
 (def private-key-content "
@@ -145,20 +151,25 @@ There are two kinds of users that can access our API: **Project** and **Member**
 
 There are two ways to inform the user to the SDK:
  
-4.1 Passing the user as argument in all functions using the `user` keyword:
+4.1 Passing the user as argument in all functions as the last argument:
 
 ```clojure
-(def balance (starkbank.balance/get user))
+(ns my-lib.core
+  (:use starkbank.core))
+
+(def balance (starkbank.balance/get project))
 ```
 
 4.2 Set it as a default user in the SDK:
 
 ```clojure
+(ns my-lib.core
+  (:use starkbank.core))
+
 (def project {
     :environment "sandbox"
     :id "5671398416568321"
-    :private-key private-key-content
-  })
+    :private-key private-key-content})
 (starkbank.user/set project)
 
 (def balance (starkbank.balance/get))
@@ -166,6 +177,8 @@ There are two ways to inform the user to the SDK:
 
 Just select the way of passing the project user that is more convenient to you.
 On all following examples we will assume a default user has been set in the configs.
+We will also assume you are using `(:use starkbank.core)` on your code ns calls to
+expose the starkbank SDK namespaces.
 
 ## Testing in Sandbox
 
