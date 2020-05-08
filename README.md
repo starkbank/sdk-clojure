@@ -32,7 +32,7 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 
 1.1 Manually download the desired SDK version JARs found in our
 [GitHub page](https://github.com/starkbank/sdk-clojure/releases/latest)
-and add it to your `project.clj` as `:resource-paths ["resources/starkbank-0.1.2.jar", "resources/starkbank-java-0.2.3.jar"]`.
+and add it to your `project.clj` as `:resource-paths ["resources/starkbank-0.1.2.jar"]`.
 
 1.2 Using Leiningen/Boot:
 ```sh
