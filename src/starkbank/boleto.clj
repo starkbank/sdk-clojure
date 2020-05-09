@@ -82,7 +82,16 @@
 
 (defn- java-to-clojure
   ([java-object]
-    (defn- java-hashmap-to-map [x] (into {} x))
+    (defn- java-description-to-map [description] 
+      (if (nil? (.amount description))
+        {:text (.text description)}
+        {
+          :amount (.amount description)
+          :text (.text description)}))
+    (defn- java-discount-to-map [discount] {
+      :percentage (.percentage discount)
+      :date (.date discount)})
+
     {
       :id (.id java-object)
       :amount (.amount java-object)
@@ -99,8 +108,8 @@
       :interest (.interest java-object)
       :overdue-limit (.overdueLimit java-object)
       :tags (into [] (.tags java-object))
-      :descriptions (into [] (keywordize-keys (map java-hashmap-to-map (.descriptions java-object))))
-      :discounts (into [] (keywordize-keys (map java-hashmap-to-map (.discounts java-object))))
+      :descriptions (into [] (keywordize-keys (map java-description-to-map (.descriptions java-object))))
+      :discounts (into [] (keywordize-keys (map java-discount-to-map (.discounts java-object))))
       :fee (.fee java-object)
       :line (.line java-object)
       :bar-code (.barCode java-object)
