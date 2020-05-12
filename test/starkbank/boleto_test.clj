@@ -19,6 +19,8 @@
         :street-line-2  "ap 200"
         :tax-id "012.345.678-90"
         :zip-code "00000-000"
+        :receiver-name "My Favorite Receiver"
+        :receiver-tax-id "123.456.789-09"
         :tags ["testing" "clojure"]
         :due "2020-05-30"
         :discounts [
