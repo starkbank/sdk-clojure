@@ -36,6 +36,6 @@
 
 (defn- set-user-agent-override
   ([] 
-    (set! (. com.starkbank.User  -userAgentOverride) (str "Clojure-" (clojure-version) "-SDK-0.1.4"))))
+    (set! (. com.starkbank.User  -userAgentOverride) (str "Clojure-" (clojure-version) "-SDK-0.2.0"))))
 
 (set-user-agent-override)
