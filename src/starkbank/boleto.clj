@@ -19,6 +19,8 @@
     - `:fine` [float, default 0.0]: Boleto fine for overdue payment in %. ex: 2.5
     - `:interest` [float, default 0.0]: Boleto monthly interest for overdue payment in %. ex: 5.2
     - `:overdue-limit` [integer, default 59]: limit in days for payment after due date. ex: 7 (max: 59)
+    - `:receiver-name` [string]: receiver (Sacador Avalista) full name. ex: \"Anthony Edward Stark\"
+    - `:receiver-tax-id` [string]: receiver (Sacador Avalista) tax ID (CPF or CNPJ) with or without formatting. ex: \"01234567890\" or \"20.018.183/0001-80\"
     - `:descriptions` [list of maps, default nil]: list of maps with :text (string) and :amount (int, optional) pairs
     - `:discounts` [list of maps, default nil]: list of maps with :percentage (float) and :date (string) pairs
     - `:tags` [list of strings]: list of strings for tagging
@@ -51,6 +53,8 @@
       fine "fine"
       interest "interest"
       overdue-limit "overdue-limit"
+      receiver-name "receiver-name"
+      receiver-tax-id "receiver-tax-id"
       tags "tags"
       descriptions "descriptions"
       discounts "discounts"
@@ -74,6 +78,8 @@
           "fine" (if (nil? fine) nil (double fine))
           "interest" (if (nil? interest) nil (double interest))
           "overdueLimit" (if (nil? overdue-limit) nil (Integer. overdue-limit))
+          "receiverName" receiver-name
+          "receiverTaxId" receiver-tax-id
           "tags" (if (nil? tags) nil (into-array String tags))
           "descriptions" (if (nil? descriptions) nil (java.util.ArrayList. (map apply-java-hashmap descriptions)))
           "discounts" (if (nil? discounts) nil (java.util.ArrayList. (map apply-java-hashmap discounts)))
@@ -107,6 +113,8 @@
       :fine (.fine java-object)
       :interest (.interest java-object)
       :overdue-limit (.overdueLimit java-object)
+      :receiver-name (.receiverName java-object)
+      :receiver-tax-id (.receiverTaxId java-object)
       :tags (into [] (.tags java-object))
       :descriptions (into [] (keywordize-keys (map java-description-to-map (.descriptions java-object))))
       :discounts (into [] (keywordize-keys (map java-discount-to-map (.discounts java-object))))
