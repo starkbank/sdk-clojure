@@ -13,6 +13,27 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 
 
 ## [Unreleased]
-### Added
 
+## [0.2.0] - 2020-05-12
+### Added
+- "receiver-name" & "receiver-tax-id" properties to Boleto entities
+
+## [0.1.4] - 2020-05-09
+### Changed
+- SDK Java repo to com.starkbank/sdk
+
+## [0.1.3] - 2020-05-07
+### Fixed
+- boleto amount type
+
+## [0.1.2] - 2020-05-07
+### Changed
+- Local Java SDK JAR to remote (Maven Central)
+
+## [0.1.1] - 2020-05-07
+### Fixed
+- Warnings
+
+## [0.1.0] - 2020-05-07
+### Added
 - Full Stark Bank API v2 compatibility
