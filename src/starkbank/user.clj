@@ -32,4 +32,9 @@
   ([params]
     (try
       (get-java-project params)
-      (catch Exception e (stringify-keys params)))))
+      (catch Exception e (stringify-keys params))))
+   
+  ([params, callback]
+    (try
+      (get-java-project params)
+      (catch Exception e (callback params)))))

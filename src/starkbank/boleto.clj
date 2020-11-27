@@ -163,6 +163,19 @@
         }
       ))))
 
+(defn- clojure-options-to-java
+  [clojure-map]
+  (let [{
+    layout "layout"
+    hidden-fields "hidden-fields"
+  } (stringify-keys clojure-map)]
+  (java.util.HashMap.
+    {
+      "layout" layout
+      "hiddenFields" (if (nil? hidden-fields) nil (into-array String hidden-fields))
+    }
+  )))
+
 (defn create
   "Send a list of Boleto maps for creation in the Stark Bank API
 
@@ -259,6 +272,7 @@
 
   ## Options:
     - `:layout` [string]: Layout specification. Available options are \"default\" and \"booklet\"
+    - `:hidden-fields` [list of strings]: List of string fields to be hidden in the Boleto pdf. ex: [\"customerAddress\"]
     - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ## Return:
@@ -271,13 +285,13 @@
     (clojure.java.io/input-stream
       (Boleto/pdf
         id
-        (#'starkbank.user/try-java-project user-or-options))))
+        (#'starkbank.user/try-java-project user-or-options clojure-options-to-java ))))
 
   ([id, options, user]
     (clojure.java.io/input-stream
       (Boleto/pdf
         id
-        options
+        (clojure-options-to-java options)
         (#'starkbank.user/get-java-project user)))))
 
 
