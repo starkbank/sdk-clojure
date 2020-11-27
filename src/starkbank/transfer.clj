@@ -75,6 +75,7 @@
         limit "limit"
         after "after"
         before "before"
+        tax-id "tax-id"
         transaction-ids "transaction-ids"
         status "status"
         sort "sort"
@@ -85,6 +86,7 @@
           "limit" (if (nil? limit) nil (Integer. limit))
           "after" after
           "before" before
+          "taxId" tax-id
           "transactionIds" (if (nil? transaction-ids) nil (into-array String transaction-ids))
           "status" status
           "sort" sort
@@ -124,6 +126,7 @@
     - `:status` [string, default nil]: filter for status of retrieved maps. ex: \"processing\" or \"success\"
     - `:sort` [string, default \"-created\"]: sort order considered in response. Valid options are \"created\", \"-created\", \"updated\" or \"-updated\".
     - `:tags` [list of strings, default nil]: tags to filter retrieved maps. ex: [\"tony\", \"stark\"]
+    - `:tax-id` [string, default nil]: filter for transfers sent to the specified tax ID. ex: \"012.345.678-90\"
     - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ## Return:
