@@ -153,7 +153,7 @@
     - `boletos` [list of Boleto maps]: list of Boleto maps to be created in the API
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ## Return:
     - list of Boleto maps with updated attributes"
@@ -177,7 +177,7 @@
     - `:status` [string, default nil]: filter for status of retrieved maps. ex: \"paid\" or \"registered\"
     - `:tags` [list of strings, default nil]: tags to filter retrieved maps. ex: [\"tony\", \"stark\"]
     - `:ids` [list of strings, default nil]: list of ids to filter retrieved maps. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ## Return:
     - stream of Boleto maps with updated attributes"
@@ -199,7 +199,7 @@
     - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ## Return:
     - Boleto map with updated attributes"
@@ -220,7 +220,7 @@
     - `id` [string]: Boleto unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ##  Return:
     - deleted Boleto map with updated attributes"
@@ -241,7 +241,8 @@
     - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:layout` [string]: Layout specification. Available options are \"default\" and \"booklet\"
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ## Return:
     - Boleto pdf file content"
@@ -249,10 +250,18 @@
     (clojure.java.io/input-stream
       (Boleto/pdf id)))
 
-  ([id, user]
+  ([id, user-or-options]
+    (def param (if (map? user-or-options) user-or-options (#'starkbank.user/get-java-project user-or-options)))
     (clojure.java.io/input-stream
       (Boleto/pdf
         id
+        param)))
+
+  ([id, layout, user]
+    (clojure.java.io/input-stream
+      (Boleto/pdf
+        id
+        layout
         (#'starkbank.user/get-java-project user)))))
 
 
@@ -310,7 +319,7 @@
     - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ## Return:
     - Log map with updated attributes"
@@ -333,7 +342,7 @@
     - `:before` [string, default nil]: date filter for maps created only before specified date. ex: \"2020-3-10\"
     - `:types` [list of strings, default nil]: filter for log event types. ex: \"paid\" or \"registered\"
     - `:boleto-ids` [list of strings, default nil]: list of Boleto ids to filter logs. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ## Return:
     - stream of Log maps with updated attributes"

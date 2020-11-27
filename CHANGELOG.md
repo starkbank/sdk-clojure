@@ -14,7 +14,7 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 
 ## [Unreleased]
 ### Change
-- Test user credentials to environment variable instead of hard-code
+- starkbank.user/set to starkbank.settings/set-default-user
 
 ## [0.2.0] - 2020-05-12
 ### Added

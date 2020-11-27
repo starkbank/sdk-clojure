@@ -170,7 +170,7 @@ There are two ways to inform the user to the SDK:
     :environment "sandbox"
     :id "5671398416568321"
     :private-key private-key-content})
-(starkbank.user/set project)
+(starkbank.settings/set-default-user project)
 
 (def balance (starkbank.balance/get))
 ```

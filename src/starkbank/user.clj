@@ -1,5 +1,5 @@
 (ns starkbank.user
-  "Used to generate new API-compatible key pairs."
+  "Used to define API user."
   (:refer-clojure :exclude [set])
   (:import [com.starkbank Project]))
 
@@ -26,16 +26,3 @@
         private-key :private-key
       } project]
       (Project. environment id private-key))))
-
-(defn set
-  "sets a default user (project) to be automatically used in all requests"
-  ([user] 
-    (def java-project (get-java-project user))
-    (set! (. com.starkbank.User  -defaultUser) java-project)
-    ))
-
-(defn- set-user-agent-override
-  ([] 
-    (set! (. com.starkbank.User  -userAgentOverride) (str "Clojure-" (clojure-version) "-SDK-0.2.0"))))
-
-(set-user-agent-override)
