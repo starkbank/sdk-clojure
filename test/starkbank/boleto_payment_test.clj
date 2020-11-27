@@ -18,8 +18,10 @@
         :tags ["testing" "clojure"]
       }]))
     (payment/get (:id (first payments)))
-    (io/copy (payment/pdf (:id (first payments))) (io/file "temp/boleto-payment.pdf"))
-    (payment/delete (:id (first payments)))))
+    (def file-name "temp/boleto-payment.pdf")
+    (io/make-parents file-name)
+    (io/copy (payment/pdf (:id (first payments))) (io/file file-name)))
+    (payment/delete (:id (first payments))))
 
 (deftest query-boleto-payments
   (testing "query boleto payments"

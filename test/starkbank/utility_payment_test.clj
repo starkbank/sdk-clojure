@@ -17,7 +17,9 @@
         :tags ["testing" "clojure"]
       }]))
     (payment/get (:id (first payments)))
-    (io/copy (payment/pdf (:id (first payments))) (io/file "temp/utility-payment.pdf"))
+    (def file-name "temp/utility-payment.pdf")
+    (io/make-parents file-name)
+    (io/copy (payment/pdf (:id (first payments))) (io/file file-name))
     (payment/delete (:id (first payments)))))
 
 (deftest query-utility-payments
