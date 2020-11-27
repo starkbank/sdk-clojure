@@ -22,7 +22,7 @@
         :receiver-name "My Favorite Receiver"
         :receiver-tax-id "123.456.789-09"
         :tags ["testing" "clojure"]
-        :due "2020-05-30"
+        :due "2022-05-30"
         :discounts [
           {
             :percentage 5

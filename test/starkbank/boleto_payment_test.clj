@@ -13,8 +13,8 @@
         :amount 100
         :tax-id "012.345.678-90"
         :description "testing clojure"
-        :line (str "34191.09107 05447.947309 71444.640008 8 846600" (format "%08d" (rand-int 100000000)))
-        :scheduled "2020-05-30"
+        :line (str "34191.09107 05447.947309 71444.640008 8 900000" (format "%08d" (rand-int 100000000)))
+        :scheduled "2022-05-30"
         :tags ["testing" "clojure"]
       }]))
     (payment/get (:id (first payments)))

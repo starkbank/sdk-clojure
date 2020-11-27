@@ -13,7 +13,7 @@
         :amount 100
         :description "testing clojure"
         :bar-code (str "8364000" (format "%08d" (rand-int 100000000)) "01380076105302611108067159411")
-        :scheduled "2020-05-30"
+        :scheduled "2022-05-30"
         :tags ["testing" "clojure"]
       }]))
     (payment/get (:id (first payments)))
