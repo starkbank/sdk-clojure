@@ -1,7 +1,8 @@
 (ns starkbank.user
   "Used to define API user."
   (:refer-clojure :exclude [set])
-  (:import [com.starkbank Project]))
+  (:import [com.starkbank Project])
+  (:use [clojure.walk]))
 
 (defn project
   "The Project map is the main authentication entity for the SDK.
@@ -26,3 +27,9 @@
         private-key :private-key
       } project]
       (Project. environment id private-key))))
+
+(defn- try-java-project
+  ([params]
+    (try
+      (get-java-project params)
+      (catch Exception e (stringify-keys params)))))

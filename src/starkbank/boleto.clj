@@ -266,17 +266,16 @@
       (Boleto/pdf id)))
 
   ([id, user-or-options]
-    (def param (if (map? user-or-options) user-or-options (#'starkbank.user/get-java-project user-or-options)))
     (clojure.java.io/input-stream
       (Boleto/pdf
         id
-        param)))
+        (#'starkbank.user/try-java-project user-or-options))))
 
-  ([id, layout, user]
+  ([id, options, user]
     (clojure.java.io/input-stream
       (Boleto/pdf
         id
-        layout
+        options
         (#'starkbank.user/get-java-project user)))))
 
 

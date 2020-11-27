@@ -46,7 +46,7 @@
     (boleto/get (:id (first boletos)))
     (def file-name "temp/boleto.pdf")
     (io/make-parents file-name)
-    (io/copy (boleto/pdf (:id (first boletos))) (io/file file-name))
+    (io/copy (boleto/pdf (:id (first boletos)) {:layout "booklet"}) (io/file file-name))
     (boleto/delete (:id (first boletos)))))
 
 (deftest query-boletos
