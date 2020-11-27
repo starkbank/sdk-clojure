@@ -80,6 +80,7 @@
         after "after"
         before "before"
         tax-id "tax-id"
+        ids "ids"
         transaction-ids "transaction-ids"
         status "status"
         sort "sort"
@@ -91,6 +92,7 @@
           "after" after
           "before" before
           "taxId" tax-id
+          "ids" (if (nil? ids) nil (into-array String ids))
           "transactionIds" (if (nil? transaction-ids) nil (into-array String transaction-ids))
           "status" status
           "sort" sort
@@ -126,11 +128,12 @@
     - `:limit` [integer, default nil]: maximum number of maps to be retrieved. Unlimited if nil. ex: 35
     - `:after` [string, default nil]: date filter for maps created or updated only after specified date. ex: ~D[2020-03-25]
     - `:before` [string, default nil]: date filter for maps created or updated only before specified date. ex: ~D[2020-03-25]
+    - `:ids` [list of strings, default nil]: list of ids to filter retrieved objects. ex: [\"5656565656565656\", \"4545454545454545\"]
     - `:transaction-ids` [list of strings, default nil]: list of transaction IDs linked to the desired transfers. ex: [\"5656565656565656\", \"4545454545454545\"]
+    - `:tax-id` [string, default nil]: filter for transfers sent to the specified tax ID. ex: \"012.345.678-90\"
     - `:status` [string, default nil]: filter for status of retrieved maps. ex: \"processing\" or \"success\"
     - `:sort` [string, default \"-created\"]: sort order considered in response. Valid options are \"created\", \"-created\", \"updated\" or \"-updated\".
     - `:tags` [list of strings, default nil]: tags to filter retrieved maps. ex: [\"tony\", \"stark\"]
-    - `:tax-id` [string, default nil]: filter for transfers sent to the specified tax ID. ex: \"012.345.678-90\"
     - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ## Return:
