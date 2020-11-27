@@ -1,7 +1,9 @@
 (ns starkbank.core
   "SDK to facilitate Clojure integrations with the StarkBank API."
   (:refer-clojure :exclude [get set update])
-  (:require [starkbank.key]
+  (:require [starkbank.user]
+            [starkbank.settings]
+            [starkbank.key]
             [starkbank.balance]
             [starkbank.transaction]
             [starkbank.boleto]
