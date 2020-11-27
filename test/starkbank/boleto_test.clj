@@ -26,11 +26,11 @@
         :discounts [
           {
             :percentage 5
-            :date "2020-05-25"
+            :date "2022-05-25"
           }
           {
             :percentage 3
-            :date "2020-05-26"
+            :date "2022-05-26"
           }
         ]
         :descriptions [

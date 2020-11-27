@@ -37,6 +37,21 @@
   (:use [starkbank.user]
         [clojure.walk]))
 
+(defn- clojure-descriptions-to-java
+  ([clojure-map]
+    (let [{
+      amount "amount"
+      text "text"
+    }
+    (stringify-keys clojure-map)]
+      
+      (java.util.HashMap.
+        {
+          "amount" (if (nil? amount) nil (Integer. amount))
+          "text" text
+        }
+      ))))
+
 (defn- clojure-to-java
   ([clojure-map]
     (let [{
@@ -81,7 +96,7 @@
           "receiverName" receiver-name
           "receiverTaxId" receiver-tax-id
           "tags" (if (nil? tags) nil (into-array String tags))
-          "descriptions" (if (nil? descriptions) nil (java.util.ArrayList. (map apply-java-hashmap descriptions)))
+          "descriptions" (if (nil? descriptions) nil (java.util.ArrayList. (map clojure-descriptions-to-java descriptions)))
           "discounts" (if (nil? discounts) nil (java.util.ArrayList. (map apply-java-hashmap discounts)))
         }
       )))))
