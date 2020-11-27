@@ -12,6 +12,7 @@
     - `:account-number` [string]: Receiver Bank Account number. Use '-' before the verifier digit. ex: \"876543-2\"
 
   ## Parameters (optional):
+    - `:scheduled` [string]: date or datetime when the transfer will be processed. May be pushed to next business day if necessary. ex: \"2021-03-11T08:00:00.000000+00:00\"
     - `:tags` [list of strings]: list of strings for reference when searching for transfers. ex: [\"employees\", \"monthly\"]
 
   Attributes (return-only):
@@ -35,6 +36,7 @@
       bank-code "bank-code"
       branch-code "branch-code"
       account-number "account-number"
+      scheduled "scheduled"
       tags "tags"
     }
     (stringify-keys clojure-map)]
@@ -47,6 +49,7 @@
           "bankCode" bank-code
           "branchCode" branch-code
           "accountNumber" account-number
+          "scheduled" scheduled
           "tags" (if (nil? tags) nil (into-array String tags))
         }
       )))))
@@ -61,6 +64,7 @@
       :bank-code (.bankCode java-object)
       :branch-code (.branchCode java-object)
       :account-number (.accountNumber java-object)
+      :scheduled (.scheduled java-object)
       :tags (into [] (.tags java-object))
       :fee (.fee java-object)
       :status (.status java-object)
@@ -162,6 +166,27 @@
       (Transfer/get
         id
         (#'starkbank.user/get-java-project user)))))
+
+(defn delete
+  "Cancel a single scheduled Transfer entity previously created in the Stark Bank API by passing its id
+
+  ## Parameters (required):
+    - `id` [string]: entity unique id. ex: \"5656565656565656\"
+
+  ## Options:
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
+
+  ## Return:
+    - canceled Transfer entity with updated attributes"
+  ([id]
+   (java-to-clojure
+    (Transfer/delete id)))
+
+  ([id, user]
+   (java-to-clojure
+    (Transfer/delete
+     id
+     (#'starkbank.user/get-java-project user)))))
 
 (defn pdf
   "Receive a single Transfer pdf receipt file generated in the Stark Bank API by passing its id.

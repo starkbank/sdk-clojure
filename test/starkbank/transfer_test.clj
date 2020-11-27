@@ -5,8 +5,8 @@
             [starkbank.user-test :as user]
             [clojure.java.io :as io]))
 
-(deftest create-get-pdf-transfers
-  (testing "create, get, pdf and delete transfers"
+(deftest create-get-delete-transfers
+  (testing "create, get and delete transfers"
     (user/set-test-user)
     (def transfers (transfer/create
       [{
@@ -17,10 +17,12 @@
         :branch-code "0001"
         :account-number "00000-0"
         :tags ["testing" "clojure"]
+        :scheduled "2020-12-01"
       }]))
-    (transfer/get (:id (first transfers)))))
+    (transfer/get (:id (first transfers)))
+    (transfer/delete (:id (first transfers)))))
 
-(deftest query-transfers
+(deftest query-pdf-transfers
   (testing "query transfers"
     (user/set-test-user)
     (def transfers (take 200 (transfer/query {:limit 3 :status "success"})))
