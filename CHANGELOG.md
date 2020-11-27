@@ -14,25 +14,23 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 
 ## [Unreleased]
 ### Added
-- Invoice resource to load your account with dynamic QR Codes
-- DictKey resource to get DICT (PIX) key parameters
-- Deposit resource to receive transfers passively
-- PIX support in Transfer resource
-- BrcodePayment and BrcodePreview resources to pay static and dynamic PIX QR Codes
-- BoletoHolmes to investigate boleto status according to CIP
-- ids parameter to Transaction.query
-- ids parameter to Transfer.query
-- hiddenFields parameter to Boleto.pdf
-- ourNumber attribute to Boleto
-- PaymentRequest resource to pass payments through manual approval flow
-- Boleto.Discount & Boleto.Description parsing on Boleto API responses
-- Travis CI configuration
-- Transfer.scheduled parameter to allow Transfer scheduling
-- StarkBank.Transfer.delete to cancel scheduled Transfers
-- Transaction query by tags
-- Transfer query taxId parameter
+- invoice resource to load your account with dynamic QR Codes
+- dict-key resource to get DICT (PIX) key parameters
+- deposit resource to receive transfers passively
+- brcode-payment and BrcodePreview resources to pay static and dynamic PIX QR Codes
+- PIX support in transfer resource
+- boleto-holmes to investigate boleto status according to CIP
+- our-number attribute to Boleto
+- payment-request resource to pass payments through manual approval flow
+- transfer.scheduled parameter to allow transfer scheduling
+- transfer/delete to cancel scheduled transfers
+- transaction query by ids
+- transaction query by tags
+- transfer query by ids
+- transfer query by tax-id
+- boleto/pdf layout and hidden-fields options
 - Global error language setting
-- Boleto PDF layout option
+- Travis CI configuration
 ### Change
 - starkbank.user/set to starkbank.settings/set-default-user
 
