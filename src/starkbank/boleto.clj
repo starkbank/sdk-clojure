@@ -27,6 +27,7 @@
 
   ## Attributes (return-only):
     - `:id` [string, default nil]: unique id returned when the Boleto is created. ex: \"5656565656565656\"
+    - `:our-number` [string, default nil]: Reference number registered at the settlement bank. ex: \"10131474\"
     - `:fee` [integer, default nil]: fee charged when the Boleto is paid. ex: 200 (= R$ 2.00)
     - `:line` [string, default nil]: generated Boleto line for payment. ex: \"34191.09008 63571.277308 71444.640008 5 81960000000062\"
     - `:bar-code` [string, default nil]: generated Boleto bar-code for payment. ex: \"34195819600000000621090063571277307144464000\"
@@ -134,6 +135,7 @@
       :descriptions (into [] (keywordize-keys (map java-description-to-map (.descriptions java-object))))
       :discounts (into [] (keywordize-keys (map java-discount-to-map (.discounts java-object))))
       :fee (.fee java-object)
+      :our-number (.ourNumber java-object)
       :line (.line java-object)
       :bar-code (.barCode java-object)
       :status (.status java-object)
