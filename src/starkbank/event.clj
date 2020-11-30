@@ -20,7 +20,6 @@
 
 (defn- java-to-clojure
   ([java-object]
-    (defn- java-hashmap-to-map [x] (into {} x))
     {
       :id (.id java-object)
       :created (.created java-object)

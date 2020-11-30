@@ -50,7 +50,6 @@
 
 (defn- java-to-clojure
   ([java-object]
-    (defn- java-hashmap-to-map [x] (into {} x))
     {
       :id (.id java-object)
       :amount (.amount java-object)
