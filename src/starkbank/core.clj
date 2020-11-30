@@ -6,6 +6,7 @@
             [starkbank.key]
             [starkbank.balance]
             [starkbank.transaction]
+            [starkbank.invoice]
             [starkbank.boleto]
             [starkbank.transfer]
             [starkbank.boleto-payment]
