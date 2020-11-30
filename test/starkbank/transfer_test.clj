@@ -3,7 +3,8 @@
   (:require [starkbank.transfer :as transfer]
             [starkbank.transfer.log :as log]
             [starkbank.user-test :as user]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [starkbank.utils.date :as date]))
 
 (deftest create-get-delete-transfers
   (testing "create, get and delete transfers"
@@ -13,11 +14,11 @@
         :amount 200
         :name "Dumlocks von z'Blurbows"
         :tax-id "012.345.678-90"
-        :bank-code "341"
+        :bank-code "60701190"
         :branch-code "0001"
         :account-number "00000-0"
         :tags ["testing" "clojure"]
-        :scheduled "2020-12-01"
+        :scheduled (date/future-datetime)
       }]))
     (transfer/get (:id (first transfers)))
     (transfer/delete (:id (first transfers)))))

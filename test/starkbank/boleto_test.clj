@@ -3,7 +3,8 @@
   (:require [starkbank.boleto :as boleto]
             [starkbank.boleto.log :as log]
             [starkbank.user-test :as user]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [starkbank.utils.date :as date]))
 
 (deftest create-get-pdf-delete-boletos
   (testing "create, get, pdf and delete boletos"
@@ -22,15 +23,15 @@
         :receiver-name "My Favorite Receiver"
         :receiver-tax-id "123.456.789-09"
         :tags ["testing" "clojure"]
-        :due "2022-05-30"
+        :due (date/future-date 5)
         :discounts [
           {
             :percentage 5
-            :date "2022-05-25"
+            :date (date/future-date 2)
           }
           {
             :percentage 3
-            :date "2022-05-26"
+            :date (date/future-date 4)
           }
         ]
         :descriptions [
