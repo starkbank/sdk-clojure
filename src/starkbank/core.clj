@@ -8,6 +8,7 @@
             [starkbank.transaction]
             [starkbank.invoice]
             [starkbank.boleto]
+            [starkbank.boleto-holmes]
             [starkbank.transfer]
             [starkbank.boleto-payment]
             [starkbank.utility-payment]
