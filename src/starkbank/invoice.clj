@@ -19,7 +19,7 @@
 
   ## Attributes (return-only):
     - `:fee` [integer, default null]: fee charged by this Invoice. ex: 65 (= R$ 0.65)
-    - `:pdf` [string, default null]: public Invoice PDF URL. ex: 'https://invoice.starkbank.com/pdf/d454fa4e524441c1b0c1a729457ed9d8'
+    - `:pdf` [string, default null]: public Invoice PDF URL. ex: \"https://invoice.starkbank.com/pdf/d454fa4e524441c1b0c1a729457ed9d8\"
     - `:nominal-amount` [integer, default nil]: Invoice emission value in cents (will change if invoice is updated, but not if it's paid). ex: 400000
     - `:fine-amount` [integer, default nil]: Invoice fine value calculated over nominal-amount. ex: 20000
     - `:interest-amount` [integer, default nil]: Invoice interest value calculated over nominal-amount. ex: 10000
@@ -265,7 +265,6 @@
 
 (defn update
   "Update an Invoice by passing id.
-    If is-delivered is true, the event will no longer be returned on queries with is-delivered=false.
 
   ## Parameters (required):
     - `:id` [list of strings]: Invoice unique ids. ex: \"5656565656565656\"

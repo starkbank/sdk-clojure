@@ -7,6 +7,7 @@
             [starkbank.balance]
             [starkbank.transaction]
             [starkbank.invoice]
+            [starkbank.deposit]
             [starkbank.boleto]
             [starkbank.boleto-holmes]
             [starkbank.transfer]
