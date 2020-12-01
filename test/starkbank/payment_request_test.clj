@@ -24,13 +24,13 @@
           :amount 100
           :tax-id "012.345.678-90"
           :description "testing clojure"
-          :line (str "34191.09107 05447.947309 71444.640008 8 900000" (format "%08d" (rand-int 100000000)))
+          :line (str "34191.09107 05447.947309 71444.640008 8 900000" (format "%08d" (rand-int 20000000)))
           :tags ["testing" "clojure"]
         }
       "utility-payment" {
           :amount 100
           :description "testing clojure"
-          :bar-code (str "8364000" (format "%08d" (rand-int 100000000)) "01380076105302611108067159411")
+          :bar-code (str "8364000" (format "%08d" (rand-int 20000000)) "01380076105302611108067159411")
           :tags ["testing" "clojure"]
         }))
 

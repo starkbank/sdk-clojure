@@ -31,5 +31,4 @@
     (def holmes-log (log/get (:id (first holmes-logs))))
     (is (map? (:holmes holmes-log)))
     (is (not (nil? (:id holmes-log))))
-    (is (> (count (:result (:holmes holmes-log))) 0))
     (is (string? (:created holmes-log)))))

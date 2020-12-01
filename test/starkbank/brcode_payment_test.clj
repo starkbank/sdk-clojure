@@ -8,7 +8,7 @@
               [clojure.java.io :as io]
               [starkbank.utils.date :as date]))
 
-(deftest create-get-pdf-brcode-payments
+(deftest create-get-brcode-payments
 	(testing "create, get, pdf and update brcode payments"
 		(user/set-test-user)
 		(def invoices (invoice/create
@@ -53,23 +53,23 @@
 				:scheduled (date/future-datetime 3)
 				:tags ["Stark" "Suit"]
 			}]))
-		(payment/get (:id (first payments)))
+		(payment/get (:id (first payments)))))
+
+(deftest query-pdf-cancel-brcode-payments
+	(testing "query brcode payments"
+		(user/set-test-user)
+		(def payments (take 200 (payment/query {:limit 2, :status "created"})))
+		(is (= 2 (count payments)))
 		(def file-name "temp/brcode-payment.pdf")
 		(io/make-parents file-name)
 		(io/copy (payment/pdf (:id (first payments))) (io/file file-name)))
 		(payment/update (:id (first payments)) {:status "canceled"}))
 
-(deftest query-brcode-payments
-	(testing "query brcode payments"
-		(user/set-test-user)
-		(def payments (take 200 (payment/query {:limit 10})))
-		(is (= 10 (count payments)))))
-
 (deftest query-get-brcode-payment-logs
 	(testing "query and get brcode payment logs"
 		(user/set-test-user)
-		(def payment-logs (log/query {:limit 10}))
-		(is (= 10 (count payment-logs)))
+		(def payment-logs (log/query {:limit 5}))
+		(is (= 5 (count payment-logs)))
 		(def payment-log (log/get (:id (first payment-logs))))
 		(is (not (nil? (:id payment-log))))
 		(is (not (nil? (:errors payment-log))))

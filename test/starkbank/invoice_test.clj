@@ -48,9 +48,9 @@
 (deftest query-and-cancel-invoices
   (testing "query and cancel invoices"
     (user/set-test-user)
-    (def invoices (take 200 (invoice/query {:limit 3 :status "created"})))
-    (is (= 3 (count invoices)))
-    (invoice/update (:id (first invoices)) {:status "canceled"})))
+    (def invoices (take 200 (invoice/query {:limit 50 :status "created"})))
+    (is (= 50 (count invoices)))
+    (invoice/update (:id (rand-nth invoices)) {:status "canceled"})))
 
 (deftest qrcode
   (testing "qrcode"

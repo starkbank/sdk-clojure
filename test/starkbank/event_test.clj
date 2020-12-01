@@ -7,11 +7,11 @@
 (deftest query-get-update-delete-events
   (testing "query, get, update and delete events"
     (user/set-test-user)
-    (def events (take 200 (event/query {:limit 3 :is-delivered false})))
-    (is not (:is-delivered (first events)))
-    (event/get (:id (first events)))
-    (event/update (:id (first events)) {:is-delivered true})
-    (event/delete (:id (first events)))))
+    (def event (rand-nth (take 200 (event/query {:limit 100 :is-delivered false}))))
+    (is not (:is-delivered event))
+    (event/get (:id event))
+    (event/update (:id event) {:is-delivered true})
+    (event/delete (:id event))))
 
 (deftest parse-events
   (testing "parse events"
