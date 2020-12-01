@@ -170,7 +170,7 @@ There are two ways to inform the user to the SDK:
     :environment "sandbox"
     :id "5671398416568321"
     :private-key private-key-content})
-(starkbank.user/set project)
+(starkbank.settings/set-default-user project)
 
 (def balance (starkbank.balance/get))
 ```
@@ -208,6 +208,291 @@ To know how much money you have in your workspace, run:
 ```clojure
 (def balance (starkbank.balance/get))
 (println (double (/ (:amount balance) 100)))
+```
+
+### Get dict key
+
+You can get PIX key's parameters by its id.
+
+```clojure
+(def dict-key (starkbank.dict-key/get "tony@starkbank.com"))
+
+(println dict-key)
+```
+
+### Query your DICT keys
+
+To take a look at the PIX keys linked to your workspace, just run the following:
+
+```clojure
+(def dict-keys (starkbank.dict-key/query {:limit 5}))
+
+(doseq [dict-key dict-keys]
+  (printn dict-key))
+```
+
+### Create invoices
+
+You can create dynamic QR Code invoices to charge customers or to receive money from accounts
+you have in other banks.
+
+```clojure
+(def invoices (starkbank.invoice/create
+  [{
+    :amount 400000
+    :due "2020-12-25T19:32:35.418698+00:00"
+    :tax-id "012.345.678-90"
+    :name "Iron Bank S.A.",
+    :expiration 123456789,
+    :fine 2.5,
+    :interest 1.3,
+    :discounts [
+      {
+        :percentage 5
+        :due "2020-12-20T19:32:35.418698+00:00"
+      }
+      {
+        :percentage 3
+        :due "2020-12-22T19:32:35.418698+00:00"
+      }
+    ]
+    :descriptions [
+      {
+        :key "Product X"
+        :value "big"
+      }
+    ]
+    :tags [
+      "War supply",
+      "Invoice #1234"
+    ]
+  }]))
+
+(doseq [invoice invoices]
+  (println invoice))
+```
+
+**Note**: Instead of using Invoice objects, you can also pass each invoice element in dictionary format
+
+### Get an invoice
+
+After its creation, information on an invoice may be retrieved by its id. 
+Its status indicates whether it's been paid.
+
+```clojure
+(def invoice (starkbank.invoice/get "6750458353811456"))
+
+(println invoice)
+```
+
+### Get an invoice PDF
+
+After its creation, an invoice PDF may be retrieved by its id. 
+
+```clojure
+(clojure.java.io/copy
+  (starkbank.invoice/pdf "6750458353811456")
+  (clojure.java.io/file "invoice.pdf"))
+```
+
+### Get an invoice QR Code
+
+After its creation, an Invoice QR Code may be retrieved by its id. 
+
+```clojure
+(clojure.java.io/copy
+  (starkbank.invoice/qrcode "6750458353811456")
+  (clojure.java.io/file "invoice.png"))
+```
+
+Be careful not to accidentally enforce any encoding on the raw png content,
+as it may yield abnormal results in the final file.
+
+### Cancel an invoice
+
+You can also cancel an invoice by its id.
+Note that this is not possible if it has been paid already.
+
+```clojure
+(def invoice (starkbank.invoice/update (:id "6750458353811456") {:status "canceled"}))
+
+(println invoice)
+```
+
+### Update an invoice
+
+You can update an invoice's amount, due date and expiration by its id.
+Note that this is not possible if it has been paid already.
+
+```clojure
+(def invoices (starkbank.invoice/update ((:id "6750458353811456") {:amount 10 :expiration 600 :due "2020-12-20T19:32:35.418698+00:00"})))
+
+(doseq [invoice invoices]
+  (println invoice))
+```
+
+### Query invoices
+
+You can get a list of created invoices given some filters.
+
+```clojure
+
+(def invoices (starkbank.invoice/query {:limit 5 :status "created"}))
+
+(doser [invoice invoices]
+  (println invoice))
+```
+
+### Query invoice logs
+
+Logs are pretty important to understand the life cycle of an invoice.
+
+```clojure
+(def logs (starkbank.invoice.log/query {:limit 5}))
+
+(doseq [log logs]
+  (println log))
+```
+
+### Get an invoice log
+
+You can get a single log by its id.
+
+```clojure
+(def log (starkbank.invoice.log/get (:id "6288576484474880")))
+
+(println log)
+```
+
+### Query deposits
+
+You can get a list of created deposits given some filters.
+
+```clojure
+(def deposits (starkbank.deposit/query {:limit 5}))
+
+(doseq [deposit deposits]
+  (println deposit))
+```
+
+### Query deposit logs
+
+Logs are pretty important to understand the life cycle of a deposit.
+
+```clojure
+(def logs (starkbank.deposit.log/query {:limit 10}))
+
+(doseq [log logs]
+  (println log))
+```
+
+### Get a deposit log
+
+You can get a single log by its id.
+
+```clojure
+(def log (starkbank.deposit.log/get "6532638269505536"))
+
+(println log)
+```
+
+### Pay a BR Code
+
+Paying a BR Code is also simple.
+
+```clojure
+(def payments (starkbank.brcode-payment/create
+  [{
+    :brcode "00020126580014br.gov.bcb.pix0136a629532e-7693-4846-852d-1bbff817b5a8520400005303986540510.005802BR5908T'Challa6009Sao Paulo62090505123456304B14A"
+    :tax-id "20.018.183/0001-80"
+    :description "Tony Stark's Suit"
+    :amount 123456
+    :scheduled "2020-12-20T19:32:35.418698+00:00"
+    :tags ["Stark" "Suit"]
+  }]))
+
+(doseq [payment payments]
+  (println payment))
+```
+
+**Note**: Instead of using BrcodePayment objects, you can also pass each payment element in map format
+
+### Query brcode payments
+
+You can search for brcode payments using filters. 
+
+```clojure
+(def payments (starkbank.brcode-payment/query {:limit 10}))
+
+(doseq [payment payments]
+  (println payment))
+```
+
+### Get brcode payment
+
+To get a single BR Code payment by its id, run:
+
+```clojure
+(def payment (starkbank.brcode-payment/get "6532638269505536"))
+
+(println payment)
+```
+
+### Cancel a BR Code payment
+
+You can cancel a BR Code payment by changing its status to "canceled".
+Note that this is not possible if it has been processed already.
+
+```clojure
+(def payment (starkbank.brcode-payment/update "6532638269505536" {:status "canceled"}))
+
+(println payment)
+```
+
+### Get BR Code payment PDF
+
+After its creation, a boleto payment PDF may be retrieved by its id. 
+
+```clojure
+(clojure.java.io/copy
+  (starkbank.brcode-payment/pdf "6750458353811456")
+  (clojure.java.io/file "payment.pdf"))
+```
+
+### Preview a BR Code payment
+
+You can confirm the information on the BR Code payment before creating it with this preview method:
+
+```clojure
+(def previews (starkbank.brcode-preview/query {:brcodes brcodes}))
+
+(doseq [preview previews]
+  (println preview))
+```
+
+Be careful not to accidentally enforce any encoding on the raw pdf content,
+as it may yield abnormal results in the final file, such as missing images
+and strange characters.
+
+### Query BR Code payment logs
+
+Searches are also possible with BR Code payment logs:
+
+```clojure
+(def logs (starkbank.brcode-payment.log/query {:limit 10}))
+
+(doseq [log logs]
+  (println log))
+```
+
+### Get BR Code payment log
+
+You can also get a BR Code payment log by specifying its id.
+
+```clojure
+(def log (starkbank.brcode-payment.log/get "6532638269505536"))
+
+(println log)
 ```
 
 ### Create boletos
@@ -307,7 +592,7 @@ You can get a single log by its id.
 
 ### Create transfers
 
-You can also create transfers in the SDK (TED/DOC).
+You can also create transfers in the SDK (TED/PIX).
 
 ```clojure
 (def transfers
@@ -315,7 +600,7 @@ You can also create transfers in the SDK (TED/DOC).
     [
       {
         :amount 100
-        :bank-code "01"
+        :bank-code "20018183"; PIX
         :branch-code "0001"
         :account-number "10000-0"
         :tax-id "012.345.678-90"
@@ -324,7 +609,7 @@ You can also create transfers in the SDK (TED/DOC).
       }
       {
         :amount 200
-        :bank-code "341"
+        :bank-code "341"; TED
         :branch-code "1234"
         :account-number "123456-7"
         :tax-id "012.345.678-90"

@@ -3,7 +3,8 @@
   (:require [starkbank.utility-payment :as payment]
             [starkbank.utility-payment.log :as log]
             [starkbank.user-test :as user]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [starkbank.utils.date :as date]))
 
 (deftest create-get-pdf-delete-utility-payments
   (testing "create, get, pdf and delete utility payments"
@@ -13,11 +14,13 @@
         :amount 100
         :description "testing clojure"
         :bar-code (str "8364000" (format "%08d" (rand-int 100000000)) "01380076105302611108067159411")
-        :scheduled "2020-05-30"
+        :scheduled (date/future-date)
         :tags ["testing" "clojure"]
       }]))
     (payment/get (:id (first payments)))
-    (io/copy (payment/pdf (:id (first payments))) (io/file "temp/utility-payment.pdf"))
+    (def file-name "temp/utility-payment.pdf")
+    (io/make-parents file-name)
+    (io/copy (payment/pdf (:id (first payments))) (io/file file-name))
     (payment/delete (:id (first payments)))))
 
 (deftest query-utility-payments

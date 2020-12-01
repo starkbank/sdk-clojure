@@ -3,7 +3,8 @@
   (:require [starkbank.boleto-payment :as payment]
             [starkbank.boleto-payment.log :as log]
             [starkbank.user-test :as user]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [starkbank.utils.date :as date]))
 
 (deftest create-get-pdf-delete-boleto-payments
   (testing "create, get, pdf and delete boleto payments"
@@ -13,13 +14,15 @@
         :amount 100
         :tax-id "012.345.678-90"
         :description "testing clojure"
-        :line (str "34191.09107 05447.947309 71444.640008 8 846600" (format "%08d" (rand-int 100000000)))
-        :scheduled "2020-05-30"
+        :line (str "34191.09107 05447.947309 71444.640008 8 900000" (format "%08d" (rand-int 100000000)))
+        :scheduled (date/future-date)
         :tags ["testing" "clojure"]
       }]))
     (payment/get (:id (first payments)))
-    (io/copy (payment/pdf (:id (first payments))) (io/file "temp/boleto-payment.pdf"))
-    (payment/delete (:id (first payments)))))
+    (def file-name "temp/boleto-payment.pdf")
+    (io/make-parents file-name)
+    (io/copy (payment/pdf (:id (first payments))) (io/file file-name)))
+    (payment/delete (:id (first payments))))
 
 (deftest query-boleto-payments
   (testing "query boleto payments"

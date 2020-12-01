@@ -27,6 +27,7 @@
 
   ## Attributes (return-only):
     - `:id` [string, default nil]: unique id returned when the Boleto is created. ex: \"5656565656565656\"
+    - `:our-number` [string, default nil]: Reference number registered at the settlement bank. ex: \"10131474\"
     - `:fee` [integer, default nil]: fee charged when the Boleto is paid. ex: 200 (= R$ 2.00)
     - `:line` [string, default nil]: generated Boleto line for payment. ex: \"34191.09008 63571.277308 71444.640008 5 81960000000062\"
     - `:bar-code` [string, default nil]: generated Boleto bar-code for payment. ex: \"34195819600000000621090063571277307144464000\"
@@ -36,6 +37,21 @@
   (:import [com.starkbank Boleto])
   (:use [starkbank.user]
         [clojure.walk]))
+
+(defn- clojure-descriptions-to-java
+  ([clojure-map]
+    (let [{
+      amount "amount"
+      text "text"
+    }
+    (stringify-keys clojure-map)]
+      
+      (java.util.HashMap.
+        {
+          "amount" (if (nil? amount) nil (Integer. amount))
+          "text" text
+        }
+      ))))
 
 (defn- clojure-to-java
   ([clojure-map]
@@ -81,7 +97,7 @@
           "receiverName" receiver-name
           "receiverTaxId" receiver-tax-id
           "tags" (if (nil? tags) nil (into-array String tags))
-          "descriptions" (if (nil? descriptions) nil (java.util.ArrayList. (map apply-java-hashmap descriptions)))
+          "descriptions" (if (nil? descriptions) nil (java.util.ArrayList. (map clojure-descriptions-to-java descriptions)))
           "discounts" (if (nil? discounts) nil (java.util.ArrayList. (map apply-java-hashmap discounts)))
         }
       )))))
@@ -119,6 +135,7 @@
       :descriptions (into [] (keywordize-keys (map java-description-to-map (.descriptions java-object))))
       :discounts (into [] (keywordize-keys (map java-discount-to-map (.discounts java-object))))
       :fee (.fee java-object)
+      :our-number (.ourNumber java-object)
       :line (.line java-object)
       :bar-code (.barCode java-object)
       :status (.status java-object)
@@ -146,6 +163,19 @@
         }
       ))))
 
+(defn- clojure-options-to-java
+  [clojure-map]
+  (let [{
+    layout "layout"
+    hidden-fields "hidden-fields"
+  } (stringify-keys clojure-map)]
+  (java.util.HashMap.
+    {
+      "layout" layout
+      "hiddenFields" (if (nil? hidden-fields) nil (into-array String hidden-fields))
+    }
+  )))
+
 (defn create
   "Send a list of Boleto maps for creation in the Stark Bank API
 
@@ -153,7 +183,7 @@
     - `boletos` [list of Boleto maps]: list of Boleto maps to be created in the API
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ## Return:
     - list of Boleto maps with updated attributes"
@@ -177,7 +207,7 @@
     - `:status` [string, default nil]: filter for status of retrieved maps. ex: \"paid\" or \"registered\"
     - `:tags` [list of strings, default nil]: tags to filter retrieved maps. ex: [\"tony\", \"stark\"]
     - `:ids` [list of strings, default nil]: list of ids to filter retrieved maps. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ## Return:
     - stream of Boleto maps with updated attributes"
@@ -199,7 +229,7 @@
     - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ## Return:
     - Boleto map with updated attributes"
@@ -220,7 +250,7 @@
     - `id` [string]: Boleto unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ##  Return:
     - deleted Boleto map with updated attributes"
@@ -241,7 +271,9 @@
     - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:layout` [string]: Layout specification. Available options are \"default\" and \"booklet\"
+    - `:hidden-fields` [list of strings]: List of string fields to be hidden in the Boleto pdf. ex: [\"customerAddress\"]
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ## Return:
     - Boleto pdf file content"
@@ -249,10 +281,17 @@
     (clojure.java.io/input-stream
       (Boleto/pdf id)))
 
-  ([id, user]
+  ([id, user-or-options]
     (clojure.java.io/input-stream
       (Boleto/pdf
         id
+        (#'starkbank.user/try-java-project user-or-options clojure-options-to-java ))))
+
+  ([id, options, user]
+    (clojure.java.io/input-stream
+      (Boleto/pdf
+        id
+        (clojure-options-to-java options)
         (#'starkbank.user/get-java-project user)))))
 
 
@@ -310,7 +349,7 @@
     - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ## Return:
     - Log map with updated attributes"
@@ -333,7 +372,7 @@
     - `:before` [string, default nil]: date filter for maps created only before specified date. ex: \"2020-3-10\"
     - `:types` [list of strings, default nil]: filter for log event types. ex: \"paid\" or \"registered\"
     - `:boleto-ids` [list of strings, default nil]: list of Boleto ids to filter logs. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ## Return:
     - stream of Log maps with updated attributes"

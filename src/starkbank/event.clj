@@ -15,12 +15,15 @@
             [starkbank.transfer]
             [starkbank.boleto]
             [starkbank.boleto-payment]
+            [starkbank.invoice]
+            [starkbank.deposit]
+            [starkbank.boleto-holmes]
+            [starkbank.brcode-payment]
             [starkbank.utility-payment])
   (:use [clojure.walk]))
 
 (defn- java-to-clojure
   ([java-object]
-    (defn- java-hashmap-to-map [x] (into {} x))
     {
       :id (.id java-object)
       :created (.created java-object)
@@ -28,9 +31,14 @@
       :subscription (.subscription java-object)
       :log (case (.subscription java-object)
             "transfer" (#'starkbank.transfer.log/java-to-clojure (.log java-object))
+            "invoice" (#'starkbank.invoice.log/java-to-clojure (.log java-object))
+            "deposit" (#'starkbank.deposit.log/java-to-clojure (.log java-object))
             "boleto" (#'starkbank.boleto.log/java-to-clojure (.log java-object))
+            "boleto-holmes" (#'starkbank.boleto-holmes.log/java-to-clojure (.log java-object))
+            "brcode-payment" (#'starkbank.brcode-payment.log/java-to-clojure (.log java-object))
             "boleto-payment" (#'starkbank.boleto-payment.log/java-to-clojure (.log java-object))
-            "utility-payment" (#'starkbank.utility-payment.log/java-to-clojure (.log java-object)))
+            "utility-payment" (#'starkbank.utility-payment.log/java-to-clojure (.log java-object))
+            (.log java-object))
     }))
 
 (defn- clojure-query-to-java
@@ -69,7 +77,7 @@
     - `:after` [string, default nil]: date filter for maps created only after specified date. ex: ~D[2020-03-25]
     - `:before` [string, default nil]: date filter for maps created only before specified date. ex: ~D[2020-03-25]
     - `:is-delivered` [bool, default nil]: filter successfully delivered events. ex: true or false
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ## Return:
     - stream of Event maps with updated attributes"
@@ -91,7 +99,7 @@
     - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ## Return:
     - Event map with updated attributes"
@@ -112,7 +120,7 @@
     - `id` [string]: Event unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ## Return:
     - deleted Event map with updated attributes"
@@ -135,7 +143,7 @@
     - `:is-delivered` [bool]: If true and event hasn't been delivered already, event will be set as delivered. ex: true
 
   ## Parameters (optional):
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ## Return:
     - target Event with updated attributes"

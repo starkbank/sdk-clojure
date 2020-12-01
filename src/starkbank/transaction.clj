@@ -71,13 +71,17 @@
         limit "limit"
         after "after"
         before "before"
+        ids "ids"
         external-ids "external-ids"
+        tags "tags"
       } (stringify-keys clojure-map)]
       (java.util.HashMap.
         {
           "limit" (if (nil? limit) nil (Integer. limit))
           "after" after
           "before" before
+          "ids" (if (nil? ids) nil (into-array String ids))
+          "tags" (if (nil? tags) nil (into-array String tags))
           "externalIds" (if (nil? external-ids) nil (into-array String external-ids))
         }
       ))))
@@ -89,7 +93,7 @@
     - `transactions` [list of Transaction entities]: list of Transaction entities to be created in the API
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ## Return:
     - list of Transaction maps with updated attributes"
@@ -110,8 +114,10 @@
     - `:limit` [integer, default nil]: maximum number of entities to be retrieved. Unlimited if nil. ex: 35
     - `:after` [string, default nil]: date filter for entities created only after specified date. ex: \"2020-3-10\"
     - `:before` [string, default nil]: date filter for entities created only before specified date. ex: \"2020-3-10\"
+    - `:ids` [list of strings, default nil]: list of ids to filter retrieved objects. ex: [\"5656565656565656\", \"4545454545454545\"]
     - `:external-ids` [list of strings, default nil]: list of external ids to filter retrieved entities. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:tags` [list of strings, default nil]: list of strings for tagging
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ## Return:
     - stream of Transaction maps with updated attributes"
@@ -133,7 +139,7 @@
     - `id` [string]: entity unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ## Return:
     - Transaction map with updated attributes"

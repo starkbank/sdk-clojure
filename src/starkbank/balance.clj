@@ -26,7 +26,7 @@
   "Receive the Balance entity linked to your workspace in the Stark Bank API
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
 
   ## Return:
     - Balance map with updated attributes"
