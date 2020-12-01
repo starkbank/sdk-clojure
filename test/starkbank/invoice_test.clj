@@ -40,7 +40,7 @@
         ]
       }]))
     (invoice/get (:id (first invoices)))
-    (def file-name "temp/boleto.pdf")
+    (def file-name "temp/invoice.pdf")
     (io/make-parents file-name)
     (io/copy (invoice/pdf (:id (first invoices))) (io/file file-name))
     (invoice/update (:id (first invoices)) {:amount 10 :expiration 600 :due (date/future-datetime 10)})))
@@ -57,7 +57,10 @@
     (user/set-test-user)
     (def invoices (take 200 (invoice/query {:limit 1})))
     (def qrcode (invoice/qrcode (:id (first invoices))))
-    (is (< 1000 (.available qrcode)))))
+    (is (< 1000 (.available qrcode)))
+    (def file-name "temp/invoice-qrcode.png")
+    (io/make-parents file-name)
+    (io/copy qrcode (io/file file-name))))
 
 (deftest query-get-invoice-logs
   (testing "query and get invoice logs"
