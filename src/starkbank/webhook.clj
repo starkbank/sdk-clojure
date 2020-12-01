@@ -5,7 +5,7 @@
 
   ## Parameters (required):
     - `:url` [string]: Url that will be notified when an event occurs.
-    - `:subscriptions` [list of strings]: list of any non-empty combination of the available services. ex: [\"transfer\", \"boleto-payment\"]
+    - `:subscriptions` [list of strings]: list of any non-empty combination of the available services. ex: [\"transfer\", \"deposit\", \"brcode-payment\"]
 
   ## Attributes:
     - `:id` [string, default nil]: unique id returned when the webhook is created. ex: \"5656565656565656\""

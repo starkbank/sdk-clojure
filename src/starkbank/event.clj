@@ -15,6 +15,10 @@
             [starkbank.transfer]
             [starkbank.boleto]
             [starkbank.boleto-payment]
+            [starkbank.invoice]
+            [starkbank.deposit]
+            [starkbank.boleto-holmes]
+            [starkbank.brcode-payment]
             [starkbank.utility-payment])
   (:use [clojure.walk]))
 
@@ -27,9 +31,14 @@
       :subscription (.subscription java-object)
       :log (case (.subscription java-object)
             "transfer" (#'starkbank.transfer.log/java-to-clojure (.log java-object))
+            "invoice" (#'starkbank.invoice.log/java-to-clojure (.log java-object))
+            "deposit" (#'starkbank.deposit.log/java-to-clojure (.log java-object))
             "boleto" (#'starkbank.boleto.log/java-to-clojure (.log java-object))
+            "boleto-holmes" (#'starkbank.boleto-holmes.log/java-to-clojure (.log java-object))
+            "brcode-payment" (#'starkbank.brcode-payment.log/java-to-clojure (.log java-object))
             "boleto-payment" (#'starkbank.boleto-payment.log/java-to-clojure (.log java-object))
-            "utility-payment" (#'starkbank.utility-payment.log/java-to-clojure (.log java-object)))
+            "utility-payment" (#'starkbank.utility-payment.log/java-to-clojure (.log java-object))
+            (.log java-object))
     }))
 
 (defn- clojure-query-to-java
