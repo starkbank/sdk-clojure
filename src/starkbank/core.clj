@@ -13,5 +13,6 @@
             [starkbank.boleto-payment]
             [starkbank.utility-payment]
             [starkbank.payment-request]
+            [starkbank.dict-key]
             [starkbank.event]
             [starkbank.webhook]))
