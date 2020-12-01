@@ -11,6 +11,7 @@
             [starkbank.boleto]
             [starkbank.boleto-holmes]
             [starkbank.transfer]
+            [starkbank.brcode-preview]
             [starkbank.boleto-payment]
             [starkbank.utility-payment]
             [starkbank.payment-request]
