@@ -40,7 +40,7 @@
         :payment payment
         :center-id (System/getenv "SANDBOX_CENTER_ID")
         :tags ["testing" "clojure"]
-        :scheduled (date/future-datetime)
+        :due (date/future-date)
       }]))))
 
 (deftest query-payment-requests
