@@ -55,7 +55,7 @@
     - `:subscriptions` [list of strings]: list of any non-empty combination of the available services. ex: [\"transfer\", \"boleto-payment\"]
 
   ## Parameters (optional):
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Webhook map with updated attributes"
@@ -74,7 +74,7 @@
 
   ## Options:
     - `:limit` [integer, default nil]: maximum number of maps to be retrieved. Unlimited if nil. ex: 35
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - stream of Webhook maps with updated attributes"
@@ -96,7 +96,7 @@
     - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Webhook map with updated attributes"
@@ -117,7 +117,7 @@
     - `id` [string]: Webhook unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - deleted Webhook with updated attributes"

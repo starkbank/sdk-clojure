@@ -14,10 +14,10 @@
         :amount 400000
         :due (date/future-datetime 5)
         :tax-id "012.345.678-90"
-        :name "Iron Bank S.A.",
-        :expiration 123456789,
-        :fine 2.5,
-        :interest 1.3,
+        :name "Iron Bank S.A."
+        :expiration 123456789
+        :fine 2.5
+        :interest 1.3
         :discounts [
           {
             :percentage 5
