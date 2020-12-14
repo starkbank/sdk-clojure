@@ -13,8 +13,9 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 
 
 ## [Unreleased]
+## [2.1.0] - 2020-12-14
 ### Change
-- starkbank.user/set to starkbank.settings/user
+- starkbank.user/set-default-user to starkbank.settings/user
 
 ## [2.0.0] - 2020-12-01
 ### Added
