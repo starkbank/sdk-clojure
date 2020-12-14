@@ -170,7 +170,7 @@ There are two ways to inform the user to the SDK:
     :environment "sandbox"
     :id "5671398416568321"
     :private-key private-key-content})
-(starkbank.settings/set-default-user project)
+(starkbank.settings/user project)
 
 (def balance (starkbank.balance/get))
 ```
@@ -372,10 +372,10 @@ you have in other banks.
     :amount 400000
     :due "2020-12-25T19:32:35.418698+00:00"
     :tax-id "012.345.678-90"
-    :name "Iron Bank S.A.",
-    :expiration 123456789,
-    :fine 2.5,
-    :interest 1.3,
+    :name "Iron Bank S.A."
+    :expiration 123456789
+    :fine 2.5
+    :interest 1.3
     :discounts [
       {
         :percentage 5
@@ -444,7 +444,10 @@ You can also cancel an invoice by its id.
 Note that this is not possible if it has been paid already.
 
 ```clojure
-(def invoice (starkbank.invoice/update (:id "6750458353811456") {:status "canceled"}))
+(def invoice (starkbank.invoice/update "6750458353811456"))
+  {
+    :status "canceled"
+  }))
 
 (println invoice)
 ```
@@ -455,7 +458,12 @@ You can update an invoice's amount, due date and expiration by its id.
 Note that this is not possible if it has been paid already.
 
 ```clojure
-(def invoices (starkbank.invoice/update ((:id "6750458353811456") {:amount 10 :expiration 600 :due "2020-12-20T19:32:35.418698+00:00"})))
+(def invoices (starkbank.invoice/update "6750458353811456"))
+  {
+    :amount 10
+    :expiration 600
+    :due "2020-12-20T19:32:35.418698+00:00"
+  })))
 
 (doseq [invoice invoices]
   (println invoice))
@@ -467,7 +475,11 @@ You can get a list of created invoices given some filters.
 
 ```clojure
 
-(def invoices (starkbank.invoice/query {:limit 5 :status "created"}))
+(def invoices (starkbank.invoice/query
+  {
+    :limit 5
+    :status "created"
+  }))
 
 (doser [invoice invoices]
   (println invoice))
@@ -478,7 +490,10 @@ You can get a list of created invoices given some filters.
 Logs are pretty important to understand the life cycle of an invoice.
 
 ```clojure
-(def logs (starkbank.invoice.log/query {:limit 5}))
+(def logs (starkbank.invoice.log/query
+  {
+    :limit 5
+  }))
 
 (doseq [log logs]
   (println log))
@@ -489,7 +504,7 @@ Logs are pretty important to understand the life cycle of an invoice.
 You can get a single log by its id.
 
 ```clojure
-(def log (starkbank.invoice.log/get (:id "6288576484474880")))
+(def log (starkbank.invoice.log/get "6288576484474880"))
 
 (println log)
 ```
@@ -499,7 +514,10 @@ You can get a single log by its id.
 You can get a list of created deposits given some filters.
 
 ```clojure
-(def deposits (starkbank.deposit/query {:limit 5}))
+(def deposits (starkbank.deposit/query
+  {
+    :limit 5
+  }))
 
 (doseq [deposit deposits]
   (println deposit))
@@ -510,7 +528,10 @@ You can get a list of created deposits given some filters.
 Logs are pretty important to understand the life cycle of a deposit.
 
 ```clojure
-(def logs (starkbank.deposit.log/query {:limit 10}))
+(def logs (starkbank.deposit.log/query
+  {
+    :limit 10
+  }))
 
 (doseq [log logs]
   (println log))
@@ -594,7 +615,7 @@ You can get a stream of created boletos given some filters.
 (def boletos
   (starkbank.boleto/query
     {
-      :after "2020-09-05",
+      :after "2020-09-05"
       :before "2020-10-02"
       :limit 10
     }))
@@ -656,7 +677,11 @@ To get a single boleto holmes by its id, run:
 You can search for boleto holmes using filters. 
 
 ```clojure
-(def holmes (starkbank.boleto-holmes/query {:limit 10, :after "2020-11-01", :before "2020-12-01"}))
+(def holmes (starkbank.boleto-holmes/query {
+  :limit 10
+  :after "2020-11-01"
+  :before "2020-12-01"
+}))
 
 (doseq [sherlock holmes]
   (println sherlock))
@@ -667,7 +692,11 @@ You can search for boleto holmes using filters.
 Searches are also possible with boleto holmes logs:
 
 ```clojure
-(def logs (starkbank.boleto-holmes.log/query {:limit 10 :type "solved"}))
+(def logs (starkbank.boleto-holmes.log/query
+  {
+    :limit 10
+    :type "solved"
+  }))
 
 (doseq [log logs]
   (println log))
@@ -688,7 +717,10 @@ You can also get a boleto holmes log by specifying its id.
 You can confirm the information on the BR Code payment before creating it with this preview method:
 
 ```clojure
-(def previews (starkbank.brcode-preview/query {:brcodes brcodes}))
+(def previews (starkbank.brcode-preview/query
+  {
+    :brcodes brcodes
+  }))
 
 (doseq [preview previews]
   (println preview))
@@ -718,7 +750,10 @@ Paying a BR Code is also simple.
 You can search for brcode payments using filters. 
 
 ```clojure
-(def payments (starkbank.brcode-payment/query {:limit 10}))
+(def payments (starkbank.brcode-payment/query
+  {
+    :limit 10
+  }))
 
 (doseq [payment payments]
   (println payment))
@@ -740,7 +775,10 @@ You can cancel a BR Code payment by changing its status to "canceled".
 Note that this is not possible if it has been processed already.
 
 ```clojure
-(def payment (starkbank.brcode-payment/update "6532638269505536" {:status "canceled"}))
+(def payment (starkbank.brcode-payment/update "6532638269505536"
+  {
+    :status "canceled"
+  }))
 
 (println payment)
 ```
@@ -764,7 +802,10 @@ and strange characters.
 Searches are also possible with BR Code payment logs:
 
 ```clojure
-(def logs (starkbank.brcode-payment.log/query {:limit 10}))
+(def logs (starkbank.brcode-payment.log/query
+  {
+    :limit 10
+  }))
 
 (doseq [log logs]
   (println log))
@@ -1159,7 +1200,10 @@ With this function, you can manually set events retrieved from the API as
 "delivered" to help future event queries with `is_delivered: false`.
 
 ```clojure
-(def event (starkbank.event/update "5764442407043072" {:is-delivered true}))
+(def event (starkbank.event/update "5764442407043072"
+  {
+    :is-delivered true
+  }))
 
 (println event)
 ```

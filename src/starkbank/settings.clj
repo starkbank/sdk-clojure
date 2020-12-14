@@ -4,13 +4,13 @@
   (:import [com.starkbank Project])
   (:use [starkbank.user]))
 
-(defn set-default-user
+(defn user
   "sets a default user (project) to be automatically used in all requests"
   ([user]
    (def java-project (#'starkbank.user/get-java-project user))
    (set! (. com.starkbank.Settings -user) java-project)))
 
-(defn set-default-language
+(defn language
   "sets a default language to be automatically used in all requests. Options are en-US and pt-BR"
   ([language]
    (set! (. com.starkbank.Settings -language) language)))

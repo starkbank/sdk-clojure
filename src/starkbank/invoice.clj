@@ -274,7 +274,7 @@
     - `:amount` [string]: If the Invoice hasn't been paid yet, you may update its amount by passing the desired amount integer
     - `:due` [string, default today + 2 days]: Invoice due date in UTC ISO format. ex: \"2020-11-25T17:59:26.249976+00:00\"
     - `:expiration` [DateInterval or integer, default null]: time interval in seconds between due date and expiration date. ex 123456789
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/set-default-user has not been set.
+    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - target Invoice with updated attributes"

@@ -58,7 +58,7 @@
 (deftest query-pdf-cancel-brcode-payments
 	(testing "query brcode payments"
 		(user/set-test-user)
-		(def payments (take 200 (payment/query {:limit 2, :status "created"})))
+		(def payments (take 200 (payment/query {:limit 2 :status "created"})))
 		(is (= 2 (count payments)))
 		(def file-name "temp/brcode-payment.pdf")
 		(io/make-parents file-name)

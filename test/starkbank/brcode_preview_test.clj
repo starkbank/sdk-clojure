@@ -7,7 +7,7 @@
 (deftest query-brcode-preview
 	(testing "query brcode-preview"
 		(user/set-test-user)
-		(def invoices (invoice/query {:limit 1, :status "created"}))
+		(def invoices (invoice/query {:limit 1 :status "created"}))
 		(def brcodes [(:brcode (first invoices))])
 		(def preview (first (preview/query {:brcodes brcodes})))
 		(is (not (nil? (:id preview))))))
