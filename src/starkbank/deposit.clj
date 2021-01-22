@@ -74,7 +74,7 @@
 		- `:sort` [string, default \"-created\"]: sort order considered in response. Valid options are \"created\" or \"-created\".
 		- `:tags` [list of strings, default nil]: tags to filter retrieved maps. ex: [\"tony\", \"stark\"]
 		- `:ids` [list of strings, default nil]: list of ids to filter retrieved maps. ex: [\"5656565656565656\", \"4545454545454545\"]
-		- `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+		- `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
 	## Return:
 		- stream of Deposit maps with updated attributes"
@@ -96,7 +96,7 @@
 		- `id` [string]: map unique id. ex: \"5656565656565656\"
 
 	## Options:
-		- `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+		- `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
 	## Return:
 		- Deposit map with updated attributes"
@@ -164,7 +164,7 @@
 		- `id` [string]: map unique id. ex: \"5656565656565656\"
 
 	## Options:
-		- `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+		- `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
 	## Return:
 		- Log map with updated attributes"
@@ -187,7 +187,7 @@
 		- `:before` [string, default nil]: date filter for maps created only before specified date. ex: \"2020-3-10\"
 		- `:types` [list of strings, default nil]: filter for log event types. ex: \"paid\" or \"registered\"
 		- `:deposit-ids` [list of strings, default nil]: list of Deposit ids to filter logs. ex: [\"5656565656565656\", \"4545454545454545\"]
-		- `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+		- `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
 	## Return:
 		- stream of Log maps with updated attributes"
