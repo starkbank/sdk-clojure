@@ -116,7 +116,7 @@
 
   ([payments, user]
     (def java-payments (map clojure-to-java payments))
-    (def created-java-payments (BrcodePayment/create java-payments (#'starkbank.user/get-java-project user)))
+    (def created-java-payments (BrcodePayment/create java-payments (#'starkbank.user/get-java-user user)))
     (map java-to-clojure created-java-payments)))
 
 (defn query
@@ -142,7 +142,7 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (BrcodePayment/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (BrcodePayment/query java-params (#'starkbank.user/get-java-user user)))))
 
 (defn get
   "Receive a single BrcodePayment map previously created by the Stark Bank API by passing its id
@@ -163,7 +163,7 @@
     (java-to-clojure
       (BrcodePayment/get
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn pdf
   "Receive a single BrcodePayment pdf file generated in the Stark Bank API by passing its id.
@@ -185,7 +185,7 @@
     (clojure.java.io/input-stream
       (BrcodePayment/pdf
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
   
 (defn update
   "Update a BrcodePayment by passing id.
@@ -207,7 +207,7 @@
     (BrcodePayment/update
       id
       (clojure-update-to-java params)
-      (#'starkbank.user/get-java-project user)))))
+      (#'starkbank.user/get-java-user user)))))
 
 (ns starkbank.brcode-payment.log
   "Every time a BrcodePayment entity is modified, a corresponding BrcodePayment.Log
@@ -275,7 +275,7 @@
     (java-to-clojure
       (BrcodePayment$Log/get
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn query
   "Receive a stream of Log maps previously created in the Stark Bank API
@@ -299,4 +299,4 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (BrcodePayment$Log/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (BrcodePayment$Log/query java-params (#'starkbank.user/get-java-user user)))))

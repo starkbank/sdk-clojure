@@ -66,7 +66,7 @@
 
   ([webhook-params, user]
     (def java-webhook-params (clojure-to-java webhook-params))
-    (def created-java-webhook (Webhook/create java-webhook-params (#'starkbank.user/get-java-project user)))
+    (def created-java-webhook (Webhook/create java-webhook-params (#'starkbank.user/get-java-user user)))
     (java-to-clojure created-java-webhook)))
 
 (defn query
@@ -87,7 +87,7 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Webhook/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (Webhook/query java-params (#'starkbank.user/get-java-user user)))))
 
 (defn get
   "Receive a single Webhook subscription map previously created in the Stark Bank API by passing its id
@@ -108,7 +108,7 @@
     (java-to-clojure
       (Webhook/get
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn delete
   "Delete a Webhook subscription entity previously created in the Stark Bank API
@@ -129,4 +129,4 @@
     (java-to-clojure
       (Webhook/delete
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))

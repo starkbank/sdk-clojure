@@ -90,7 +90,7 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Event/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (Event/query java-params (#'starkbank.user/get-java-user user)))))
 
 (defn get
   "Receive a single notification Event map previously created in the Stark Bank API by passing its id
@@ -111,7 +111,7 @@
     (java-to-clojure
       (Event/get
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn delete
   "Delete a list of notification Event entities previously created in the Stark Bank API
@@ -132,7 +132,7 @@
     (java-to-clojure
       (Event/delete
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn update
   "Update notification Event by passing id.
@@ -156,7 +156,7 @@
       (Event/update
         id
         (clojure-update-to-java params)
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn parse
   "Create a single Event map received from event listening at subscribed user endpoint.
@@ -183,4 +183,4 @@
       (Event/parse
         content
         signature
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))

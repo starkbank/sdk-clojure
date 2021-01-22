@@ -36,6 +36,6 @@
 
   ([user] (-> 
     user
-    (#'starkbank.user/get-java-project)
+    (#'starkbank.user/get-java-user)
     (Balance/get)
     (java-to-clojure))))

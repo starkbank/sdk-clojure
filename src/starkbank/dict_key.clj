@@ -82,7 +82,7 @@
     (java-to-clojure
       (DictKey/get
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
   
 (defn query
   "Receive a stream of DictKey maps associated with your Stark Bank Workspace
@@ -107,4 +107,4 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (DictKey/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (DictKey/query java-params (#'starkbank.user/get-java-user user)))))

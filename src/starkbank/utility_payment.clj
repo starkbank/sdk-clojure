@@ -102,7 +102,7 @@
 
   ([payments, user]
     (def java-payments (map clojure-to-java payments))
-    (def created-java-payments (UtilityPayment/create java-payments (#'starkbank.user/get-java-project user)))
+    (def created-java-payments (UtilityPayment/create java-payments (#'starkbank.user/get-java-user user)))
     (map java-to-clojure created-java-payments)))
 
 (defn query
@@ -128,7 +128,7 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (UtilityPayment/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (UtilityPayment/query java-params (#'starkbank.user/get-java-user user)))))
 
 (defn get
   "Receive a single UtilityPayment map previously created by the Stark Bank API by passing its id
@@ -149,7 +149,7 @@
     (java-to-clojure
       (UtilityPayment/get
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn delete
   "Delete a UtilityPayment entity previously created in the Stark Bank API
@@ -170,7 +170,7 @@
     (java-to-clojure
       (UtilityPayment/delete
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn pdf
   "Receive a single UtilityPayment pdf file generated in the Stark Bank API by passing its id.
@@ -192,7 +192,7 @@
     (clojure.java.io/input-stream
       (UtilityPayment/pdf
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 
 (ns starkbank.utility-payment.log
@@ -260,7 +260,7 @@
     (java-to-clojure
       (UtilityPayment$Log/get
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn query
   "Receive a stream of Log maps previously created in the Stark Bank API
@@ -284,4 +284,4 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (UtilityPayment$Log/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (UtilityPayment$Log/query java-params (#'starkbank.user/get-java-user user)))))

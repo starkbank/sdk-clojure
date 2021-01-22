@@ -7,7 +7,7 @@
 (defn user
   "sets a default user (project) to be automatically used in all requests"
   ([user]
-   (def java-project (#'starkbank.user/get-java-project user))
+   (def java-project (#'starkbank.user/get-java-user user))
    (set! (. com.starkbank.Settings -user) java-project)))
 
 (defn language

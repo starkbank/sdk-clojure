@@ -119,7 +119,7 @@
 
   ([requests, user]
    (def java-requests (map clojure-to-java requests))
-   (def created-java-requests (PaymentRequest/create java-requests (#'starkbank.user/get-java-project user)))
+   (def created-java-requests (PaymentRequest/create java-requests (#'starkbank.user/get-java-user user)))
    (map java-to-clojure created-java-requests)))
 
 (defn query
@@ -147,4 +147,4 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (PaymentRequest/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (PaymentRequest/query java-params (#'starkbank.user/get-java-user user)))))

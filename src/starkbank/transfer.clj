@@ -126,7 +126,7 @@
 
   ([transfers, user]
     (def java-transfers (map clojure-to-java transfers))
-    (def created-java-transfers (Transfer/create java-transfers (#'starkbank.user/get-java-project user)))
+    (def created-java-transfers (Transfer/create java-transfers (#'starkbank.user/get-java-user user)))
     (map java-to-clojure created-java-transfers)))
 
 (defn query
@@ -155,7 +155,7 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Transfer/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (Transfer/query java-params (#'starkbank.user/get-java-user user)))))
 
 (defn get
   "Receive a single Transfer map previously created in the Stark Bank API by passing its id
@@ -176,7 +176,7 @@
     (java-to-clojure
       (Transfer/get
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn delete
   "Cancel a single scheduled Transfer entity previously created in the Stark Bank API by passing its id
@@ -197,7 +197,7 @@
    (java-to-clojure
     (Transfer/delete
      id
-     (#'starkbank.user/get-java-project user)))))
+     (#'starkbank.user/get-java-user user)))))
 
 (defn pdf
   "Receive a single Transfer pdf receipt file generated in the Stark Bank API by passing its id.
@@ -219,7 +219,7 @@
     (clojure.java.io/input-stream
       (Transfer/pdf
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 
 (ns starkbank.transfer.log
@@ -287,7 +287,7 @@
     (java-to-clojure
       (Transfer$Log/get
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn query
   "Receive a stream of Log maps previously created in the Stark Bank API
@@ -311,4 +311,4 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Transfer$Log/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (Transfer$Log/query java-params (#'starkbank.user/get-java-user user)))))

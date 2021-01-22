@@ -87,7 +87,7 @@
 
 	([params, user] 
 		(def java-params (clojure-query-to-java params))
-		(map java-to-clojure (Deposit/query java-params (#'starkbank.user/get-java-project user)))))
+		(map java-to-clojure (Deposit/query java-params (#'starkbank.user/get-java-user user)))))
 
 (defn get
 	"Receive a single Deposit map previously created in the Stark Bank API by passing its id
@@ -108,7 +108,7 @@
 		(java-to-clojure
 			(Deposit/get
 				id
-				(#'starkbank.user/get-java-project user)))))
+				(#'starkbank.user/get-java-user user)))))
 
 (ns starkbank.deposit.log
 	"Every time a Deposit entity is updated, a corresponding Deposit.Log
@@ -176,7 +176,7 @@
 		(java-to-clojure
 			(Deposit$Log/get
 				id
-				(#'starkbank.user/get-java-project user)))))
+				(#'starkbank.user/get-java-user user)))))
 
 (defn query
 	"Receive a stream of Log maps previously created in the Stark Bank API
@@ -200,4 +200,4 @@
 
 	([params, user] 
 		(def java-params (clojure-query-to-java params))
-		(map java-to-clojure (Deposit$Log/query java-params (#'starkbank.user/get-java-project user)))))
+		(map java-to-clojure (Deposit$Log/query java-params (#'starkbank.user/get-java-user user)))))

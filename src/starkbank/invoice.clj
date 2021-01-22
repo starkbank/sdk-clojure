@@ -173,7 +173,7 @@
 
   ([invoices, user] 
     (def java-invoices (map clojure-to-java invoices))
-    (def created-java-invoices (Invoice/create java-invoices (#'starkbank.user/get-java-project user)))
+    (def created-java-invoices (Invoice/create java-invoices (#'starkbank.user/get-java-user user)))
     (map java-to-clojure created-java-invoices)))
 
 (defn query
@@ -199,7 +199,7 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Invoice/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (Invoice/query java-params (#'starkbank.user/get-java-user user)))))
 
 (defn get
   "Receive a single Invoice map previously created in the Stark Bank API by passing its id
@@ -220,7 +220,7 @@
     (java-to-clojure
       (Invoice/get
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 
 (defn pdf
@@ -242,7 +242,7 @@
     (clojure.java.io/input-stream
       (Invoice/pdf
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn qrcode
   "Receive a single Invoice QRCode in png format generated in the Stark Bank API by the invoice ID.
@@ -261,7 +261,7 @@
     ([id, user]
       (Invoice/qrcode
         id
-        (#'starkbank.user/get-java-project user))))
+        (#'starkbank.user/get-java-user user))))
 
 (defn update
   "Update an Invoice by passing id.
@@ -287,7 +287,7 @@
     (Invoice/update
      id
      (clojure-update-to-java params)
-     (#'starkbank.user/get-java-project user)))))
+     (#'starkbank.user/get-java-user user)))))
 
 
 (ns starkbank.invoice.log
@@ -356,7 +356,7 @@
     (java-to-clojure
       (Invoice$Log/get
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn query
   "Receive a stream of Log maps previously created in the Stark Bank API
@@ -380,4 +380,4 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Invoice$Log/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (Invoice$Log/query java-params (#'starkbank.user/get-java-user user)))))

@@ -63,4 +63,4 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (BrcodePreview/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (BrcodePreview/query java-params (#'starkbank.user/get-java-user user)))))

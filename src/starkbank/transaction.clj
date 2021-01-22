@@ -104,7 +104,7 @@
 
   ([transactions, user] 
     (def java-transactions (map clojure-to-java transactions))
-    (def created-java-transactions (Transaction/create java-transactions (#'starkbank.user/get-java-project user)))
+    (def created-java-transactions (Transaction/create java-transactions (#'starkbank.user/get-java-user user)))
     (map java-to-clojure created-java-transactions)))
 
 (defn query
@@ -130,7 +130,7 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Transaction/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (Transaction/query java-params (#'starkbank.user/get-java-user user)))))
 
 (defn get
   "Receive a single Transaction entity previously created in the Stark Bank API by passing its id
@@ -151,4 +151,4 @@
     (java-to-clojure
       (Transaction/get
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))

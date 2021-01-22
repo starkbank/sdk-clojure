@@ -194,7 +194,7 @@
 
   ([boletos, user] 
     (def java-boletos (map clojure-to-java boletos))
-    (def created-java-boletos (Boleto/create java-boletos (#'starkbank.user/get-java-project user)))
+    (def created-java-boletos (Boleto/create java-boletos (#'starkbank.user/get-java-user user)))
     (map java-to-clojure created-java-boletos)))
 
 (defn query
@@ -220,7 +220,7 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Boleto/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (Boleto/query java-params (#'starkbank.user/get-java-user user)))))
 
 (defn get
   "Receive a single Boleto map previously created in the Stark Bank API by passing its id
@@ -241,7 +241,7 @@
     (java-to-clojure
       (Boleto/get
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn delete
   "Delete a list of Boleto entities previously created in the Stark Bank API
@@ -262,7 +262,7 @@
     (java-to-clojure
       (Boleto/delete
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn pdf
   "Receive a single Boleto pdf file generated in the Stark Bank API by passing its id.
@@ -285,14 +285,14 @@
     (clojure.java.io/input-stream
       (Boleto/pdf
         id
-        (#'starkbank.user/try-java-project user-or-options clojure-options-to-java ))))
+        (#'starkbank.user/try-java-user user-or-options clojure-options-to-java ))))
 
   ([id, options, user]
     (clojure.java.io/input-stream
       (Boleto/pdf
         id
         (clojure-options-to-java options)
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 
 (ns starkbank.boleto.log
@@ -361,7 +361,7 @@
     (java-to-clojure
       (Boleto$Log/get
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn query
   "Receive a stream of Log maps previously created in the Stark Bank API
@@ -385,4 +385,4 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Boleto$Log/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (Boleto$Log/query java-params (#'starkbank.user/get-java-user user)))))

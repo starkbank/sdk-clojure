@@ -83,7 +83,7 @@
 
   ([holmes, user]
    (def java-holmes (map clojure-to-java holmes))
-   (def created-java-holmes (BoletoHolmes/create java-holmes (#'starkbank.user/get-java-project user)))
+   (def created-java-holmes (BoletoHolmes/create java-holmes (#'starkbank.user/get-java-user user)))
    (map java-to-clojure created-java-holmes)))
 
 (defn query
@@ -110,7 +110,7 @@
 
   ([params, user]
    (def java-params (clojure-query-to-java params))
-   (map java-to-clojure (BoletoHolmes/query java-params (#'starkbank.user/get-java-project user)))))
+   (map java-to-clojure (BoletoHolmes/query java-params (#'starkbank.user/get-java-user user)))))
 
 (defn get
   "Receive a single BoletoHolmes map previously created by the Stark Bank API by passing its id
@@ -131,7 +131,7 @@
    (java-to-clojure
     (BoletoHolmes/get
      id
-     (#'starkbank.user/get-java-project user)))))
+     (#'starkbank.user/get-java-user user)))))
 
 (ns starkbank.boleto-holmes.log
   "Every time a BoletoHolmes entity is modified, a corresponding BoletoHolmes.Log
@@ -191,7 +191,7 @@
    (java-to-clojure
     (BoletoHolmes$Log/get
      id
-     (#'starkbank.user/get-java-project user)))))
+     (#'starkbank.user/get-java-user user)))))
 
 (defn query
   "Receive a stream of Log maps previously created in the Stark Bank API
@@ -215,4 +215,4 @@
 
   ([params, user]
    (def java-params (clojure-query-to-java params))
-   (map java-to-clojure (BoletoHolmes$Log/query java-params (#'starkbank.user/get-java-project user)))))
+   (map java-to-clojure (BoletoHolmes$Log/query java-params (#'starkbank.user/get-java-user user)))))
