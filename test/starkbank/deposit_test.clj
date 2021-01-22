@@ -6,7 +6,7 @@
 
 (deftest query-and-get-deposits
 	(testing "query and get deposits"
-		(user/set-test-user)
+		(user/set-test-project)
 		(def deposits (take 200 (deposit/query {:limit 3})))
 		(is (= 3 (count deposits))))
 		(def deposit (first deposits))
@@ -16,7 +16,7 @@
 
 (deftest query-get-deposit-logs
 	(testing "query and get deposit logs"
-		(user/set-test-user)
+		(user/set-test-project)
 		(def deposit-logs (log/query {:limit 1}))
 		(is (= 1 (count deposit-logs)))
 		(def deposit-log (log/get (:id (first deposit-logs))))

@@ -8,7 +8,7 @@
 
 (deftest create-payment-requests
   (testing "create payment-requests"
-    (user/set-test-user)
+    (user/set-test-project)
     (def type (rand-nth ["transfer", "brcode-payment", "boleto-payment", "utility-payment"]))
     (def payment (case type
       "transfer" {
@@ -51,7 +51,7 @@
 
 (deftest query-payment-requests
   (testing "query payment-requests"
-    (user/set-test-user)
+    (user/set-test-project)
     (def payment-requests (take 200 (payment-request/query {
       :limit 3
       :status ["success"]

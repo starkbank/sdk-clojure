@@ -15,6 +15,7 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 ## [Unreleased]
 ### Added
 - organization user
+- workspace resource
 - transfer.account-type property to allow "checking", "salary" or "savings" account specification
 - transfer.external-id property to allow users to take control over duplication filters
 ### Fixed

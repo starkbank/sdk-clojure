@@ -5,7 +5,7 @@
 
 (deftest get-balance
   (testing "get balance"
-    (user/set-test-user)
+    (user/set-test-project)
     (def balance (starkbank.balance/get))
     (is (map? balance))
     (is (not (nil? (:id balance))))

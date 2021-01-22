@@ -8,7 +8,7 @@
 
 (deftest create-get-pdf-delete-utility-payments
   (testing "create, get, pdf and delete utility payments"
-    (user/set-test-user)
+    (user/set-test-project)
     (def payments (payment/create
       [{
         :amount 100
@@ -25,13 +25,13 @@
 
 (deftest query-utility-payments
   (testing "query utility payments"
-    (user/set-test-user)
+    (user/set-test-project)
     (def payments (take 200 (payment/query {:limit 3})))
     (is (= 3 (count payments)))))
 
 (deftest query-get-utility-payment-logs
   (testing "query and get utility payment logs"
-    (user/set-test-user)
+    (user/set-test-project)
     (def payment-logs (log/query {:limit 1}))
     (is (= 1 (count payment-logs)))
     (def payment-log (log/get (:id (first payment-logs))))
