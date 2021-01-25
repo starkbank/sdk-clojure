@@ -13,6 +13,8 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 
 
 ## [Unreleased]
+
+## [2.2.0] - 2021-01-25
 ### Added
 - organization user
 - workspace resource
