@@ -91,7 +91,7 @@
     - `payments` [list of UtilityPayment maps]: list of UtilityPayment maps to be created in the API
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - list of UtilityPayment maps with updated attributes"
@@ -102,7 +102,7 @@
 
   ([payments, user]
     (def java-payments (map clojure-to-java payments))
-    (def created-java-payments (UtilityPayment/create java-payments (#'starkbank.user/get-java-project user)))
+    (def created-java-payments (UtilityPayment/create java-payments (#'starkbank.user/get-java-user user)))
     (map java-to-clojure created-java-payments)))
 
 (defn query
@@ -115,7 +115,7 @@
     - `:tags` [list of strings, default nil]: tags to filter retrieved maps. ex: [\"tony\", \"stark\"]
     - `:ids` [list of strings, default nil]: list of ids to filter retrieved maps. ex: [\"5656565656565656\", \"4545454545454545\"]
     - `:status` [string, default nil]: filter for status of retrieved maps. ex: \"success\"
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - stream of UtilityPayment maps with updated attributes"
@@ -128,7 +128,7 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (UtilityPayment/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (UtilityPayment/query java-params (#'starkbank.user/get-java-user user)))))
 
 (defn get
   "Receive a single UtilityPayment map previously created by the Stark Bank API by passing its id
@@ -137,7 +137,7 @@
     - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - UtilityPayment map with updated attributes"
@@ -149,7 +149,7 @@
     (java-to-clojure
       (UtilityPayment/get
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn delete
   "Delete a UtilityPayment entity previously created in the Stark Bank API
@@ -158,7 +158,7 @@
     - `id` [string]: UtilityPayment unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - deleted UtilityPayment with updated attributes"
@@ -170,7 +170,7 @@
     (java-to-clojure
       (UtilityPayment/delete
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn pdf
   "Receive a single UtilityPayment pdf file generated in the Stark Bank API by passing its id.
@@ -180,7 +180,7 @@
     - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - UtilityPayment pdf file content"
@@ -192,7 +192,7 @@
     (clojure.java.io/input-stream
       (UtilityPayment/pdf
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 
 (ns starkbank.utility-payment.log
@@ -248,7 +248,7 @@
     - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Log map with updated attributes"
@@ -260,7 +260,7 @@
     (java-to-clojure
       (UtilityPayment$Log/get
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn query
   "Receive a stream of Log maps previously created in the Stark Bank API
@@ -271,7 +271,7 @@
     - `:before` [string, default nil]: date filter for entities created only before specified date. ex: \"2020-3-10\"
     - `:types` [list of strings, default nil]: filter retrieved entities by event types. ex: \"processing\" or \"success\"
     - `:payment-ids` [list of strings, default nil]: list of UtilityPayment ids to filter retrieved entities. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - stream of Log maps with updated attributes"
@@ -284,4 +284,4 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (UtilityPayment$Log/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (UtilityPayment$Log/query java-params (#'starkbank.user/get-java-user user)))))

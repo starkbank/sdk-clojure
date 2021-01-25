@@ -13,6 +13,14 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 
 
 ## [Unreleased]
+### Added
+- organization user
+- workspace resource
+- transfer.account-type property to allow "checking", "salary" or "savings" account specification
+- transfer.external-id property to allow users to take control over duplication filters
+### Fixed
+- missing brcode-payment in payment-request
+
 ## [2.1.0] - 2020-12-14
 ### Change
 - starkbank.user/set-default-user to starkbank.settings/user

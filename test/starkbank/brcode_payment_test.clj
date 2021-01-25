@@ -10,7 +10,7 @@
 
 (deftest create-get-brcode-payments
 	(testing "create, get, pdf and update brcode payments"
-		(user/set-test-user)
+		(user/set-test-project)
 		(def invoices (invoice/create
 			[{
 				:amount 40000
@@ -57,7 +57,7 @@
 
 (deftest query-pdf-cancel-brcode-payments
 	(testing "query brcode payments"
-		(user/set-test-user)
+		(user/set-test-project)
 		(def payments (take 200 (payment/query {:limit 2 :status "created"})))
 		(is (= 2 (count payments)))
 		(def file-name "temp/brcode-payment.pdf")
@@ -67,7 +67,7 @@
 
 (deftest query-get-brcode-payment-logs
 	(testing "query and get brcode payment logs"
-		(user/set-test-user)
+		(user/set-test-project)
 		(def payment-logs (log/query {:limit 5}))
 		(is (= 5 (count payment-logs)))
 		(def payment-log (log/get (:id (first payment-logs))))

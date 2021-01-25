@@ -26,7 +26,7 @@
   "Receive the Balance entity linked to your workspace in the Stark Bank API
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Balance map with updated attributes"
@@ -36,6 +36,6 @@
 
   ([user] (-> 
     user
-    (#'starkbank.user/get-java-project)
+    (#'starkbank.user/get-java-user)
     (Balance/get)
     (java-to-clojure))))

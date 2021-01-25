@@ -55,7 +55,7 @@
     - `:subscriptions` [list of strings]: list of any non-empty combination of the available services. ex: [\"transfer\", \"boleto-payment\"]
 
   ## Parameters (optional):
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Webhook map with updated attributes"
@@ -66,7 +66,7 @@
 
   ([webhook-params, user]
     (def java-webhook-params (clojure-to-java webhook-params))
-    (def created-java-webhook (Webhook/create java-webhook-params (#'starkbank.user/get-java-project user)))
+    (def created-java-webhook (Webhook/create java-webhook-params (#'starkbank.user/get-java-user user)))
     (java-to-clojure created-java-webhook)))
 
 (defn query
@@ -74,7 +74,7 @@
 
   ## Options:
     - `:limit` [integer, default nil]: maximum number of maps to be retrieved. Unlimited if nil. ex: 35
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - stream of Webhook maps with updated attributes"
@@ -87,7 +87,7 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Webhook/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (Webhook/query java-params (#'starkbank.user/get-java-user user)))))
 
 (defn get
   "Receive a single Webhook subscription map previously created in the Stark Bank API by passing its id
@@ -96,7 +96,7 @@
     - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Webhook map with updated attributes"
@@ -108,7 +108,7 @@
     (java-to-clojure
       (Webhook/get
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn delete
   "Delete a Webhook subscription entity previously created in the Stark Bank API
@@ -117,7 +117,7 @@
     - `id` [string]: Webhook unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - deleted Webhook with updated attributes"
@@ -129,4 +129,4 @@
     (java-to-clojure
       (Webhook/delete
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))

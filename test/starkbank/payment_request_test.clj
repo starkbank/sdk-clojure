@@ -8,8 +8,8 @@
 
 (deftest create-payment-requests
   (testing "create payment-requests"
-    (user/set-test-user)
-    (def type (rand-nth ["transfer", "boleto-payment", "utility-payment"]))
+    (user/set-test-project)
+    (def type (rand-nth ["transfer", "brcode-payment", "boleto-payment", "utility-payment"]))
     (def payment (case type
       "transfer" {
           :amount 200
@@ -18,6 +18,12 @@
           :bank-code "60701190"
           :branch-code "0001"
           :account-number "00000-0"
+          :tags ["testing" "clojure"]
+        }
+      "brcode-payment" {
+          :tax-id "012.345.678-90"
+          :description "testing clojure"
+          :brcode "00020101021226890014br.gov.bcb.pix2567invoice-h.sandbox.starkbank.com/v2/d5b00b1994454706ba90a0387ff39b7952040000530398654040.005802BR5925Afel Tec Servicos Adminis6009Sao Paulo62070503***630475CE"
           :tags ["testing" "clojure"]
         }
       "boleto-payment" {
@@ -45,7 +51,7 @@
 
 (deftest query-payment-requests
   (testing "query payment-requests"
-    (user/set-test-user)
+    (user/set-test-project)
     (def payment-requests (take 200 (payment-request/query {
       :limit 3
       :status ["success"]

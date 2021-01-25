@@ -1,14 +1,14 @@
 (ns starkbank.payment-request
   "A PaymentRequest is an indirect request to access a specific cash-out service
-  (such as Transfer, BoletoPayments, etc.) which goes through the cost center
+  (such as Transfer, BrcodePayments, etc.) which goes through the cost center
   approval flow on our website. To emit a PaymentRequest, you must direct it to
   a specific cost center by its ID, which can be retrieved on our website at the
   cost center page.
 
   ## Parameters (required):
   - `:center-id` [string]: unique id returned when PaymentRequest is created. ex: \"5656565656565656\"
-  - `:payment` [Transfer, BoletoPayment, UtilityPayment, Transaction or map]: payment entity that should be approved and executed.
-  - `:type` [string]: payment type, inferred from the payment parameter if it is not a map. ex: \"transfer\", \"boleto-payment\"
+  - `:payment` [Transfer, BrcodePayment, BoletoPayment, UtilityPayment, Transaction or map]: payment entity that should be approved and executed.
+  - `:type` [string]: payment type, inferred from the payment parameter if it is not a map. ex: \"transfer\", \"brcode-payment\"
 
   ## Parameters (optional):
   - `:due` [string]: Payment target date in ISO format.
@@ -26,6 +26,7 @@
   (:require [starkbank.user]
             [starkbank.transfer]
             [starkbank.transaction]
+            [starkbank.brcode-payment]
             [starkbank.boleto-payment]
             [starkbank.utility-payment])
   (:use [clojure.walk]))
@@ -51,6 +52,7 @@
       :payment (case (.type java-object)
         "transfer" (#'starkbank.transfer/java-to-clojure (.payment java-object))
         "transaction" (#'starkbank.transaction/java-to-clojure (.payment java-object))
+        "brcode-payment" (#'starkbank.brcode-payment/java-to-clojure (.payment java-object))
         "boleto-payment" (#'starkbank.boleto-payment/java-to-clojure (.payment java-object))
         "utility-payment" (#'starkbank.utility-payment/java-to-clojure (.payment java-object)))
     }))
@@ -68,6 +70,7 @@
         "payment" (case type
           "transfer" (#'starkbank.transfer/clojure-to-java payment)
           "transaction" (#'starkbank.transaction/clojure-to-java payment)
+          "brcode-payment" (#'starkbank.brcode-payment/clojure-to-java payment)
           "boleto-payment" (#'starkbank.boleto-payment/clojure-to-java payment)
           "utility-payment" (#'starkbank.utility-payment/clojure-to-java payment))
         "type" type
@@ -108,7 +111,7 @@
     - `requests` [list of PaymentRequest maps]: list of PaymentRequest maps to be created in the API
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - list of PaymentRequest maps with updated attributes"
@@ -119,7 +122,7 @@
 
   ([requests, user]
    (def java-requests (map clojure-to-java requests))
-   (def created-java-requests (PaymentRequest/create java-requests (#'starkbank.user/get-java-project user)))
+   (def created-java-requests (PaymentRequest/create java-requests (#'starkbank.user/get-java-user user)))
    (map java-to-clojure created-java-requests)))
 
 (defn query
@@ -131,10 +134,10 @@
     - `:before` [string, default nil] date filter for objects created only before specified date. ex: \"2020-03-10\"
     - `:sort` [string, default \"-created\"]: sort order considered in response. Valid options are \"-created\" or \"-due\".
     - `:status` [string, default nil]: filter for status of retrieved objects. ex: \"success\" or \"failed\"
-    - `:type` [string, default nil]: payment type, inferred from the payment parameter if it is not a map. ex: \"transfer\", \"boleto-payment\"
+    - `:type` [string, default nil]: payment type, inferred from the payment parameter if it is not a map. ex: \"transfer\", \"brcode-payment\"
     - `:tags` [list of strings, default nil]: tags to filter retrieved objects. ex: [\"tony\", \"stark\"]
     - `:ids` [list of strings, default nil]: list of ids to filter retrieved objects. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - stream of PaymentRequest maps with updated attributes"
@@ -147,4 +150,4 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (PaymentRequest/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (PaymentRequest/query java-params (#'starkbank.user/get-java-user user)))))

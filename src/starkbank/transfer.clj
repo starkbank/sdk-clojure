@@ -9,10 +9,12 @@
     - `:tax-id` [string]: receiver tax ID (CPF or CNPJ) with or without formatting. ex: \"01234567890\" or \"20.018.183/0001-80\"
     - `:bank-code` [string]: code of the receiver bank institution in Brazil. If an ISPB (8 digits) is informed, a PIX transfer will be created, else a TED will be issued. ex: \"20018183\" or \"341\"
     - `:branch-code` [string]: receiver bank account branch. Use '-' in case there is a verifier digit. ex: \"1357-9\"
-    - `:account-number` [string]: Receiver Bank Account number. Use '-' before the verifier digit. ex: \"876543-2\"
+    - `:account-number` [string]: receiver bank account number. Use '-' before the verifier digit. ex: \"876543-2\"
 
   ## Parameters (optional):
-    - `:scheduled` [string]: date or datetime when the transfer will be processed. May be pushed to next business day if necessary. ex: \"2021-03-11T08:00:00.000000+00:00\"
+    - `:account-type` [string, \"checking\"]: receiver bank account type. This parameter only has effect on Pix Transfers. ex: \"checking\", \"savings\" or \"salary\"
+    - `:external-id` [string, default nil]: url safe string that must be unique among all your transfers. Duplicated external-ids will cause failures. By default, this parameter will block any transfer that repeats amount and receiver information on the same date. ex: \"my-internal-id-123456\"
+    - `:scheduled` [string, default now]: date or datetime when the transfer will be processed. May be pushed to next business day if necessary. ex: \"2021-03-11T08:00:00.000000+00:00\"
     - `:tags` [list of strings]: list of strings for reference when searching for transfers. ex: [\"employees\", \"monthly\"]
 
   Attributes (return-only):
@@ -36,6 +38,8 @@
       bank-code "bank-code"
       branch-code "branch-code"
       account-number "account-number"
+      account-type "account-type"
+      external-id "external-id"
       scheduled "scheduled"
       tags "tags"
     }
@@ -49,6 +53,8 @@
           "bankCode" bank-code
           "branchCode" branch-code
           "accountNumber" account-number
+          "accountType" account-type
+          "externalId" external-id
           "scheduled" scheduled
           "tags" (if (nil? tags) nil (into-array String tags))
         }
@@ -64,6 +70,8 @@
       :bank-code (.bankCode java-object)
       :branch-code (.branchCode java-object)
       :account-number (.accountNumber java-object)
+      :account-type (.accountType java-object)
+      :external-id (.externalId java-object)
       :scheduled (.scheduled java-object)
       :tags (into [] (.tags java-object))
       :fee (.fee java-object)
@@ -107,7 +115,7 @@
     - `transfers` [list of Transfer maps]: list of Transfer maps to be created in the API
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - list of Transfer maps with updated attributes"
@@ -118,7 +126,7 @@
 
   ([transfers, user]
     (def java-transfers (map clojure-to-java transfers))
-    (def created-java-transfers (Transfer/create java-transfers (#'starkbank.user/get-java-project user)))
+    (def created-java-transfers (Transfer/create java-transfers (#'starkbank.user/get-java-user user)))
     (map java-to-clojure created-java-transfers)))
 
 (defn query
@@ -134,7 +142,7 @@
     - `:status` [string, default nil]: filter for status of retrieved maps. ex: \"processing\" or \"success\"
     - `:sort` [string, default \"-created\"]: sort order considered in response. Valid options are \"created\", \"-created\", \"updated\" or \"-updated\".
     - `:tags` [list of strings, default nil]: tags to filter retrieved maps. ex: [\"tony\", \"stark\"]
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - stream of Transfer maps with updated attributes"
@@ -147,7 +155,7 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Transfer/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (Transfer/query java-params (#'starkbank.user/get-java-user user)))))
 
 (defn get
   "Receive a single Transfer map previously created in the Stark Bank API by passing its id
@@ -156,7 +164,7 @@
     - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Transfer map with updated attributes"
@@ -168,7 +176,7 @@
     (java-to-clojure
       (Transfer/get
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn delete
   "Cancel a single scheduled Transfer entity previously created in the Stark Bank API by passing its id
@@ -177,7 +185,7 @@
     - `id` [string]: entity unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - canceled Transfer entity with updated attributes"
@@ -189,7 +197,7 @@
    (java-to-clojure
     (Transfer/delete
      id
-     (#'starkbank.user/get-java-project user)))))
+     (#'starkbank.user/get-java-user user)))))
 
 (defn pdf
   "Receive a single Transfer pdf receipt file generated in the Stark Bank API by passing its id.
@@ -199,7 +207,7 @@
     - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Transfer pdf file content"
@@ -211,7 +219,7 @@
     (clojure.java.io/input-stream
       (Transfer/pdf
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 
 (ns starkbank.transfer.log
@@ -267,7 +275,7 @@
     - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Log map with updated attributes"
@@ -279,7 +287,7 @@
     (java-to-clojure
       (Transfer$Log/get
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn query
   "Receive a stream of Log maps previously created in the Stark Bank API
@@ -290,7 +298,7 @@
     - `:before` [string, default nil]: date filter for maps created only before specified date. ex: \"2020-3-10\"
     - `:types` [list of strings, default nil]: filter retrieved maps by types. ex: \"success\" or \"failed\"
     - `:transfer-ids` [list of strings, default nil]: list of Transfer ids to filter retrieved maps. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - stream of Log maps with updated attributes"
@@ -303,4 +311,4 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Transfer$Log/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (Transfer$Log/query java-params (#'starkbank.user/get-java-user user)))))

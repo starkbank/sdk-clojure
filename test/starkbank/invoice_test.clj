@@ -8,7 +8,7 @@
 
 (deftest create-get-pdf-update-invoices
   (testing "create, get, pdf and update invoices"
-    (user/set-test-user)
+    (user/set-test-project)
     (def invoices (invoice/create
       [{
         :amount 400000
@@ -47,14 +47,14 @@
 
 (deftest query-and-cancel-invoices
   (testing "query and cancel invoices"
-    (user/set-test-user)
+    (user/set-test-project)
     (def invoices (take 200 (invoice/query {:limit 50 :status "created"})))
     (is (= 50 (count invoices)))
     (invoice/update (:id (rand-nth invoices)) {:status "canceled"})))
 
 (deftest qrcode
   (testing "qrcode"
-    (user/set-test-user)
+    (user/set-test-project)
     (def invoices (take 200 (invoice/query {:limit 1})))
     (def qrcode (invoice/qrcode (:id (first invoices))))
     (is (< 1000 (.available qrcode)))
@@ -64,7 +64,7 @@
 
 (deftest query-get-invoice-logs
   (testing "query and get invoice logs"
-    (user/set-test-user)
+    (user/set-test-project)
     (def invoice-logs (log/query {:limit 1}))
     (is (= 1 (count invoice-logs)))
     (def invoice-log (log/get (:id (first invoice-logs))))

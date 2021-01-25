@@ -70,7 +70,7 @@
     - `id` [string]: DictKey object unique id and PIX key itself. ex: \"tony@starkbank.com\", \"722.461.430-04\", \"20.018.183/0001-80\", \"+5511988887777\", \"b6295ee1-f054-47d1-9e90-ee57b74f60d9\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - DictKey object with updated attributes"
@@ -82,7 +82,7 @@
     (java-to-clojure
       (DictKey/get
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
   
 (defn query
   "Receive a stream of DictKey maps associated with your Stark Bank Workspace
@@ -94,7 +94,7 @@
     - `:type` [string, default None]: DictKey type. ex: \"cpf\", \"cnpj\", \"phone\", \"email\" or \"evp\"
     - `:status` [string, default nil]: filter for status of retrieved maps. ex: \"created\", \"paid\", \"canceled\" or \"overdue\"
     - `:ids` [list of strings, default nil]: list of ids to filter retrieved maps. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - stream of DictKey maps with updated attributes"
@@ -107,4 +107,4 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (DictKey/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (DictKey/query java-params (#'starkbank.user/get-java-user user)))))

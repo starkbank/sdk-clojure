@@ -105,7 +105,7 @@
     - `payments` [list of BrcodePayment maps]: list of BrcodePayment maps to be created in the API
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - list of BrcodePayment maps with updated attributes"
@@ -116,7 +116,7 @@
 
   ([payments, user]
     (def java-payments (map clojure-to-java payments))
-    (def created-java-payments (BrcodePayment/create java-payments (#'starkbank.user/get-java-project user)))
+    (def created-java-payments (BrcodePayment/create java-payments (#'starkbank.user/get-java-user user)))
     (map java-to-clojure created-java-payments)))
 
 (defn query
@@ -129,7 +129,7 @@
     - `:tags` [list of strings, default nil]: tags to filter retrieved maps. ex: [\"tony\", \"stark\"]
     - `:ids` [list of strings, default null]: list of ids to filter retrieved objects. ex: [\"5656565656565656\", \"4545454545454545\"]
     - `:status` [string, default nil]: filter for status of retrieved maps. ex: \"success\"
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - stream of BrcodePayment maps with updated attributes"
@@ -142,7 +142,7 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (BrcodePayment/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (BrcodePayment/query java-params (#'starkbank.user/get-java-user user)))))
 
 (defn get
   "Receive a single BrcodePayment map previously created by the Stark Bank API by passing its id
@@ -151,7 +151,7 @@
     - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - BrcodePayment map with updated attributes"
@@ -163,7 +163,7 @@
     (java-to-clojure
       (BrcodePayment/get
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn pdf
   "Receive a single BrcodePayment pdf file generated in the Stark Bank API by passing its id.
@@ -173,7 +173,7 @@
     - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - BrcodePayment pdf file content"
@@ -185,7 +185,7 @@
     (clojure.java.io/input-stream
       (BrcodePayment/pdf
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
   
 (defn update
   "Update a BrcodePayment by passing id.
@@ -207,7 +207,7 @@
     (BrcodePayment/update
       id
       (clojure-update-to-java params)
-      (#'starkbank.user/get-java-project user)))))
+      (#'starkbank.user/get-java-user user)))))
 
 (ns starkbank.brcode-payment.log
   "Every time a BrcodePayment entity is modified, a corresponding BrcodePayment.Log
@@ -263,7 +263,7 @@
     - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Log map with updated attributes"
@@ -275,7 +275,7 @@
     (java-to-clojure
       (BrcodePayment$Log/get
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))
 
 (defn query
   "Receive a stream of Log maps previously created in the Stark Bank API
@@ -286,7 +286,7 @@
     - `:before` [string, default nil]: date filter for entities created only before specified date. ex: \"2020-3-10\"
     - `:types` [list of strings, default nil]: filter retrieved entities by event types. ex: \"processing\" or \"success\"
     - `:payment-ids` [list of strings, default nil]: list of BrcodePayment ids to filter retrieved entities. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - stream of Log maps with updated attributes"
@@ -299,4 +299,4 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (BrcodePayment$Log/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (BrcodePayment$Log/query java-params (#'starkbank.user/get-java-user user)))))

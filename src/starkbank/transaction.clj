@@ -93,7 +93,7 @@
     - `transactions` [list of Transaction entities]: list of Transaction entities to be created in the API
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - list of Transaction maps with updated attributes"
@@ -104,7 +104,7 @@
 
   ([transactions, user] 
     (def java-transactions (map clojure-to-java transactions))
-    (def created-java-transactions (Transaction/create java-transactions (#'starkbank.user/get-java-project user)))
+    (def created-java-transactions (Transaction/create java-transactions (#'starkbank.user/get-java-user user)))
     (map java-to-clojure created-java-transactions)))
 
 (defn query
@@ -117,7 +117,7 @@
     - `:ids` [list of strings, default nil]: list of ids to filter retrieved objects. ex: [\"5656565656565656\", \"4545454545454545\"]
     - `:external-ids` [list of strings, default nil]: list of external ids to filter retrieved entities. ex: [\"5656565656565656\", \"4545454545454545\"]
     - `:tags` [list of strings, default nil]: list of strings for tagging
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - stream of Transaction maps with updated attributes"
@@ -130,7 +130,7 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Transaction/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (Transaction/query java-params (#'starkbank.user/get-java-user user)))))
 
 (defn get
   "Receive a single Transaction entity previously created in the Stark Bank API by passing its id
@@ -139,7 +139,7 @@
     - `id` [string]: entity unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Transaction map with updated attributes"
@@ -151,4 +151,4 @@
     (java-to-clojure
       (Transaction/get
         id
-        (#'starkbank.user/get-java-project user)))))
+        (#'starkbank.user/get-java-user user)))))

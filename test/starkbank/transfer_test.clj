@@ -8,7 +8,7 @@
 
 (deftest create-get-delete-transfers
   (testing "create, get and delete transfers"
-    (user/set-test-user)
+    (user/set-test-project)
     (def transfers (transfer/create
       [{
         :amount 200
@@ -25,7 +25,7 @@
 
 (deftest query-pdf-transfers
   (testing "query transfers"
-    (user/set-test-user)
+    (user/set-test-project)
     (def transfers (take 200 (transfer/query {:limit 3 :status "success"})))
     (is (= 3 (count transfers)))
     (is (map? (first transfers)))
@@ -35,7 +35,7 @@
 
 (deftest query-get-transfer-logs
   (testing "query and get transfer logs"
-    (user/set-test-user)
+    (user/set-test-project)
     (def transfer-logs (log/query {:limit 1}))
     (is (= 1 (count transfer-logs)))
     (def transfer-log (log/get (:id (first transfer-logs))))

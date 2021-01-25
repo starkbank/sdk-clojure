@@ -8,7 +8,7 @@
 
 (deftest create-get-pdf-delete-boletos
   (testing "create, get, pdf and delete boletos"
-    (user/set-test-user)
+    (user/set-test-project)
     (def boletos (boleto/create
       [{
         :amount 50000
@@ -52,13 +52,13 @@
 
 (deftest query-boletos
   (testing "query boletos"
-    (user/set-test-user)
+    (user/set-test-project)
     (def boletos (take 200 (boleto/query {:limit 3})))
     (is (= 3 (count boletos)))))
 
 (deftest query-get-boleto-logs
   (testing "query and get boleto logs"
-    (user/set-test-user)
+    (user/set-test-project)
     (def boleto-logs (log/query {:limit 1}))
     (is (= 1 (count boleto-logs)))
     (def boleto-log (log/get (:id (first boleto-logs))))

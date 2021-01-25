@@ -52,7 +52,7 @@
 
   ## Options:
     - `:brcodes` [list of strings]: List of brcodes to preview. ex: [\"00020126580014br.gov.bcb.pix0136a629532e-7693-4846-852d-1bbff817b5a8520400005303986540510.005802BR5908T'Challa6009Sao Paulo62090505123456304B14A\"]
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.user/set has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - stream of BrcodePreview maps with updated attributes"
@@ -63,4 +63,4 @@
 
   ([params, user] 
     (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (BrcodePreview/query java-params (#'starkbank.user/get-java-project user)))))
+    (map java-to-clojure (BrcodePreview/query java-params (#'starkbank.user/get-java-user user)))))

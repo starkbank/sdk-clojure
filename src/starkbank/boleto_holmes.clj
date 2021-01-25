@@ -72,7 +72,7 @@
     - `holmes` [list of BoletoHolmes maps]: list of BoletoHolmes maps to be created in the API
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - list of BoletoHolmes maps with updated attributes"
@@ -83,7 +83,7 @@
 
   ([holmes, user]
    (def java-holmes (map clojure-to-java holmes))
-   (def created-java-holmes (BoletoHolmes/create java-holmes (#'starkbank.user/get-java-project user)))
+   (def created-java-holmes (BoletoHolmes/create java-holmes (#'starkbank.user/get-java-user user)))
    (map java-to-clojure created-java-holmes)))
 
 (defn query
@@ -97,7 +97,7 @@
     - `:ids` [list of strings, default null]: list of ids to filter retrieved objects. ex: [\"5656565656565656\", \"4545454545454545\"]
     - `:status` [string, default nil]: filter for status of retrieved maps. ex: \"success\"
     - `:boleto-id` [string, default nil]: filter for holmes that investigate a specific boleto by its ID. ex: \"5656565656565656\"
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - stream of BoletoHolmes maps with updated attributes"
@@ -110,7 +110,7 @@
 
   ([params, user]
    (def java-params (clojure-query-to-java params))
-   (map java-to-clojure (BoletoHolmes/query java-params (#'starkbank.user/get-java-project user)))))
+   (map java-to-clojure (BoletoHolmes/query java-params (#'starkbank.user/get-java-user user)))))
 
 (defn get
   "Receive a single BoletoHolmes map previously created by the Stark Bank API by passing its id
@@ -119,7 +119,7 @@
     - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - BoletoHolmes map with updated attributes"
@@ -131,7 +131,7 @@
    (java-to-clojure
     (BoletoHolmes/get
      id
-     (#'starkbank.user/get-java-project user)))))
+     (#'starkbank.user/get-java-user user)))))
 
 (ns starkbank.boleto-holmes.log
   "Every time a BoletoHolmes entity is modified, a corresponding BoletoHolmes.Log
@@ -179,7 +179,7 @@
     - `id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Log map with updated attributes"
@@ -191,7 +191,7 @@
    (java-to-clojure
     (BoletoHolmes$Log/get
      id
-     (#'starkbank.user/get-java-project user)))))
+     (#'starkbank.user/get-java-user user)))))
 
 (defn query
   "Receive a stream of Log maps previously created in the Stark Bank API
@@ -202,7 +202,7 @@
     - `:before` [string, default nil]: date filter for entities created only before specified date. ex: \"2020-3-10\"
     - `:types` [list of strings, default nil]: filter retrieved entities by event types. ex: \"processing\" or \"success\"
     - `:holmes-ids` [list of strings, default nil]: list of BoletoHolmes ids to filter retrieved entities. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:user` [Project]: Project map returned from starkbank.user/project. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - stream of Log maps with updated attributes"
@@ -215,4 +215,4 @@
 
   ([params, user]
    (def java-params (clojure-query-to-java params))
-   (map java-to-clojure (BoletoHolmes$Log/query java-params (#'starkbank.user/get-java-project user)))))
+   (map java-to-clojure (BoletoHolmes$Log/query java-params (#'starkbank.user/get-java-user user)))))

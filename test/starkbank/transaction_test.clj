@@ -6,7 +6,7 @@
 
 (deftest create-get-transactions
   (testing "create, get, pdf and delete transactions"
-    (user/set-test-user)
+    (user/set-test-project)
     (def transactions (transaction/create
       [{
         :amount 1
@@ -20,6 +20,6 @@
 
 (deftest query-transactions
   (testing "query transactions"
-    (user/set-test-user)
+    (user/set-test-project)
     (def transactions (take 200 (transaction/query {:limit 3})))
     (is (= 3 (count transactions)))))

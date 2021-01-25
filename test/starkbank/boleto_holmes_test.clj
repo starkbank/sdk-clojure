@@ -8,7 +8,7 @@
 
 (deftest create-get-boleto-holmes
   (testing "create and get boleto holmes"
-    (user/set-test-user)
+    (user/set-test-project)
     (def boleto (rand-nth (take 100 (boleto/query {:limit 100 :status "registered"}))))
     (def holmes (holmes/create
       [{
@@ -19,13 +19,13 @@
 
 (deftest query-boleto-holmes
   (testing "query boleto holmes"
-    (user/set-test-user)
+    (user/set-test-project)
     (def holmes (take 200 (holmes/query {:limit 3})))
     (is (= 3 (count holmes)))))
 
 (deftest query-get-boleto-holmes-logs
   (testing "query and get boleto holmes logs"
-    (user/set-test-user)
+    (user/set-test-project)
     (def holmes-logs (log/query {:limit 1 :type "solved"}))
     (is (= 1 (count holmes-logs)))
     (def holmes-log (log/get (:id (first holmes-logs))))
