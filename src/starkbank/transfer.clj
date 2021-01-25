@@ -13,7 +13,7 @@
 
   ## Parameters (optional):
     - `:account-type` [string, \"checking\"]: receiver bank account type. This parameter only has effect on Pix Transfers. ex: \"checking\", \"savings\" or \"salary\"
-    - `:external-id` [string, default nil]: url safe string that must be unique among all your transfers. Duplicated external_ids will cause failures. By default, this parameter will block any transfer that repeats amount and receiver information on the same date. ex: \"my-internal-id-123456\"
+    - `:external-id` [string, default nil]: url safe string that must be unique among all your transfers. Duplicated external-ids will cause failures. By default, this parameter will block any transfer that repeats amount and receiver information on the same date. ex: \"my-internal-id-123456\"
     - `:scheduled` [string, default now]: date or datetime when the transfer will be processed. May be pushed to next business day if necessary. ex: \"2021-03-11T08:00:00.000000+00:00\"
     - `:tags` [list of strings]: list of strings for reference when searching for transfers. ex: [\"employees\", \"monthly\"]
 

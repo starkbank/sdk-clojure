@@ -1,7 +1,7 @@
 (ns starkbank.workspace
   "Workspaces are bank accounts. They have independent balances, statements, operations and permissions.
   The only property that is shared between your workspaces is that they are linked to your organization,
-  which carries your basic informations, such as tax ID, name, etc..
+  which carries your basic information, such as tax ID, name, etc..
 
   ## Parameters (required):
     - `:username` [string]: Simplified name to define the workspace URL. This name must be unique across all Stark Bank Workspaces. Ex: \"starkbankworkspace\"

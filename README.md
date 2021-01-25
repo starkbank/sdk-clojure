@@ -1,4 +1,4 @@
-# Stark Bank Clojure SDK Beta
+# Stark Bank Clojure SDK
 
 Welcome to the Stark Bank Clojure SDK! This tool is made for Clojure
 developers who want to easily integrate with our API.
@@ -84,24 +84,32 @@ You can use one of following methods:
 (def public-key (:public-key key-pair))
 ```
 
-**Note**: When you are creating a new Project, it is recommended that you create the
+**NOTE**: When you are creating new credentials, it is recommended that you create the
 keys inside the infrastructure that will use it, in order to avoid risky internet
 transmissions of your **private-key**. Then you can export the **public-key** alone to the
 computer where it will be used in the new Project creation.
 
-### 3. Create a Project
+### 3. Register your user credentials
 
-You need a project for direct API integrations. To create one in Sandbox:
+You can interact directly with our API using two types of users: Projects and Organizations.
 
-3.1. Log into [Starkbank Sandbox](https://sandbox.web.starkbank.com)
+- **Projects** are workspace-specific users, that is, they are bound to the workspaces they are created in.
+One workspace can have multiple Projects.
+- **Organizations** are general users that control your entire organization.
+They can control all your Workspaces and even create new ones. The Organization is bound to your company's tax ID only.
+Since this user is unique in your entire organization, only one credential can be linked to it.
 
-3.2. Go to Menu > Usuários (Users) > Projetos (Projects)
+3.1 To create a Project in Sandbox:
 
-3.3. Create a Project: Give it a name and upload the public key you created in section 2.
+3.1.1. Log into [Starkbank Sandbox](https://web.sandbox.starkbank.com)
 
-3.4. After creating the Project, get its Project ID
+3.1.2. Go to Menu > Projects
 
-3.5. Use the Project ID and private key to create the object below:
+3.1.3. Create a Project: Give it a name and upload the public key you created in section 2.
+
+3.1.4. After creating the Project, get its Project ID
+
+3.1.5. Use the Project ID and private key to create the object below:
 
 ```clojure
 (ns my-lib.core
@@ -127,7 +135,6 @@ You need a project for direct API integrations. To create one in Sandbox:
   ))
 
 ;the function output is just a map, so you can also do:
-
 (def project {
     :environment "sandbox"
     :id "5671398416568321"
@@ -135,19 +142,58 @@ You need a project for direct API integrations. To create one in Sandbox:
   })
 ```
 
+3.2 To register your Organization's public key, a legal representative of your organization must send an e-mail with the desired public key to developers@starkbank.com. This flow will soon be integrated with our website, where you'll be able to do the entire process quicker and independently. Here is an example on how to handle your Organization in the SDK:
+
+```clojure
+(ns my-lib.core
+  (:use starkbank.core))
+
+;Get your private key from an environment variable or an encrypted database.
+;This is only an example of a private key content. You should use your own key.
+(def private-key-content "
+  -----BEGIN EC PARAMETERS-----
+  BgUrgQQACg==
+  -----END EC PARAMETERS-----
+  -----BEGIN EC PRIVATE KEY-----
+  MHQCAQEEIMCwW74H6egQkTiz87WDvLNm7fK/cA+ctA2vg/bbHx3woAcGBSuBBAAK
+  oUQDQgAE0iaeEHEgr3oTbCfh8U2L+r7zoaeOX964xaAnND5jATGpD/tHec6Oe9U1
+  IF16ZoTVt1FzZ8WkYQ3XomRD4HS13A==
+  -----END EC PRIVATE KEY-----
+  ")
+
+(def project (starkbank.user/organization
+    "sandbox"
+    "5671398416568321"
+    private-key-content
+    nil; You only need to set the workspace-id when you are operating a specific workspace-id
+  ))
+
+;the function output is just a map, so you can also do:
+(def project {
+    :environment "sandbox"
+    :id "5671398416568321"
+    :private-key private-key-content
+    :workspace-id nil
+  })
+
+;To dynamically use your organization credentials in a specific workspace-id,
+;you can use the user/organization-replace function:
+(starkbank.balance/get (starkbank.user/organization-replace organization "4848484848484848"))
+```
+
 NOTE 1: Never hard-code your private key. Get it from an environment variable or an encrypted database.
 
-NOTE 2: We support `"sandbox"` and `"production"` as environments.
+NOTE 2: We support `'sandbox'` and `'production'` as environments.
 
-NOTE 3: The project you created in `sandbox` does not exist in `production` and vice versa.
+NOTE 3: The credentials you registered in `sandbox` do not exist in `production` and vice versa.
 
 
 ### 4. Setting up the user
 
-There are two kinds of users that can access our API: **Project** and **Member**.
+There are three kinds of users that can access our API: **Organization**, **Project** and **Member**.
 
+- `Project` and `Organization` are designed for integrations and are the ones meant for our SDKs.
 - `Member` is the one you use when you log into our webpage with your e-mail.
-- `Project` is designed for integrations and is the one meant for our SDK.
 
 There are two ways to inform the user to the SDK:
  
@@ -157,7 +203,7 @@ There are two ways to inform the user to the SDK:
 (ns my-lib.core
   (:use starkbank.core))
 
-(def balance (starkbank.balance/get project))
+(def balance (starkbank.balance/get project)); or organization
 ```
 
 4.2 Set it as a default user in the SDK:
@@ -170,7 +216,7 @@ There are two ways to inform the user to the SDK:
     :environment "sandbox"
     :id "5671398416568321"
     :private-key private-key-content})
-(starkbank.settings/user project)
+(starkbank.settings/user project); or organization
 
 (def balance (starkbank.balance/get))
 ```
@@ -183,13 +229,13 @@ expose the starkbank SDK namespaces.
 ## Testing in Sandbox
 
 Your initial balance is zero. For many operations in Stark Bank, you'll need funds
-in your account, which can be added to your balance by creating a Boleto.
+in your account, which can be added to your balance by creating an Invoice or a Boleto. 
 
-In the Sandbox environment, 90% of the created Boletos will be automatically paid,
+In the Sandbox environment, most of the created Invoices and Boletos will be automatically paid,
 so there's nothing else you need to do to add funds to your account. Just create
-a few and wait around a bit.
+a few Invoices and wait around a bit.
 
-In Production, you (or one of your clients) will need to actually pay this Boleto
+In Production, you (or one of your clients) will need to actually pay this Invoice or Boleto
 for the value to be credited to your account.
 
 
@@ -198,8 +244,6 @@ for the value to be credited to your account.
 Here are a few examples on how to use the SDK. If you have any doubts, use the built-in
 `doc` function to get more info on the desired functionality
 (for example: `(doc starkbank.boleto)`)
-
-**Note**: Almost all SDK functions also provide a bang (!) version. To simplify the examples, they will be used the most throughout this README.
 
 ### Create transactions
 
@@ -256,7 +300,7 @@ You can get a specific transaction by its id:
 (println transaction)
 ```
 
-### Get balance
+### Get your balance
 
 To know how much money you have in your workspace, run:
 
@@ -268,7 +312,7 @@ To know how much money you have in your workspace, run:
 
 ### Create transfers
 
-You can also create transfers in the SDK (TED/PIX).
+You can also create transfers in the SDK (TED/Pix).
 
 ```clojure
 (def transfers
@@ -276,9 +320,11 @@ You can also create transfers in the SDK (TED/PIX).
     [
       {
         :amount 100
-        :bank-code "20018183"; PIX
+        :bank-code "20018183"; Pix
         :branch-code "0001"
         :account-number "10000-0"
+        :account-type "checking"
+        :external-id "my-internal-id-12345"
         :tax-id "012.345.678-90"
         :name "Tony Stark"
         :tags ["iron" "suit"]
@@ -312,7 +358,7 @@ You can query multiple transfers according to filters.
 (println transfers)
 ```
 
-### Get transfer
+### Get a transfer
 
 To get a single transfer by its id, run:
 
@@ -322,7 +368,7 @@ To get a single transfer by its id, run:
 (println transfer)
 ```
 
-### Get transfer PDF
+### Get a transfer PDF
 
 A transfer PDF may also be retrieved by passing its id.
 This operation is only valid for transfers with "processing" or "success" status.
@@ -571,7 +617,7 @@ you have in other banks.
 (println boletos)
 ```
 
-### Get boleto
+### Get a boleto
 
 After its creation, information on a boleto may be retrieved by passing its id.
 Its status indicates whether it's been paid.
@@ -582,7 +628,7 @@ Its status indicates whether it's been paid.
 (println boleto)
 ```
 
-### Get boleto PDF
+### Get a boleto PDF
 
 After its creation, a boleto PDF may be retrieved by passing its id.
 
@@ -596,7 +642,7 @@ Be careful not to accidentally enforce any encoding on the raw pdf content,
 as it may yield abnormal results in the final file, such as missing images
 and strange characters.
 
-### Delete boleto
+### Delete a boleto
 
 You can also cancel a boleto by its id.
 Note that this is not possible if it has been processed already.
@@ -662,7 +708,7 @@ You can discover if a StarkBank boleto has been recently paid before we receive 
   (println sherlock))
 ```
 
-### Get boleto holmes
+### Get a boleto holmes
 
 To get a single boleto holmes by its id, run:
 
@@ -702,7 +748,7 @@ Searches are also possible with boleto holmes logs:
   (println log))
 ```
 
-### Get boleto holmes log
+### Get a boleto holmes log
 
 You can also get a boleto holmes log by specifying its id.
 
@@ -759,7 +805,7 @@ You can search for brcode payments using filters.
   (println payment))
 ```
 
-### Get BR Code payment
+### Get a BR Code payment
 
 To get a single BR Code payment by its id, run:
 
@@ -783,7 +829,7 @@ Note that this is not possible if it has been processed already.
 (println payment)
 ```
 
-### Get BR Code payment PDF
+### Get a BR Code payment PDF
 
 After its creation, a boleto payment PDF may be retrieved by its id. 
 
@@ -811,7 +857,7 @@ Searches are also possible with BR Code payment logs:
   (println log))
 ```
 
-### Get BR Code payment log
+### Get a BR Code payment log
 
 You can also get a BR Code payment log by specifying its id.
 
@@ -848,7 +894,7 @@ Paying a boleto is also simple.
 (println payments)
 ```
 
-### Get boleto payment
+### Get a boleto payment
 
 To get a single boleto payment by its id, run:
 
@@ -858,7 +904,7 @@ To get a single boleto payment by its id, run:
 (println payment)
 ```
 
-### Get boleto payment PDF
+### Get a boleto payment PDF
 
 After its creation, a boleto payment PDF may be retrieved by passing its id.
 
@@ -872,7 +918,7 @@ Be careful not to accidentally enforce any encoding on the raw pdf content,
 as it may yield abnormal results in the final file, such as missing images
 and strange characters.
 
-### Delete boleto payment
+### Delete a boleto payment
 
 You can also cancel a boleto payment by its id.
 Note that this is not possible if it has been processed already.
@@ -912,7 +958,7 @@ Searches are also possible with boleto payment logs:
 (println logs)
 ```
 
-### Get boleto payment log
+### Get a boleto payment log
 
 You can also get a boleto payment log by specifying its id.
 
@@ -922,7 +968,7 @@ You can also get a boleto payment log by specifying its id.
 (println log)
 ```
 
-### Create utility payment
+### Create a utility payment
 
 It's also simple to pay utility bills (such as electricity and water bills) in the SDK.
 
@@ -962,7 +1008,7 @@ To search for utility payments using filters, run:
 (println payments)
 ```
 
-### Get utility payment
+### Get a utility payment
 
 You can get a specific bill by its id:
 
@@ -972,7 +1018,7 @@ You can get a specific bill by its id:
 (println payment)
 ```
 
-### Get utility payment PDF
+### Get a utility payment PDF
 
 After its creation, a utility payment PDF may also be retrieved by passing its id.
 
@@ -986,7 +1032,7 @@ Be careful not to accidentally enforce any encoding on the raw pdf content,
 as it may yield abnormal results in the final file, such as missing images
 and strange characters.
 
-### Delete utility payment
+### Delete a utility payment
 
 You can also cancel a utility payment by its id.
 Note that this is not possible if it has been processed already.
@@ -1012,7 +1058,7 @@ bills life cycles.
 (println logs)
 ```
 
-### Get utility payment log
+### Get a utility payment log
 
 If you want to get a specific payment log by its id, just run:
 
@@ -1026,7 +1072,7 @@ If you want to get a specific payment log by its id, just run:
 
 You can also request payments that must pass through a specific cost center approval flow to be executed. In certain structures, this allows double checks for cash-outs and also gives time to load your account with the required amount before the payments take place. The approvals can be granted at our website and must be performed according to the rules specified in the cost center.
 
-**Note**: The value of the center\_id parameter can be consulted by logging into our website and going
+**Note**: The value of the center-id parameter can be consulted by logging into our website and going
 to the desired cost center page.
 
 ```clojure
@@ -1085,7 +1131,7 @@ To create a webhook subscription and be notified whenever an event occurs, run:
 (println webhook)
 ```
 
-### Query webhooks
+### Query webhook subscriptions
 
 To search for registered webhooks, run:
 
@@ -1095,7 +1141,7 @@ To search for registered webhooks, run:
 (println webhooks)
 ```
 
-### Get webhook
+### Get a webhook subscription
 
 You can get a specific webhook by its id.
 
@@ -1105,7 +1151,7 @@ You can get a specific webhook by its id.
 (println webhook)
 ```
 
-### Delete webhook
+### Delete a webhook subscription
 
 You can also delete a specific webhook by its id.
 
@@ -1151,7 +1197,7 @@ To search for webhooks events, run:
 (println events)
 ```
 
-### Get webhook event
+### Get a webhook event
 
 You can get a specific webhook event by its id.
 
@@ -1161,7 +1207,7 @@ You can get a specific webhook event by its id.
 (println event)
 ```
 
-### Delete webhook event
+### Delete a webhook event
 
 You can also delete a specific webhook event by its id.
 
@@ -1171,9 +1217,9 @@ You can also delete a specific webhook event by its id.
 (println event)
 ```
 
-### Get DICT key
+### Get a DICT key
 
-You can get PIX key's parameters by its id.
+You can get Pix key's parameters by its id.
 
 ```clojure
 (def dict-key (starkbank.dict-key/get "tony@starkbank.com"))
@@ -1183,7 +1229,7 @@ You can get PIX key's parameters by its id.
 
 ### Query your DICT keys
 
-To take a look at the PIX keys linked to your workspace, just run the following:
+To take a look at the Pix keys linked to your workspace, just run the following:
 
 ```clojure
 (def dict-keys (starkbank.dict-key/query {:limit 5}))
@@ -1197,7 +1243,7 @@ To take a look at the PIX keys linked to your workspace, just run the following:
 
 This can be used in case you've lost events.
 With this function, you can manually set events retrieved from the API as
-"delivered" to help future event queries with `is_delivered: false`.
+"delivered" to help future event queries with `is-delivered: false`.
 
 ```clojure
 (def event (starkbank.event/update "5764442407043072"
@@ -1206,6 +1252,46 @@ With this function, you can manually set events retrieved from the API as
   }))
 
 (println event)
+```
+
+### Create a new Workspace
+
+The Organization user allows you to create new Workspaces (bank accounts) under your organization.
+Workspaces have independent balances, statements, operations and users.
+The only link between your Workspaces is the Organization that controls them.
+
+**Note**: This route will only work if the Organization user is used with `:workspace-id nil`.
+
+```clojure
+(def workspace
+  (starkbank.workspace/create
+    {
+      :username "iron-bank-workspace-1"
+      :name "Iron Bank Workspace 1"
+    }))
+
+(println workspace)
+```
+
+### List your Workspaces
+
+This route lists Workspaces. If no parameter is passed, all the workspaces the user has access to will be listed, but
+you can also find other Workspaces by searching for their usernames or IDs directly.
+
+```clojure
+(def workspaces (starkbank.workspace/query))
+
+(println workspaces)
+```
+
+### Get a Workspace
+
+You can get a specific Workspace by its id.
+
+```clojure
+(def workspace (starkbank.workspace/get "6178044066660352"))
+
+(println workspace)
 ```
 
 ## Handling errors
