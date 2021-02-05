@@ -23,3 +23,13 @@
     (user/set-test-project)
     (def transactions (take 200 (transaction/query {:limit 3})))
     (is (= 3 (count transactions)))))
+
+(deftest page-transactions
+  (testing "page transactions"
+    (user/set-test-project)
+    (def first-page (transaction/page {:limit 2}))
+    (println first-page)
+    (def second-page (transaction/page {:limit 2 :cursor (:cursor first-page)}))
+    (println (:transactions second-page))
+    (println (:cursor second-page))
+    (is (not (= (:id (first (:transactions first-page))) (:id (first (:transactions second-page))))))))
