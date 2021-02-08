@@ -117,6 +117,26 @@
       :created (.created java-object)
       :updated (.updated java-object)
     }))
+
+(defn- java-payment-to-clojure
+  ([java-object]
+   (defn- java-description-to-map [description]
+     (if (nil? (.key description))
+       {:key (.value description)}
+       {:key (.key description)
+        :value (.value description)}))
+
+   {
+     :amount (.amount java-object)
+     :name (.name java-object)
+     :tax-id (.taxId java-object)
+     :bank-code (.bankCode java-object)
+     :branch-code (.branchCode java-object)
+     :account-number (.accountNumber java-object)
+     :account-type (.accountType java-object)
+     :end-to-end-id (.endToEndId java-object)
+     :method (.method java-object)
+   }))
  
 (defn- clojure-query-to-java
   ([clojure-map]
@@ -222,7 +242,6 @@
         id
         (#'starkbank.user/get-java-user user)))))
 
-
 (defn pdf
   "Receive a single Invoice pdf file generated in the Stark Bank API by passing its id.
 
@@ -262,6 +281,36 @@
       (Invoice/qrcode
         id
         (#'starkbank.user/get-java-user user))))
+
+(defn payment
+  "Receive the invoice.payment sub-resource associated with a paid invoice.
+
+  ## Parameters (required):
+    - `id` [string]: map unique id. ex: \"5656565656565656\"
+
+  ## Options:
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+
+  ## Return:
+    - Invoice payment information:
+      - amount [integer]: amount in cents that was paid. ex: 1234 (= R$ 12.34)
+      - name [string]: payer full name. ex: \"Anthony Edward Stark\"
+      - tax-id [string]: payer tax ID (CPF or CNPJ). ex: \"20.018.183/0001-80\"
+      - bank-code [string]: code of the payer bank institution in Brazil. ex: \"20018183\"
+      - branch-code [string]: payer bank account branch. ex: \"1357-9\"
+      - account-number [string]: payer bank account number. ex: \"876543-2\"
+      - account-type [string]: payer bank account type. ex: \"checking\", \"savings\" or \"salary\"
+      - end-to-end-id [string]: central bank's unique transaction ID. ex: \"E79457883202101262140HHX553UPqeq\"
+      - method [string]: payment method that was used. ex: \"pix\""
+  ([id]
+    (java-payment-to-clojure
+      (Invoice/payment id)))
+
+  ([id, user]
+    (java-payment-to-clojure
+      (Invoice/payment
+        id
+        (#'starkbank.user/get-java-user user)))))
 
 (defn update
   "Update an Invoice by passing id.

@@ -555,6 +555,16 @@ You can get a single log by its id.
 (println log)
 ```
 
+### Get an invoice payment information
+
+Once an invoice has been paid, you can get the payment information using the Invoice.Payment sub-resource:
+
+```clojure
+(def payment (starkbank.invoice/payment "4187263519823719"))
+
+(println payment)
+```
+
 ### Query deposits
 
 You can get a list of created deposits given some filters.
