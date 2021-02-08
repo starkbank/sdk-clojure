@@ -13,6 +13,8 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 
 
 ## [Unreleased]
+
+## [2.3.0] - 2021-02-08
 ### Added
 - invoice.payment sub-resource to allow retrieval of invoice payment information
 
