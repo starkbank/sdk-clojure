@@ -135,13 +135,6 @@ Since this user is unique in your entire organization, only one credential can b
     "5671398416568321"
     private-key-content
   ))
-
-;the function output is just a map, so you can also do:
-(def project {
-    :environment "sandbox"
-    :id "5671398416568321"
-    :private-key private-key-content
-  })
 ```
 
 3.2. To create Organization credentials in Sandbox:
@@ -175,20 +168,12 @@ Since this user is unique in your entire organization, only one credential can b
   -----END EC PRIVATE KEY-----
   ")
 
-(def project (starkbank.user/organization
+(def organization (starkbank.user/organization
     "sandbox"
     "5671398416568321"
     private-key-content
     nil; You only need to set the workspace-id when you are operating a specific workspace-id
   ))
-
-;the function output is just a map, so you can also do:
-(def project {
-    :environment "sandbox"
-    :id "5671398416568321"
-    :private-key private-key-content
-    :workspace-id nil
-  })
 
 ;To dynamically use your organization credentials in a specific workspace-id,
 ;you can use the user/organization-replace function:
@@ -217,7 +202,12 @@ There are two ways to inform the user to the SDK:
 (ns my-lib.core
   (:use starkbank.core))
 
-(def balance (starkbank.balance/get project)); or organization
+(def user (starkbank.user/project; or organization
+    "sandbox"
+    "5671398416568321"
+    private-key-content))
+
+(def balance (starkbank.balance/get user))
 ```
 
 4.2 Set it as a default user in the SDK:
@@ -226,11 +216,12 @@ There are two ways to inform the user to the SDK:
 (ns my-lib.core
   (:use starkbank.core))
 
-(def project {
-    :environment "sandbox"
-    :id "5671398416568321"
-    :private-key private-key-content})
-(starkbank.settings/user project); or organization
+(def user (starkbank.user/project; or organization
+    "sandbox"
+    "5671398416568321"
+    private-key-content))
+
+(starkbank.settings/user user)
 
 (def balance (starkbank.balance/get))
 ```
