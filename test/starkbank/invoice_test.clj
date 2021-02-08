@@ -52,15 +52,16 @@
     (is (= 50 (count invoices)))
     (invoice/update (:id (rand-nth invoices)) {:status "canceled"})))
 
-(deftest qrcode
-  (testing "qrcode"
+(deftest query-qrcode-payment
+  (testing "query, get qrcode and get payment information"
     (user/set-test-project)
-    (def invoices (take 200 (invoice/query {:limit 1})))
+    (def invoices (take 200 (invoice/query {:limit 1 :status "paid"})))
     (def qrcode (invoice/qrcode (:id (first invoices))))
     (is (< 1000 (.available qrcode)))
     (def file-name "temp/invoice-qrcode.png")
     (io/make-parents file-name)
-    (io/copy qrcode (io/file file-name))))
+    (io/copy qrcode (io/file file-name))
+    (def payment (invoice/payment (:id (first invoices))))))
 
 (deftest query-get-invoice-logs
   (testing "query and get invoice logs"
