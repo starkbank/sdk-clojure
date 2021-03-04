@@ -24,6 +24,7 @@
     - `:fine-amount` [integer, default nil]: Invoice fine value calculated over nominal-amount. ex: 20000
     - `:interest-amount` [integer, default nil]: Invoice interest value calculated over nominal-amount. ex: 10000
     - `:discount-amount` [integer, default nil]: Invoice discount value calculated over nominal-amount. ex: 3000
+    - `:transaction-ids` [list of strings]: ledger transaction ids linked to this invoice (if there are more than one, all but first are reversals). ex: [\"19827356981273\"]
     - `:id` [string, default nil]: unique id returned when the Invoice is created. ex: \"5656565656565656\"
     - `:brcode` [string, default nil]: BR Code for the Invoice payment. ex: \"00020101021226800014br.gov.bcb.pix2558invoice.starkbank.com/f5333103-3279-4db2-8389-5efe335ba93d5204000053039865802BR5913Arya Stark6009Sao Paulo6220051656565656565656566304A9A0\"
     - `:status` [string, default nil]: current Invoice status. ex: \"registered\" or \"paid\"
@@ -112,6 +113,7 @@
       :fine-amount (.fineAmount java-object)
       :interest-amount (.interestAmount java-object)
       :discount-amount (.discountAmount java-object)
+      :transaction-ids (into [] (.transactionIds java-object))
       :brcode (.brcode java-object)
       :status (.status java-object)
       :created (.created java-object)
