@@ -14,6 +14,10 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 
 ## [Unreleased]
 
+## [2.3.1] - 2021-03-04
+### Fixed
+- bug when no expiration is passed to invoice resource
+
 ## [2.3.0] - 2021-02-08
 ### Added
 - invoice.payment sub-resource to allow retrieval of invoice payment information
