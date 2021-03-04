@@ -20,6 +20,7 @@
   ## Attributes (return-only):
     - `:fee` [integer, default nil]: fee charged by this Invoice. ex: 65 (= R$ 0.65)
     - `:pdf` [string, default nil]: public Invoice PDF URL. ex: \"https://invoice.starkbank.com/pdf/d454fa4e524441c1b0c1a729457ed9d8\"
+    - `:link` [string, default nil]: public Invoice webpage URL. ex: \"https://my-workspace.sandbox.starkbank.com/invoicelink/d454fa4e524441c1b0c1a729457ed9d8\"
     - `:nominal-amount` [integer, default nil]: Invoice emission value in cents (will change if invoice is updated, but not if it's paid). ex: 400000
     - `:fine-amount` [integer, default nil]: Invoice fine value calculated over nominal-amount. ex: 20000
     - `:interest-amount` [integer, default nil]: Invoice interest value calculated over nominal-amount. ex: 10000
@@ -109,6 +110,7 @@
       :discounts (into [] (keywordize-keys (map java-discount-to-map (.discounts java-object))))
       :fee (.fee java-object)
       :pdf (.pdf java-object)
+      :link (.link java-object)
       :nominal-amount (.nominalAmount java-object)
       :fine-amount (.fineAmount java-object)
       :interest-amount (.interestAmount java-object)
