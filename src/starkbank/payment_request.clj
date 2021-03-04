@@ -18,7 +18,7 @@
   - `:id` [string]: id of the object
   - `:amount` [long]: PaymentRequest amount. ex: 100000 = R$1.000,00
   - `:status` [string]: current PaymentRequest status.ex: \"pending\" or \"approved\"
-  - `:actions` [list of PaymentRequest.Action, default null]: list of actions that are affecting this PaymentRequest.ex: [{\"type\": \"member\", \"id\": \"56565656565656, \"action\": \"requested\"}]
+  - `:actions` [list of PaymentRequest.Action, default nil]: list of actions that are affecting this PaymentRequest.ex: [{\"type\": \"member\", \"id\": \"56565656565656, \"action\": \"requested\"}]
   - `:updated` [string]: latest update datetime for the PaymentRequest. ex: \"2020-03-26T19:32:35.418698+00:00\"
   - `:created` [string]: creation datetime for the PaymentRequest. ex: \"2020-03-26T19:32:35.418698+00:00\""
   (:refer-clojure :exclude [get type])

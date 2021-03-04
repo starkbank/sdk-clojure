@@ -18,8 +18,8 @@
     - `:descriptions` [list of maps, default nil]: list of maps with :key (string) and :value (string) pairs
 
   ## Attributes (return-only):
-    - `:fee` [integer, default null]: fee charged by this Invoice. ex: 65 (= R$ 0.65)
-    - `:pdf` [string, default null]: public Invoice PDF URL. ex: \"https://invoice.starkbank.com/pdf/d454fa4e524441c1b0c1a729457ed9d8\"
+    - `:fee` [integer, default nil]: fee charged by this Invoice. ex: 65 (= R$ 0.65)
+    - `:pdf` [string, default nil]: public Invoice PDF URL. ex: \"https://invoice.starkbank.com/pdf/d454fa4e524441c1b0c1a729457ed9d8\"
     - `:nominal-amount` [integer, default nil]: Invoice emission value in cents (will change if invoice is updated, but not if it's paid). ex: 400000
     - `:fine-amount` [integer, default nil]: Invoice fine value calculated over nominal-amount. ex: 20000
     - `:interest-amount` [integer, default nil]: Invoice interest value calculated over nominal-amount. ex: 10000
@@ -322,7 +322,7 @@
     - `:status` [string]: If the Invoice hasn't been paid yet, you may cancel it by passing \"canceled\" in the status
     - `:amount` [string]: If the Invoice hasn't been paid yet, you may update its amount by passing the desired amount integer
     - `:due` [string, default today + 2 days]: Invoice due date in UTC ISO format. ex: \"2020-11-25T17:59:26.249976+00:00\"
-    - `:expiration` [DateInterval or integer, default null]: time interval in seconds between due date and expiration date. ex 123456789
+    - `:expiration` [DateInterval or integer, default nil]: time interval in seconds between due date and expiration date. ex 123456789
     - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
