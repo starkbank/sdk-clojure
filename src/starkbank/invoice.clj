@@ -73,7 +73,7 @@
           "name" name
           "taxId" tax-id
           "due" due
-          "expiration" (Long. expiration)
+          "expiration" (if (nil? expiration) nil (Long. expiration))
           "fine" (if (nil? fine) nil (double fine))
           "interest" (if (nil? interest) nil (double interest))
           "discounts" (if (nil? discounts) nil (java.util.ArrayList. (map apply-java-hashmap discounts)))
