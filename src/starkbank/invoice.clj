@@ -18,12 +18,14 @@
     - `:descriptions` [list of maps, default nil]: list of maps with :key (string) and :value (string) pairs
 
   ## Attributes (return-only):
-    - `:fee` [integer, default null]: fee charged by this Invoice. ex: 65 (= R$ 0.65)
-    - `:pdf` [string, default null]: public Invoice PDF URL. ex: \"https://invoice.starkbank.com/pdf/d454fa4e524441c1b0c1a729457ed9d8\"
+    - `:fee` [integer, default nil]: fee charged by this Invoice. ex: 65 (= R$ 0.65)
+    - `:pdf` [string, default nil]: public Invoice PDF URL. ex: \"https://invoice.starkbank.com/pdf/d454fa4e524441c1b0c1a729457ed9d8\"
+    - `:link` [string, default nil]: public Invoice webpage URL. ex: \"https://my-workspace.sandbox.starkbank.com/invoicelink/d454fa4e524441c1b0c1a729457ed9d8\"
     - `:nominal-amount` [integer, default nil]: Invoice emission value in cents (will change if invoice is updated, but not if it's paid). ex: 400000
     - `:fine-amount` [integer, default nil]: Invoice fine value calculated over nominal-amount. ex: 20000
     - `:interest-amount` [integer, default nil]: Invoice interest value calculated over nominal-amount. ex: 10000
     - `:discount-amount` [integer, default nil]: Invoice discount value calculated over nominal-amount. ex: 3000
+    - `:transaction-ids` [list of strings]: ledger transaction ids linked to this invoice (if there are more than one, all but first are reversals). ex: [\"19827356981273\"]
     - `:id` [string, default nil]: unique id returned when the Invoice is created. ex: \"5656565656565656\"
     - `:brcode` [string, default nil]: BR Code for the Invoice payment. ex: \"00020101021226800014br.gov.bcb.pix2558invoice.starkbank.com/f5333103-3279-4db2-8389-5efe335ba93d5204000053039865802BR5913Arya Stark6009Sao Paulo6220051656565656565656566304A9A0\"
     - `:status` [string, default nil]: current Invoice status. ex: \"registered\" or \"paid\"
@@ -108,10 +110,12 @@
       :discounts (into [] (keywordize-keys (map java-discount-to-map (.discounts java-object))))
       :fee (.fee java-object)
       :pdf (.pdf java-object)
+      :link (.link java-object)
       :nominal-amount (.nominalAmount java-object)
       :fine-amount (.fineAmount java-object)
       :interest-amount (.interestAmount java-object)
       :discount-amount (.discountAmount java-object)
+      :transaction-ids (into [] (.transactionIds java-object))
       :brcode (.brcode java-object)
       :status (.status java-object)
       :created (.created java-object)
@@ -322,7 +326,7 @@
     - `:status` [string]: If the Invoice hasn't been paid yet, you may cancel it by passing \"canceled\" in the status
     - `:amount` [string]: If the Invoice hasn't been paid yet, you may update its amount by passing the desired amount integer
     - `:due` [string, default today + 2 days]: Invoice due date in UTC ISO format. ex: \"2020-11-25T17:59:26.249976+00:00\"
-    - `:expiration` [DateInterval or integer, default null]: time interval in seconds between due date and expiration date. ex 123456789
+    - `:expiration` [DateInterval or integer, default nil]: time interval in seconds between due date and expiration date. ex 123456789
     - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
