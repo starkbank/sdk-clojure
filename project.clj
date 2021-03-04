@@ -1,4 +1,4 @@
-(defproject starkbank/sdk "2.3.1"
+(defproject starkbank/sdk "2.4.0"
   :description "SDK to make Clojure integrations with the Stark Bank API easier."
   :url "https://github.com/starkbank/sdk-clojure"
   :license {:name "MIT"

@@ -13,6 +13,10 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 
 
 ## [Unreleased]
+## [2.3.4] - 2021-03-04
+### Added
+- invoice.transaction-ids property to allow invoice ledger transaction look-up
+- invoice.link property to allow easy access to invoice webpage
 
 ## [2.3.1] - 2021-03-04
 ### Fixed
