@@ -12,7 +12,7 @@
       - `:ispb` [string, default nil]: ISPB code used for transactions. ex: \"20018183\"
       - `:branch-code` [string, default nil]: bank account branch code associated with the PIX key. ex: \"9585\"
       - `:account-number` [string, default nil]: bank account number associated with the PIX key. ex: \"9828282578010513\"
-      - `:account-type` [string, default nil]: bank account type associated with the PIX key. ex: \"checking\", \"saving\" e \"salary\"
+      - `:account-type` [string, default nil]: bank account type associated with the PIX key. ex: \"checking\", \"saving\", \"salary\" or \"payment\"
       - `:status` [string, default nil]: current PIX key status. ex: \"created\", \"registered\", \"canceled\" or \"failed\"
       - `:account-created` [string, default nil]: creation datetime of the bank account associated with the PIX key. ex: \"2020-11-05T14:55:08.812665+00:00\"
       - `:owned` [string, default nil]: datetime since when the current owner hold this PIX key. ex : \"2020-11-05T14:55:08.812665+00:00\"     
