@@ -13,6 +13,9 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 
 
 ## [Unreleased]
+### Added
+- "payment" account type for Pix related resources
+
 ## [2.3.4] - 2021-03-04
 ### Added
 - invoice.transaction-ids property to allow invoice ledger transaction look-up
