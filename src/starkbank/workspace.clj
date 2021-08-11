@@ -6,6 +6,9 @@
   ## Parameters (required):
     - `:username` [string]: Simplified name to define the workspace URL. This name must be unique across all Stark Bank Workspaces. Ex: \"starkbankworkspace\"
     - `:name` [string]: Full name that identifies the Workspace. This name will appear when people access the Workspace on our platform, for example. Ex: \"Stark Bank Workspace\"
+
+  ## Parameters (optional):
+    - `:allowed-tax-ids` [list of strings, default nil]: list of tax IDs that will be allowed to send Deposits to this Workspace. If empty, all are allowed. ex: [\"012.345.678-90\", \"20.018.183/0001-80\"]
   
   ## Attributes:
     - `:id` [string, default nil]: unique id returned when the workspace is created. ex: \"5656565656565656\""
@@ -19,12 +22,14 @@
     (let [{
       username "username"
       name "name"
+      allowed-tax-ids "allowed-tax-ids"
     }
     (stringify-keys clojure-map)]
       (java.util.HashMap.
         {
           "username" username
           "name" name
+          "allowed-tax-ids" allowed-tax-ids
         }
       ))))
 
@@ -34,6 +39,7 @@
       :id (.id java-object)
       :username (.username java-object)
       :name (.name java-object)
+      :allowed-tax-ids (into [] (.allowedTaxIds java-object))
     }))
 
 (defn- clojure-query-to-java
@@ -59,7 +65,8 @@
     - `:name` [string]: Full name that identifies the Workspace. This name will appear when people access the Workspace on our platform, for example. Ex: \"Stark Bank Workspace\"
 
   ## Parameters (optional):
-    - `:user` [Organization]: Organization map returned from starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:allowed-tax-ids` [list of strings, default []]: list of tax IDs that will be allowed to send Deposits to this Workspace. If empty, all are allowed. ex: [\"012.345.678-90\", \"20.018.183/0001-80\"]
+    - `:user` [Organization, default nil]: Organization map returned from starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Workspace map with updated attributes"

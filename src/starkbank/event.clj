@@ -8,6 +8,7 @@
     - `:log` [Log]: a Log map from one the subscription services (Transfer.Log, Boleto.Log, BoletoPayment.log or UtilityPayment.Log)
     - `:created` [string]: creation datetime for the notification event. ex: \"2020-03-26T19:32:35.418698+00:00\"
     - `:is-delivered` [bool]: true if the event has been successfully delivered to the user url. ex: false
+    - `:workspace-id` [string]: ID of the Workspace that generated this event. Mostly used when multiple Workspaces have Webhooks registered to the same endpoint. ex: \"4545454545454545\"
     - `:subscription` [string]: service that triggered this event. ex: \"transfer\", \"utility-payment\""
   (:refer-clojure :exclude [get update])
   (:import [com.starkbank Event])
@@ -29,6 +30,7 @@
       :created (.created java-object)
       :is-delivered (.isDelivered java-object)
       :subscription (.subscription java-object)
+      :workspace-id (.workspaceId java-object)
       :log (case (.subscription java-object)
             "transfer" (#'starkbank.transfer.log/java-to-clojure (.log java-object))
             "invoice" (#'starkbank.invoice.log/java-to-clojure (.log java-object))

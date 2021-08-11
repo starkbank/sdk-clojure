@@ -9,6 +9,7 @@
       - `:name` [string, default nil]: account owner full name. ex: \"Tony Stark\"
       - `:tax-id [string, default nil]: tax ID (CPF or CNPJ) with or without formatting. ex: \"01234567890\" or \"20.018.183/0001-80\"
       - `:owner-type` [string, default nil]: PIX key owner type. ex \"naturalPerson\" or \"legalPerson\"
+      - `:bank-name` [string, default nil]: bank name associated with the DICT key. ex: \"Stark Bank\"
       - `:ispb` [string, default nil]: ISPB code used for transactions. ex: \"20018183\"
       - `:branch-code` [string, default nil]: bank account branch code associated with the PIX key. ex: \"9585\"
       - `:account-number` [string, default nil]: bank account number associated with the PIX key. ex: \"9828282578010513\"
@@ -29,6 +30,7 @@
       :type (.type java-object)
       :name (.name java-object)
       :tax-id (.taxId java-object)
+      :bank-name (.bankName java-object)
       :owner-type (.ownerType java-object)
       :ispb (.ispb java-object)
       :branch-code (.branchCode java-object)
