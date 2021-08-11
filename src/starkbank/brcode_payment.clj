@@ -4,22 +4,23 @@
     to the Stark Bank API and returns the list of created objects.
   
     ## Parameters (required):
-			- `:brcode` [string]: String loaded directly from the QRCode or copied from the invoice. ex: \"00020126580014br.gov.bcb.pix0136a629532e-7693-4846-852d-1bbff817b5a8520400005303986540510.005802BR5908T'Challa6009Sao Paulo62090505123456304B14A\"
-			- `:tax-id` [string]: receiver tax ID (CPF or CNPJ) with or without formatting. ex: \"01234567890\" or \"20.018.183/0001-80\"
-			- `:description` [string]: Text to be displayed in your statement (min. 10 characters). ex: \"payment ABC\"
+      - `:brcode` [string]: String loaded directly from the QRCode or copied from the invoice. ex: \"00020126580014br.gov.bcb.pix0136a629532e-7693-4846-852d-1bbff817b5a8520400005303986540510.005802BR5908T'Challa6009Sao Paulo62090505123456304B14A\"
+      - `:tax-id` [string]: receiver tax ID (CPF or CNPJ) with or without formatting. ex: \"01234567890\" or \"20.018.183/0001-80\"
+      - `:description` [string]: Text to be displayed in your statement (min. 10 characters). ex: \"payment ABC\"
   
-		## Parameters (optional):
-			- `:amount` [long, default nil]: amount automatically calculated from line or barCode. ex: 23456 (= R$ 234.56)
-			- `:scheduled` [string, default now]: payment scheduled date or datetime. ex: \"2020-11-25T17:59:26.249976+00:00\"
-			- `:tags` [list of strings, default nil]: list of strings for tagging
+    ## Parameters (optional):
+      - `:amount` [long, default nil]: amount automatically calculated from line or barCode. ex: 23456 (= R$ 234.56)
+      - `:scheduled` [string, default now]: payment scheduled date or datetime. ex: \"2020-11-25T17:59:26.249976+00:00\"
+      - `:tags` [list of strings, default nil]: list of strings for tagging
   
-		## Attributes (return-only):
-			- `:id` [string, default nil]: unique id returned when payment is created. ex: \"5656565656565656\"
-			- `:status` [string, default nil]: current payment status. ex: \"success\" or \"failed\"
-			- `:type` [string, default nil]: brcode type. ex: \"static\" or \"dynamic\"
-			- `:fee` [integer, default nil]: fee charged when the brcode payment is created. ex: 200 (= R$ 2.00)
-			- `:updated` [string, default nil]: latest update datetime for the payment. ex: \"2020-11-25T17:59:26.249976+00:00\"
-			- `:created` [string, default nil]: creation datetime for the payment. ex: \"2020-11-25T17:59:26.249976+00:00\""
+    ## Attributes (return-only):
+      - `:id` [string, default nil]: unique id returned when payment is created. ex: \"5656565656565656\"
+      - `:status` [string, default nil]: current payment status. ex: \"success\" or \"failed\"
+      - `:type` [string, default nil]: brcode type. ex: \"static\" or \"dynamic\"
+      - `:fee` [integer, default nil]: fee charged when the brcode payment is created. ex: 200 (= R$ 2.00)
+      - `:transaction-ids` [list of strings, default nil]: ledger transaction ids linked to this boleto. ex: [\"19827356981273\"] 
+      - `:updated` [string, default nil]: latest update datetime for the payment. ex: \"2020-11-25T17:59:26.249976+00:00\"
+      - `:created` [string, default nil]: creation datetime for the payment. ex: \"2020-11-25T17:59:26.249976+00:00\""
     (:refer-clojure :exclude [get set update])
     (:import [com.starkbank BrcodePayment])
     (:use [starkbank.user]
@@ -63,6 +64,7 @@
       :status (.status java-object)
       :type (.type java-object)
       :fee (.fee java-object)
+      :transaction-ids (into [] (.transactionIds java-object))
       :updated (.updated java-object)
       :created (.created java-object)
     }))
@@ -194,7 +196,7 @@
     - `:id` [list of strings]: BrcodePayment unique ids. ex: \"5656565656565656\"
 
   ## Parameters (optional):
-    - `:status` [string]: If the BrcodePayment hasn't been paid yet, you may cancel it by passing \"canceled\" in the status			
+    - `:status` [string]: If the BrcodePayment hasn't been paid yet, you may cancel it by passing \"canceled\" in the status
 
   ## Return:
     - target BrcodePayment with updated attributes"

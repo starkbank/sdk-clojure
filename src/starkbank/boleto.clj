@@ -32,6 +32,7 @@
     - `:line` [string, default nil]: generated Boleto line for payment. ex: \"34191.09008 63571.277308 71444.640008 5 81960000000062\"
     - `:bar-code` [string, default nil]: generated Boleto bar-code for payment. ex: \"34195819600000000621090063571277307144464000\"
     - `:status` [string, default nil]: current Boleto status. ex: \"registered\" or \"paid\"
+    - `:transaction-ids` [list of strings, default nil]: ledger transaction ids linked to this boleto. ex: [\"19827356981273\"] 
     - `:created` [string, default nil]: creation datetime for the Boleto. ex: \"2020-03-26T19:32:35.418698+00:00\""
   (:refer-clojure :exclude [get set])
   (:import [com.starkbank Boleto])
@@ -139,6 +140,7 @@
       :line (.line java-object)
       :bar-code (.barCode java-object)
       :status (.status java-object)
+      :transaction-ids (into [] (.transactionIds java-object))
       :created (.created java-object)
     }))
 
