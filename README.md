@@ -1309,6 +1309,21 @@ You can get a specific Workspace by its id.
 (println workspace)
 ```
 
+### Update a Workspace
+
+You can update a specific Workspace by its id.
+
+```clojure
+(def workspace (starkbank.workspace/update
+  "6178044066660352"
+  {
+    :username "new-username-test"
+    :name "Updated workspace test"
+    :allowed-tax-ids ["359.536.680-82", "20.018.183/0001-80"]
+  }))
+(print workspace)
+```
+
 ## Handling errors
 
 The SDK may raise one of four types of errors: __InputErrors__, __InternalServerError__, __UnknownException__, __InvalidSignatureException__

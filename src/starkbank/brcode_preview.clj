@@ -13,7 +13,7 @@
       - `:account-number` [string]: Payment receiver account number. ex: \"1234567\"
       - `:account-type` [string]: Payment receiver account type. ex: \"checking\"
       - `:allow-change` [bool]: If True, the payment is able to receive amounts that are diferent from the nominal one. ex: True or False
-      - `:amount` [long]: Value in cents that this payment is expecting to receive. If 0, any value is accepted. ex: 123 (= R$1,23)
+      - `:amount` [integer]: Value in cents that this payment is expecting to receive. If 0, any value is accepted. ex: 123 (= R$1,23)
       - `:reconciliation-id` [string]: Reconciliation ID linked to this payment. ex: \"tx-id\", \"payment-123\""
     (:refer-clojure :exclude [get set update])
     (:import [com.starkbank BrcodePreview])
