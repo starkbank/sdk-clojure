@@ -16,7 +16,7 @@
 
   Attributes (return-only):
   - `:id` [string]: id of the object
-  - `:amount` [long]: PaymentRequest amount. ex: 100000 = R$1.000,00
+  - `:amount` [integer]: PaymentRequest amount. ex: 100000 = R$1.000,00
   - `:status` [string]: current PaymentRequest status.ex: \"pending\" or \"approved\"
   - `:actions` [list of PaymentRequest.Action, default nil]: list of actions that are affecting this PaymentRequest.ex: [{\"type\": \"member\", \"id\": \"56565656565656, \"action\": \"requested\"}]
   - `:updated` [string]: latest update datetime for the PaymentRequest. ex: \"2020-03-26T19:32:35.418698+00:00\"
@@ -137,7 +137,7 @@
     - `:type` [string, default nil]: payment type, inferred from the payment parameter if it is not a map. ex: \"transfer\", \"brcode-payment\"
     - `:tags` [list of strings, default nil]: tags to filter retrieved objects. ex: [\"tony\", \"stark\"]
     - `:ids` [list of strings, default nil]: list of ids to filter retrieved objects. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - stream of PaymentRequest maps with updated attributes"

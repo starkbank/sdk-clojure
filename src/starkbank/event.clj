@@ -79,7 +79,7 @@
     - `:after` [string, default nil]: date filter for maps created only after specified date. ex: ~D[2020-03-25]
     - `:before` [string, default nil]: date filter for maps created only before specified date. ex: ~D[2020-03-25]
     - `:is-delivered` [bool, default nil]: filter successfully delivered events. ex: true or false
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - stream of Event maps with updated attributes"

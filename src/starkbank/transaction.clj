@@ -117,7 +117,7 @@
     - `:ids` [list of strings, default nil]: list of ids to filter retrieved objects. ex: [\"5656565656565656\", \"4545454545454545\"]
     - `:external-ids` [list of strings, default nil]: list of external ids to filter retrieved entities. ex: [\"5656565656565656\", \"4545454545454545\"]
     - `:tags` [list of strings, default nil]: list of strings for tagging
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - stream of Transaction maps with updated attributes"

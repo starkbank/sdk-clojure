@@ -18,7 +18,7 @@
   ## Attributes (return-only):
     - `:id` [string, default nil]: unique id returned when the payment is created. ex: \"5656565656565656\"
     - `:status` [string, default nil]: current payment status. ex: \"processing\" or \"success\"
-    - `:amount` [int, default nil]: amount automatically calculated from line or bar-code. ex: 23456 (= R$ 234.56)
+    - `:amount` [integer, default nil]: amount automatically calculated from line or bar-code. ex: 23456 (= R$ 234.56)
     - `:fee` [integer, default nil]: fee charged when a boleto payment is created. ex: 200 (= R$ 2.00)
     - `:created` [string, default nil]: creation datetime for the payment. ex: \"2020-03-26T19:32:35.418698+00:00\""
   (:refer-clojure :exclude [get set])
@@ -119,7 +119,7 @@
     - `:tags` [list of strings, default nil]: tags to filter retrieved maps. ex: [\"tony\", \"stark\"]
     - `:ids` [list of strings, default nil]: list of ids to filter retrieved objects. ex: [\"5656565656565656\", \"4545454545454545\"]
     - `:status` [string, default nil]: filter for status of retrieved maps. ex: \"success\"
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - stream of BoletoPayment maps with updated attributes"
@@ -276,7 +276,7 @@
     - `:before` [string, default nil]: date filter for entities created only before specified date. ex: \"2020-3-10\"
     - `:types` [list of strings, default nil]: filter retrieved entities by event types. ex: \"processing\" or \"success\"
     - `:payment-ids` [list of strings, default nil]: list of BoletoPayment ids to filter retrieved entities. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - stream of Log maps with updated attributes"

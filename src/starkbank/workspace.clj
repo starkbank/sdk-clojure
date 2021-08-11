@@ -12,7 +12,7 @@
   
   ## Attributes:
     - `:id` [string, default nil]: unique id returned when the workspace is created. ex: \"5656565656565656\""
-  (:refer-clojure :exclude [get set])
+  (:refer-clojure :exclude [get set update])
   (:import [com.starkbank Workspace])
   (:use [starkbank.user]
         [clojure.walk]))
@@ -57,6 +57,20 @@
         }
       ))))
 
+(defn- clojure-update-to-java
+  ([clojure-map]
+   (let [{
+     username "username"
+     name "name"
+     allowed-tax-ids "allowed-tax-ids"
+    } (stringify-keys clojure-map)]
+     (java.util.HashMap.
+      {
+        "username" username
+        "name" name
+        "allowedTaxIds" (if (nil? allowed-tax-ids) nil (into-array String allowed-tax-ids))
+      }))))
+
 (defn create
   "Send a single Workspace for creation in the Stark Bank API
 
@@ -89,7 +103,7 @@
     - `:limit` [integer, default nil]: maximum number of maps to be retrieved. Unlimited if nil. ex: 35
     - `:username` [string, default nil]: query by the simplified name that defines the workspace URL. This name is always unique across all Stark Bank Workspaces. Ex: \"starkbankworkspace\"
     - `:ids` [list of strings, default nil]: list of ids to filter retrieved objects. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - stream of Workspace maps with updated attributes"
@@ -124,3 +138,28 @@
       (Workspace/get
         id
         (#'starkbank.user/get-java-user user)))))
+
+(defn update
+  "Update a Workspace by passing id.
+
+  ## Parameters (required):
+    - `:id` [list of strings]: Workspace unique ids. ex: \"5656565656565656\"
+
+  ## Parameters (optional):
+    - `:username` [string]: Simplified name to define the workspace URL. This name must be unique across all Stark Bank Workspaces. Ex: \"starkbank-workspace\"
+    - `:name` [string]: Full name that identifies the Workspace. This name will appear when people access the Workspace on our platform, for example. Ex: \"Stark Bank Workspace\"
+    - `:allowed-tax-ids` [list of strings, default nil]: list of tax IDs that will be allowed to send Deposits to this Workspace. If empty, all are allowed. ex: [\"012.345.678-90\", \"20.018.183/0001-80\"]
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+
+  ## Return:
+    - target Workspace with updated attributes"
+  ([id, params]
+    (java-to-clojure
+    (Workspace/update id (clojure-update-to-java params))))
+
+  ([id, params, user]
+    (java-to-clojure
+    (Workspace/update
+      id
+      (clojure-update-to-java params)
+      (#'starkbank.user/get-java-user user)))))
