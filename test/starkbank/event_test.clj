@@ -1,8 +1,17 @@
 (ns starkbank.event-test
   (:use [clojure.test])
   (:require [starkbank.event :as event]
+            [starkbank.event.attempt :as attempt]
             [starkbank.user-test :as user]
             [clojure.java.io :as io]))
+
+(deftest query-attempt-events
+  (testing "query and attempt events"
+    (user/set-test-project)
+    (def event (take 2 (event/query {:limit 2 :is-delivered false})))
+    (def query-attempt (first (attempt/query {:limit 1 :event-ids (:id event)})))
+    (def get-attempt (attempt/get (:id query-attempt)))
+    (is (= (:id query-attempt) (:id get-attempt)))))
 
 (deftest query-get-update-delete-events
   (testing "query, get, update and delete events"
