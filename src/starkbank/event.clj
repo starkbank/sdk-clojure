@@ -98,7 +98,7 @@
   "Receive a single notification Event map previously created in the Stark Bank API by passing its id
 
   ## Parameters (required):
-    - `id` [string]: map unique id. ex: \"5656565656565656\"
+    - `:id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
     - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
@@ -119,7 +119,7 @@
   "Delete a list of notification Event entities previously created in the Stark Bank API
 
   ## Parameters (required):
-    - `id` [string]: Event unique id. ex: \"5656565656565656\"
+    - `:id` [string]: Event unique id. ex: \"5656565656565656\"
 
   ## Options:
     - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
@@ -141,7 +141,7 @@
     If is-delivered is true, the event will no longer be returned on queries with is-delivered=false.
 
   ## Parameters (required):
-    - `id` [list of strings]: Event unique ids. ex: \"5656565656565656\"
+    - `:id` [list of strings]: Event unique ids. ex: \"5656565656565656\"
     - `:is-delivered` [bool]: If true and event hasn't been delivered already, event will be set as delivered. ex: true
 
   ## Parameters (optional):

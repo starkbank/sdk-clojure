@@ -229,7 +229,7 @@
   "Receive a single Invoice map previously created in the Stark Bank API by passing its id
 
   ## Parameters (required):
-    - `id` [string]: map unique id. ex: \"5656565656565656\"
+    - `:id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
     - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
@@ -250,7 +250,7 @@
   "Receive a single Invoice pdf file generated in the Stark Bank API by passing its id.
 
   ## Parameters (required):
-    - `id` [string]: map unique id. ex: \"5656565656565656\"
+    - `:id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
     - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
@@ -271,7 +271,7 @@
   "Receive a single Invoice QRCode in png format generated in the Stark Bank API by the invoice ID.
 
   ## Parameters (required):
-    - `id` [string]: map unique id. ex: \"5656565656565656\"
+    - `:id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
     - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
@@ -290,7 +290,7 @@
   "Receive the invoice.payment sub-resource associated with a paid invoice.
 
   ## Parameters (required):
-    - `id` [string]: map unique id. ex: \"5656565656565656\"
+    - `:id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
     - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
@@ -394,7 +394,7 @@
   "Receive a single Log map previously created by the Stark Bank API by passing its id
 
   ## Parameters (required):
-    - `id` [string]: map unique id. ex: \"5656565656565656\"
+    - `:id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
     - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
@@ -434,3 +434,24 @@
   ([params, user] 
     (def java-params (clojure-query-to-java params))
     (map java-to-clojure (Invoice$Log/query java-params (#'starkbank.user/get-java-user user)))))
+
+(defn pdf
+  "Receive a single Invoice pdf file generated in the Stark Bank API by passing its id.
+
+  ## Parameters (required):
+    - `:id` [string]: map unique id. ex: \"5656565656565656\"
+
+  ## Options:
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+
+  ## Return:
+    - Invoice pdf file content"
+  ([id]
+    (clojure.java.io/input-stream
+      (Invoice$Log/pdf id)))
+
+  ([id, user]
+    (clojure.java.io/input-stream
+      (Invoice$Log/pdf
+        id
+        (#'starkbank.user/get-java-user user)))))

@@ -16,7 +16,7 @@
 
   ## Parameters (required):
     - `environment` [string]: environment where the project is being used. ex: \"sandbox\" or \"production\"
-    - `id` [string]: unique id required to identify project. ex: \"5656565656565656\"
+    - `:id` [string]: unique id required to identify project. ex: \"5656565656565656\"
     - `private-key` [string]: PEM string of the private key linked to the project. ex: \"-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEyTIHK6jYuik6ktM9FIF3yCEYzpLjO5X/\ntqDioGM+R2RyW0QEo+1DG8BrUf4UXHSvCjtQ0yLppygz23z0yPZYfw==\n-----END PUBLIC KEY-----\""
   ([environment id private-key] 
     {:environment environment, :id id, :private-key private-key :type "project"}))
@@ -48,7 +48,7 @@
 
   ## Parameters (required):
     - `environment` [string]: environment where the project is being used. ex: \"sandbox\" or \"production\"
-    - `id` [string]: unique id required to identify project. ex: \"5656565656565656\"
+    - `:id` [string]: unique id required to identify project. ex: \"5656565656565656\"
     - `private-key` [string]: PEM string of the private key linked to the project. ex: \"-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEyTIHK6jYuik6ktM9FIF3yCEYzpLjO5X/\ntqDioGM+R2RyW0QEo+1DG8BrUf4UXHSvCjtQ0yLppygz23z0yPZYfw==\n-----END PUBLIC KEY-----\"
 
   ## Parameters (optional):

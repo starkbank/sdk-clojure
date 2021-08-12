@@ -93,7 +93,7 @@
   "Receive a single Webhook subscription map previously created in the Stark Bank API by passing its id
 
   ## Parameters (required):
-    - `id` [string]: map unique id. ex: \"5656565656565656\"
+    - `:id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
     - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
@@ -114,7 +114,7 @@
   "Delete a Webhook subscription entity previously created in the Stark Bank API
 
   ## Parameters (required):
-    - `id` [string]: Webhook unique id. ex: \"5656565656565656\"
+    - `:id` [string]: Webhook unique id. ex: \"5656565656565656\"
 
   ## Options:
     - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.

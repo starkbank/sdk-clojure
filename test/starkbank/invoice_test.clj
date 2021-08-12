@@ -66,10 +66,13 @@
 (deftest query-get-invoice-logs
   (testing "query and get invoice logs"
     (user/set-test-project)
-    (def invoice-logs (log/query {:limit 1}))
+    (def invoice-logs (log/query {:limit 1 :types ["reversed"]}))
     (is (= 1 (count invoice-logs)))
     (def invoice-log (log/get (:id (first invoice-logs))))
     (is (not (nil? (:id invoice-log))))
     (is (not (nil? (:errors invoice-log))))
     (is (string? (:created invoice-log)))
-    (is (map? (:invoice invoice-log)))))
+    (is (map? (:invoice invoice-log)))
+    (def file-name "temp/invoice-log.pdf")
+    (io/make-parents file-name)
+    (io/copy (log/pdf (:id invoice-log)) (io/file file-name))))

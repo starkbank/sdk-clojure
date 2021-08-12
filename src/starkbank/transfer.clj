@@ -165,7 +165,7 @@
   "Receive a single Transfer map previously created in the Stark Bank API by passing its id
 
   ## Parameters (required):
-    - `id` [string]: map unique id. ex: \"5656565656565656\"
+    - `:id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
     - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
@@ -186,7 +186,7 @@
   "Cancel a single scheduled Transfer entity previously created in the Stark Bank API by passing its id
 
   ## Parameters (required):
-    - `id` [string]: entity unique id. ex: \"5656565656565656\"
+    - `:id` [string]: entity unique id. ex: \"5656565656565656\"
 
   ## Options:
     - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
@@ -208,7 +208,7 @@
   Only valid for transfers with \"processing\" or \"success\" status.
 
   ## Parameters (required):
-    - `id` [string]: map unique id. ex: \"5656565656565656\"
+    - `:id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
     - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
@@ -276,7 +276,7 @@
   "Receive a single Log map previously created by the Stark Bank API by passing its id
 
   ## Parameters (required):
-    - `id` [string]: map unique id. ex: \"5656565656565656\"
+    - `:id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
     - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
