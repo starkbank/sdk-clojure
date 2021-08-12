@@ -186,3 +186,95 @@
         content
         signature
         (#'starkbank.user/get-java-user user)))))
+
+(ns starkbank.event.attempt
+  "When an Event delivery fails, an event attempt will be registered.
+  It carries information meant to help you debug event reception issues.
+
+  ## Attributes:
+    - `:id` [string]: unique id returned when the log is created. ex: \"5656565656565656\"
+    - `:code` [string]: delivery error code. ex: badHttpStatus, badConnection, timeout
+    - `:message` [string]: delivery error full description. ex: \"HTTP POST request returned status 404\"
+    - `:event-id` [string]: ID of the Event whose delivery failed. ex: \"4848484848484848\"
+    - `:webhook-id` [string]: ID of the Webhook that triggered this event. ex: \"5656565656565656\"
+    - `:created` [string]: creation datetime for the log. ex: \"2020-03-26T19:32:35.418698+00:00\""
+  (:refer-clojure :exclude [get set])
+  (:import [com.starkbank Event$Attempt])
+  (:require [starkbank.event :as event])
+  (:use [starkbank.user]
+        [clojure.walk]))
+
+(defn- java-to-clojure
+  ([java-object]
+    {
+      :id (.id java-object)
+      :code (.code java-object)
+      :message (.message java-object)
+      :webhook-id (.webhookId java-object)
+      :event-id (.eventId java-object)
+      :created (.created java-object)
+    }))
+
+(defn- clojure-query-to-java
+  ([clojure-map]
+    (let [{
+        limit "limit"
+        after "after"
+        before "before"
+        event-ids "event-ids"
+        webhook-ids "webhook-ids"
+      } (stringify-keys clojure-map)]
+      (java.util.HashMap.
+        {
+          "limit" (if (nil? limit) nil (Integer. limit))
+          "after" after
+          "before" before
+          "eventIds" (if (nil? event-ids) nil (into-array String event-ids))
+          "webhookIds" (if (nil? webhook-ids) nil (into-array String webhook-ids))
+        }
+      ))))
+
+(defn get
+  "Receive a single Event.Attempt object previously created by the Stark Bank API by its id
+
+  ## Parameters (required):
+    - `:id` [string]: map unique id. ex: \"5656565656565656\"
+
+  ## Options:
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+
+  ## Return:
+    - Attempt map with updated attributes"
+  ([id]
+    (java-to-clojure
+      (Event$Attempt/get id)))
+
+  ([id, user]
+    (java-to-clojure
+      (Event$Attempt/get
+        id
+        (#'starkbank.user/get-java-user user)))))
+
+(defn query
+  "Receive a stream of Attempt maps previously created in the Stark Bank API
+
+  ## Options:
+    - `:limit` [integer, default nil]: maximum number of maps to be retrieved. Unlimited if nil. ex: 35
+    - `:after` [string, default nil]: date filter for maps created only after specified date. ex: \"2020-3-10\"
+    - `:before` [string, default nil]: date filter for maps created only before specified date. ex: \"2020-3-10\"
+    - `:event-ids` [list of strings, default nil]: list of Event ids to filter attempts. ex: [\"5656565656565656\", \"4545454545454545\"]
+    - `:webhook-ids` [list of strings, default nil]: list of Webhook ids to filter attempts. ex: [\"5656565656565656\", \"4545454545454545\"]
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+
+  ## Return:
+    - stream of Attempt maps with updated attributes"
+  ([]
+    (map java-to-clojure (Event$Attempt/query)))
+
+  ([params]
+    (def java-params (clojure-query-to-java params))
+    (map java-to-clojure (Event$Attempt/query java-params)))
+
+  ([params, user] 
+    (def java-params (clojure-query-to-java params))
+    (map java-to-clojure (Event$Attempt/query java-params (#'starkbank.user/get-java-user user)))))

@@ -1232,6 +1232,26 @@ You can also delete a specific webhook event by its id.
 (println event)
 ```
 
+### Query failed webhook event delivery attempts information
+
+You can also get information on failed webhook event delivery attempts.
+
+```clojure
+(def attempts (starkbank.event.attempt/query {:after ["2020-03-20"]}))
+
+(printn attempts)
+```
+
+### Get a failed webhook event delivery attempt information
+
+To retrieve information on a single attempt, use the following function:
+
+```clojure
+(def attempt (starkbank.event.attempt/get "1616161616161616"))
+
+(print attempt)
+```
+
 ### Get a DICT key
 
 You can get Pix key's parameters by its id.
