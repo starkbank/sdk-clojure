@@ -103,6 +103,35 @@
           "ids" (if (nil? ids) nil (into-array String ids))
         }
       ))))
+    
+(defn- clojure-page-to-java
+  ([clojure-map]
+    (let [{
+        cursor "cursor"
+        center-id "center-id"
+        limit "limit"
+        after "after"
+        before "before"
+        sort "sort"
+        status "status"
+        type "type"
+        tags "tags"
+        ids "ids"
+      } (stringify-keys clojure-map)]
+      (java.util.HashMap.
+        {
+          "cursor" cursor
+          "centerId" center-id
+          "limit" (if (nil? limit) nil (Integer. limit))
+          "after" after
+          "before" before
+          "sort" sort
+          "status" (if (nil? status) nil (into-array String status))
+          "type" type
+          "tags" (if (nil? tags) nil (into-array String tags))
+          "ids" (if (nil? ids) nil (into-array String ids))
+        }
+      ))))
 
 (defn create
   "Send a list of PaymentRequest maps for creation in the Stark Bank API
@@ -126,7 +155,8 @@
    (map java-to-clojure created-java-requests)))
 
 (defn query
-  "Receive a stream of PaymentRequest maps previously created by this user in the Stark Bank API
+  "Receive a stream of PaymentRequest maps previously created by this user in the Stark Bank API.
+  Use this function instead of page if you want to stream the objects without worrying about cursors and pagination.
 
   ## Options:
     - `:limit` [integer, default nil]: maximum number of objects to be retrieved. Unlimited if nil. ex: 35
@@ -151,3 +181,39 @@
   ([params, user] 
     (def java-params (clojure-query-to-java params))
     (map java-to-clojure (PaymentRequest/query java-params (#'starkbank.user/get-java-user user)))))
+
+(defn page
+  "Receive a list of up to 100 PaymentRequest maps previously created in the Stark Bank API and the cursor to the next page.
+  Use this function instead of query if you want to manually page your requests.
+
+  ## Options:
+    - `:cursor` [string, default nil]: cursor returned on the previous page function call
+    - `:limit` [integer, default nil]: maximum number of objects to be retrieved. Unlimited if nil. ex: 35
+    - `:after` [string, default nil] date filter for objects created only after specified date. ex: \"2020-03-10\"
+    - `:before` [string, default nil] date filter for objects created only before specified date. ex: \"2020-03-10\"
+    - `:sort` [string, default \"-created\"]: sort order considered in response. Valid options are \"-created\" or \"-due\".
+    - `:status` [string, default nil]: filter for status of retrieved objects. ex: \"success\" or \"failed\"
+    - `:type` [string, default nil]: payment type, inferred from the payment parameter if it is not a map. ex: \"transfer\", \"brcode-payment\"
+    - `:tags` [list of strings, default nil]: tags to filter retrieved objects. ex: [\"tony\", \"stark\"]
+    - `:ids` [list of strings, default nil]: list of ids to filter retrieved objects. ex: [\"5656565656565656\", \"4545454545454545\"]
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+
+  ## Return:
+    - map with :requests and :cursor:
+      - `:requests`: list of request maps with updated attributes
+      - `:cursor`: cursor string to retrieve the next page of requests"
+  ([]
+    (def request-page (PaymentRequest/page))
+    (def cursor (.cursor request-page))
+    (def requests (map java-to-clojure (.requests request-page)))
+    {:requests requests, :cursor cursor})
+
+  ([params]
+    (def java-params (clojure-page-to-java params))
+    (def request-page (PaymentRequest/page java-params))
+    {:requests (map java-to-clojure (.requests request-page)), :cursor (.cursor request-page)})
+
+  ([params, user] 
+    (def java-params (clojure-page-to-java params))
+    (def request-page (PaymentRequest/page java-params (#'starkbank.user/get-java-user user)))
+    {:requests (map java-to-clojure (.requests request-page)), :cursor (.cursor request-page)}))

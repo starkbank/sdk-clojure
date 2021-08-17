@@ -65,6 +65,31 @@
         }
       ))))
 
+(defn- clojure-page-to-java
+  ([clojure-map]
+    (let [{
+        cursor "cursor"
+        limit "limit"
+        after "after"
+        before "before"
+        status "status"
+        sort "sort"
+        type "type"
+        ids "ids"
+      } (stringify-keys clojure-map)]
+      (java.util.HashMap.
+        {
+          "cursor" cursor
+          "limit" (if (nil? limit) nil (Integer. limit))
+          "after" after
+          "before" before
+          "status" (if (nil? status) nil (into-array String status))
+          "sort" sort
+          "type" type
+          "ids" (if (nil? ids) nil (into-array String ids))
+        }
+      ))))
+
 (defn get
   "Receive a single DictKey by passing its id
 
@@ -87,13 +112,14 @@
         (#'starkbank.user/get-java-user user)))))
   
 (defn query
-  "Receive a stream of DictKey maps associated with your Stark Bank Workspace
+  "Receive a stream of DictKey maps previously created in the Stark Bank API.
+  Use this function instead of page if you want to stream the objects without worrying about cursors and pagination.
 
   ## Options:
     - `:limit` [integer, default nil]: maximum number of maps to be retrieved. Unlimited if nil. ex: 35
     - `:after` [string, default nil]: date filter for maps created only after specified date. ex: \"2020-3-10\"
     - `:before` [string, default nil]: date filter for maps created only before specified date. ex: \"2020-3-10\"
-    - `:type` [string, default None]: DictKey type. ex: \"cpf\", \"cnpj\", \"phone\", \"email\" or \"evp\"
+    - `:type` [string, default nil]: DictKey type. ex: \"cpf\", \"cnpj\", \"phone\", \"email\" or \"evp\"
     - `:status` [string, default nil]: filter for status of retrieved maps. ex: \"created\", \"paid\", \"canceled\" or \"overdue\"
     - `:ids` [list of strings, default nil]: list of ids to filter retrieved maps. ex: [\"5656565656565656\", \"4545454545454545\"]
     - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
@@ -110,3 +136,37 @@
   ([params, user] 
     (def java-params (clojure-query-to-java params))
     (map java-to-clojure (DictKey/query java-params (#'starkbank.user/get-java-user user)))))
+
+(defn page
+  "Receive a list of up to 100 DictKey maps previously created in the Stark Bank API and the cursor to the next page.
+  Use this function instead of query if you want to manually page your requests.
+
+  ## Options:
+    - `:cursor` [string, default nil]: cursor returned on the previous page function call
+    - `:limit` [integer, default nil]: maximum number of maps to be retrieved. Unlimited if nil. ex: 35
+    - `:after` [string, default nil]: date filter for maps created only after specified date. ex: \"2020-3-10\"
+    - `:before` [string, default nil]: date filter for maps created only before specified date. ex: \"2020-3-10\"
+    - `:type` [string, default nil]: DictKey type. ex: \"cpf\", \"cnpj\", \"phone\", \"email\" or \"evp\"
+    - `:status` [string, default nil]: filter for status of retrieved maps. ex: \"created\", \"paid\", \"canceled\" or \"overdue\"
+    - `:ids` [list of strings, default nil]: list of ids to filter retrieved maps. ex: [\"5656565656565656\", \"4545454545454545\"]
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+
+  ## Return:
+    - map with :keys and :cursor:
+      - `:keys`: list of key maps with updated attributes
+      - `:cursor`: cursor string to retrieve the next page of keys"
+  ([]
+    (def key-page (DictKey/page))
+    (def cursor (.cursor key-page))
+    (def keys (map java-to-clojure (.keys key-page)))
+    {:keys keys, :cursor cursor})
+
+  ([params]
+    (def java-params (clojure-page-to-java params))
+    (def key-page (DictKey/page java-params))
+    {:keys (map java-to-clojure (.keys key-page)), :cursor (.cursor key-page)})
+
+  ([params, user] 
+    (def java-params (clojure-page-to-java params))
+    (def key-page (DictKey/page java-params (#'starkbank.user/get-java-user user)))
+    {:keys (map java-to-clojure (.keys key-page)), :cursor (.cursor key-page)}))

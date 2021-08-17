@@ -4,7 +4,8 @@
             [starkbank.boleto.log :as log]
             [starkbank.user-test :as user]
             [clojure.java.io :as io]
-            [starkbank.utils.date :as date]))
+            [starkbank.utils.date :as date]
+            [starkbank.utils.page :as page]))
 
 (deftest create-get-pdf-delete-boletos
   (testing "create, get, pdf and delete boletos"
@@ -56,6 +57,13 @@
     (def boletos (take 200 (boleto/query {:limit 3})))
     (is (= 3 (count boletos)))))
 
+(deftest page-boletos
+  (testing "page boletos"
+    (user/set-test-project)
+    (def get-page (fn [params] (boleto/page params)))
+    (def ids (page/get-ids get-page 2 {:limit 2}))
+    (is (= 4 (count ids)))))
+
 (deftest query-get-boleto-logs
   (testing "query and get boleto logs"
     (user/set-test-project)
@@ -66,3 +74,10 @@
     (is (not (nil? (:errors boleto-log))))
     (is (string? (:created boleto-log)))
     (is (map? (:boleto boleto-log)))))
+
+(deftest page-boleto-logs
+  (testing "page boleto-logs"
+    (user/set-test-project)
+    (def get-page (fn [params] (log/page params)))
+    (def ids (page/get-ids get-page 2 {:limit 2}))
+    (is (= 4 (count ids)))))

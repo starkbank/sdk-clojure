@@ -165,6 +165,29 @@
         }
       ))))
 
+(defn- clojure-page-to-java
+  ([clojure-map]
+    (let [{
+        cursor "cursor"
+        limit "limit"
+        after "after"
+        before "before"
+        status "status"
+        tags "tags"
+        ids "ids"
+      } (stringify-keys clojure-map)]
+      (java.util.HashMap.
+        {
+          "cursor" cursor
+          "limit" (if (nil? limit) nil (Integer. limit))
+          "after" after
+          "before" before
+          "status" status
+          "tags" (if (nil? tags) nil (into-array String tags))
+          "ids" (if (nil? ids) nil (into-array String ids))
+        }
+      ))))
+
 (defn- clojure-options-to-java
   [clojure-map]
   (let [{
@@ -200,7 +223,8 @@
     (map java-to-clojure created-java-boletos)))
 
 (defn query
-  "Receive a stream of Boleto maps previously created in the Stark Bank API
+  "Receive a stream of Boleto maps previously created in the Stark Bank API.
+  Use this function instead of page if you want to stream the objects without worrying about cursors and pagination.
 
   ## Options:
     - `:limit` [integer, default nil]: maximum number of maps to be retrieved. Unlimited if nil. ex: 35
@@ -223,6 +247,40 @@
   ([params, user] 
     (def java-params (clojure-query-to-java params))
     (map java-to-clojure (Boleto/query java-params (#'starkbank.user/get-java-user user)))))
+
+(defn page
+  "Receive a list of up to 100 Boleto maps previously created in the Stark Bank API and the cursor to the next page.
+  Use this function instead of query if you want to manually page your requests.
+
+  ## Options:
+    - `:cursor` [string, default nil]: cursor returned on the previous page function call
+    - `:limit` [integer, default nil]: maximum number of maps to be retrieved. Unlimited if nil. ex: 35
+    - `:after` [string, default nil]: date filter for maps created only after specified date. ex: \"2020-3-10\"
+    - `:before` [string, default nil]: date filter for maps created only before specified date. ex: \"2020-3-10\"
+    - `:status` [string, default nil]: filter for status of retrieved maps. ex: \"paid\" or \"registered\"
+    - `:tags` [list of strings, default nil]: tags to filter retrieved maps. ex: [\"tony\", \"stark\"]
+    - `:ids` [list of strings, default nil]: list of ids to filter retrieved maps. ex: [\"5656565656565656\", \"4545454545454545\"]
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+
+  ## Return:
+    - map with :boletos and :cursor:
+      - `:boletos`: list of boleto maps with updated attributes
+      - `:cursor`: cursor string to retrieve the next page of boletos"
+  ([]
+    (def boleto-page (Boleto/page))
+    (def cursor (.cursor boleto-page))
+    (def boletos (map java-to-clojure (.boletos boleto-page)))
+    {:boletos boletos, :cursor cursor})
+
+  ([params]
+    (def java-params (clojure-page-to-java params))
+    (def boleto-page (Boleto/page java-params))
+    {:boletos (map java-to-clojure (.boletos boleto-page)), :cursor (.cursor boleto-page)})
+
+  ([params, user] 
+    (def java-params (clojure-page-to-java params))
+    (def boleto-page (Boleto/page java-params (#'starkbank.user/get-java-user user)))
+    {:boletos (map java-to-clojure (.boletos boleto-page)), :cursor (.cursor boleto-page)}))
 
 (defn get
   "Receive a single Boleto map previously created in the Stark Bank API by passing its id
@@ -344,6 +402,27 @@
         }
       ))))
 
+(defn- clojure-page-to-java
+  ([clojure-map]
+    (let [{
+        cursor "cursor"
+        limit "limit"
+        after "after"
+        before "before"
+        types "types"
+        boleto-ids "boleto-ids"
+      } (stringify-keys clojure-map)]
+      (java.util.HashMap.
+        {
+          "cursor" cursor
+          "limit" (if (nil? limit) nil (Integer. limit))
+          "after" after
+          "before" before
+          "types" (if (nil? types) nil (into-array String types))
+          "boletoIds" (if (nil? boleto-ids) nil (into-array String boleto-ids))
+        }
+      ))))
+
 (defn get
   "Receive a single Log map previously created by the Stark Bank API by passing its id
 
@@ -367,6 +446,7 @@
 
 (defn query
   "Receive a stream of Log maps previously created in the Stark Bank API
+  Use this function instead of page if you want to stream the objects without worrying about cursors and pagination.
 
   ## Options:
     - `:limit` [integer, default nil]: maximum number of maps to be retrieved. Unlimited if nil. ex: 35
@@ -388,3 +468,36 @@
   ([params, user] 
     (def java-params (clojure-query-to-java params))
     (map java-to-clojure (Boleto$Log/query java-params (#'starkbank.user/get-java-user user)))))
+
+(defn page
+  "Receive a list of up to 100 Boleto.Log maps previously created in the Stark Bank API and the cursor to the next page.
+  Use this function instead of query if you want to manually page your requests.
+
+  ## Options:
+    - `:cursor` [string, default nil]: cursor returned on the previous page function call
+    - `:limit` [integer, default nil]: maximum number of maps to be retrieved. Unlimited if nil. ex: 35
+    - `:after` [string, default nil]: date filter for maps created only after specified date. ex: \"2020-3-10\"
+    - `:before` [string, default nil]: date filter for maps created only before specified date. ex: \"2020-3-10\"
+    - `:types` [list of strings, default nil]: filter for log event types. ex: \"paid\" or \"registered\"
+    - `:boleto-ids` [list of strings, default nil]: list of Boleto ids to filter logs. ex: [\"5656565656565656\", \"4545454545454545\"]
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+
+  ## Return:
+    - map with :logs and :cursor:
+      - `:logs`: list of log maps with updated attributes
+      - `:cursor`: cursor string to retrieve the next page of logs"
+  ([]
+    (def log-page (Boleto$Log/page))
+    (def cursor (.cursor log-page))
+    (def logs (map java-to-clojure (.logs log-page)))
+    {:logs logs, :cursor cursor})
+
+  ([params]
+    (def java-params (clojure-page-to-java params))
+    (def log-page (Boleto$Log/page java-params))
+    {:logs (map java-to-clojure (.logs log-page)), :cursor (.cursor log-page)})
+
+  ([params, user] 
+    (def java-params (clojure-page-to-java params))
+    (def log-page (Boleto$Log/page java-params (#'starkbank.user/get-java-user user)))
+    {:logs (map java-to-clojure (.logs log-page)), :cursor (.cursor log-page)}))

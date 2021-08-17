@@ -1,14 +1,16 @@
 (ns starkbank.workspace-test
+  (:refer-clojure :exclude [update])
   (:use [clojure.test])
   (:require [starkbank.workspace :as workspace]
             [starkbank.user :as user]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [starkbank.utils.page :as page]))
 
 (deftest create-workspace
   (testing "create and patch workspace"
     (def organization (user/organization
       "sandbox"
-      (System/getenv "SANDBOX_ORGANIZATION_ID"); "9999999999999999"
+      (System/getenv "SANDBOX_ORGANIZATION_ID")
       (System/getenv "SANDBOX_ORGANIZATION_PRIVATE_KEY")))
     (def uuid (java.util.UUID/randomUUID))
     (def workspace (workspace/create
@@ -42,7 +44,17 @@
   (testing "query workspaces"
     (def organization (user/organization
       "sandbox"
-      (System/getenv "SANDBOX_ORGANIZATION_ID"); "9999999999999999"
+      (System/getenv "SANDBOX_ORGANIZATION_ID")
       (System/getenv "SANDBOX_ORGANIZATION_PRIVATE_KEY")))
     (def workspaces (take 200 (workspace/query {:limit 3} organization)))
     (is (<= (count workspaces) 3))))
+
+(deftest page-workspaces
+  (testing "page workspaces"
+    (def organization (user/organization
+      "sandbox"
+      (System/getenv "SANDBOX_ORGANIZATION_ID")
+      (System/getenv "SANDBOX_ORGANIZATION_PRIVATE_KEY")))
+    (def get-page (fn [params] (workspace/page params organization)))
+    (def ids (page/get-ids get-page 2 {:limit 2}))
+    (is (= 4 (count ids)))))
