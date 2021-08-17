@@ -231,6 +231,43 @@ On all following examples we will assume a default user has been set in the conf
 We will also assume you are using `(:use starkbank.core)` on your code ns calls to
 expose the starkbank SDK namespaces.
 
+### 5. Resource listing and manual pagination
+
+Almost all SDK resources provide a `query` and a `page` function.
+
+- The `query` function provides a straight forward way retrieve results that match the filters you inform, seamlessly retrieving all the filtered elements from the API.
+If you are not worried about data volume or processing time, this is the way to go.
+
+```clojure
+(def transactions
+  (starkbank.transaction/query
+    {
+      :after "2020-03-20"
+      :before "2020-03-30"
+      :limit 10
+    }))
+
+(println transactions)
+```
+
+- The `page` function gives you full control over the API pagination. With each function call, you receive up to
+100 results and the cursor to retrieve the next batch of elements. This allows you to stop your queries and
+pick up from where you left off whenever it is convenient. When there are no more elements to be retrieved, the returned cursor will be `nil`.
+
+```clojure
+(defn get-page
+  [iterations, cursor]
+    (when (> iterations 0)
+      (def page (transaction/page {:limit 2}))
+      (def new-cursor (get page :cursor))
+      (def new-entities (get page :transactions))
+      (concat new-entities (get-page (- iterations 1) new-cursor))))
+
+(println (get-page 3 nil))
+```
+
+To simplify the following SDK examples, we will only use the `query` function, but feel free to use `page` instead.
+
 ## Testing in Sandbox
 
 Your initial balance is zero. For many operations in Stark Bank, you'll need funds

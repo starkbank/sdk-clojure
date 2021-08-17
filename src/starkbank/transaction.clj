@@ -86,6 +86,29 @@
         }
       ))))
 
+(defn- clojure-page-to-java
+  ([clojure-map]
+    (let [{
+        cursor "cursor"
+        limit "limit"
+        after "after"
+        before "before"
+        ids "ids"
+        external-ids "external-ids"
+        tags "tags"
+      } (stringify-keys clojure-map)]
+      (java.util.HashMap.
+        {
+          "cursor" cursor
+          "limit" (if (nil? limit) nil (Integer. limit))
+          "after" after
+          "before" before
+          "ids" (if (nil? ids) nil (into-array String ids))
+          "tags" (if (nil? tags) nil (into-array String tags))
+          "externalIds" (if (nil? external-ids) nil (into-array String external-ids))
+        }
+      ))))
+
 (defn create
   "Send a list of Transaction entities for creation in the Stark Bank API
 
@@ -108,7 +131,8 @@
     (map java-to-clojure created-java-transactions)))
 
 (defn query
-  "Receive a stream of Transaction entities previously created in the Stark Bank API
+  "Receive a stream of Transaction entities previously created in the Stark Bank API.
+  Use this function instead of page if you want to stream the objects without worrying about cursors and pagination.
 
   ## Options:
     - `:limit` [integer, default nil]: maximum number of entities to be retrieved. Unlimited if nil. ex: 35
@@ -131,6 +155,40 @@
   ([params, user] 
     (def java-params (clojure-query-to-java params))
     (map java-to-clojure (Transaction/query java-params (#'starkbank.user/get-java-user user)))))
+
+(defn page
+  "Receive a list of up to 100 Transaction maps previously created in the Stark Bank API and the cursor to the next page.
+  Use this function instead of query if you want to manually page your requests.
+
+  ## Options:
+    - `:cursor` [string, default nil]: cursor returned on the previous page function call
+    - `:limit` [integer, default nil]: maximum number of entities to be retrieved. Unlimited if nil. ex: 35
+    - `:after` [string, default nil]: date filter for entities created only after specified date. ex: \"2020-3-10\"
+    - `:before` [string, default nil]: date filter for entities created only before specified date. ex: \"2020-3-10\"
+    - `:ids` [list of strings, default nil]: list of ids to filter retrieved objects. ex: [\"5656565656565656\", \"4545454545454545\"]
+    - `:external-ids` [list of strings, default nil]: list of external ids to filter retrieved entities. ex: [\"5656565656565656\", \"4545454545454545\"]
+    - `:tags` [list of strings, default nil]: list of strings for tagging
+    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+
+  ## Return:
+    - map with :transactions and :cursor:
+      - `:transactions`: list of transaction maps with updated attributes
+      - `:cursor`: cursor string to retrieve the next page of transactions"
+  ([]
+    (def transaction-page (Transaction/page))
+    (def cursor (.cursor transaction-page))
+    (def transactions (map java-to-clojure (.transactions transaction-page)))
+    {:transactions transactions, :cursor cursor})
+
+  ([params]
+    (def java-params (clojure-page-to-java params))
+    (def transaction-page (Transaction/page java-params))
+    {:transactions (map java-to-clojure (.transactions transaction-page)), :cursor (.cursor transaction-page)})
+
+  ([params, user] 
+    (def java-params (clojure-page-to-java params))
+    (def transaction-page (Transaction/page java-params (#'starkbank.user/get-java-user user)))
+    {:transactions (map java-to-clojure (.transactions transaction-page)), :cursor (.cursor transaction-page)}))
 
 (defn get
   "Receive a single Transaction entity previously created in the Stark Bank API by passing its id

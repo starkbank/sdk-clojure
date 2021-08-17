@@ -19,6 +19,7 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 - workspace/update to allow parameter updates
 - event.attempt sub-resource to allow retrieval of information on failed webhook event delivery attempts
 - pdf method for retrieving PDF receipts from reversed invoice logs
+- page functions as a manual-pagination alternative to queries
 
 ## [2.3.4] - 2021-03-04
 ### Added

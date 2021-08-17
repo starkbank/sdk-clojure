@@ -4,7 +4,8 @@
             [starkbank.invoice.log :as log]
             [starkbank.user-test :as user]
             [clojure.java.io :as io]
-            [starkbank.utils.date :as date]))
+            [starkbank.utils.date :as date]
+            [starkbank.utils.page :as page]))
 
 (deftest create-get-pdf-update-invoices
   (testing "create, get, pdf and update invoices"
@@ -52,6 +53,13 @@
     (is (= 50 (count invoices)))
     (invoice/update (:id (rand-nth invoices)) {:status "canceled"})))
 
+(deftest page-invoices
+  (testing "page invoices"
+    (user/set-test-project)
+    (def get-page (fn [params] (invoice/page params)))
+    (def ids (page/get-ids get-page 2 {:limit 2}))
+    (is (= 4 (count ids)))))
+
 (deftest query-qrcode-payment
   (testing "query, get qrcode and get payment information"
     (user/set-test-project)
@@ -76,3 +84,10 @@
     (def file-name "temp/invoice-log.pdf")
     (io/make-parents file-name)
     (io/copy (log/pdf (:id invoice-log)) (io/file file-name))))
+
+(deftest page-invoice-logs
+  (testing "page invoice-logs"
+    (user/set-test-project)
+    (def get-page (fn [params] (invoice/page params)))
+    (def ids (page/get-ids get-page 2 {:limit 2}))
+    (is (= 4 (count ids)))))

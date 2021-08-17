@@ -57,6 +57,23 @@
         }
       ))))
 
+(defn- clojure-page-to-java
+  ([clojure-map]
+    (let [{
+        cursor "cursor"
+        limit "limit"
+        username "username"
+        ids "ids"
+      } (stringify-keys clojure-map)]
+      (java.util.HashMap.
+        {
+          "cursor" cursor
+          "limit" (if (nil? limit) nil (Integer. limit))
+          "username" username
+          "ids" (if (nil? ids) nil (into-array String ids))
+        }
+      ))))
+
 (defn- clojure-update-to-java
   ([clojure-map]
    (let [{
@@ -95,9 +112,10 @@
     (java-to-clojure created-java-workspace)))
 
 (defn query
-  "Receive a stream of Workspace maps previously created in the Stark Bank API
+  "Receive a stream of Workspace maps previously created in the Stark Bank API.
   If no filters are passed and the user is an Organization, all of the Organization Workspaces
   will be retrieved.
+  Use this function instead of page if you want to stream the objects without worrying about cursors and pagination.
 
   ## Options:
     - `:limit` [integer, default nil]: maximum number of maps to be retrieved. Unlimited if nil. ex: 35
@@ -117,6 +135,37 @@
   ([params, user] 
     (def java-params (clojure-query-to-java params))
     (map java-to-clojure (Workspace/query java-params (#'starkbank.user/get-java-user user)))))
+
+(defn page
+  "Receive a list of up to 100 Workspace maps previously created in the Stark Bank API and the cursor to the next page.
+  Use this function instead of query if you want to manually page your requests.
+
+  ## Options:
+    - `:cursor` [string, default nil]: cursor returned on the previous page function call
+    - `:limit` [integer, default nil]: maximum number of maps to be retrieved. Unlimited if nil. ex: 35
+    - `:username` [string, default nil]: query by the simplified name that defines the workspace URL. This name is always unique across all Stark Bank Workspaces. Ex: \"starkbankworkspace\"
+    - `:ids` [list of strings, default nil]: list of ids to filter retrieved objects. ex: [\"5656565656565656\", \"4545454545454545\"]
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+
+  ## Return:
+    - map with :workspaces and :cursor:
+      - `:workspaces`: list of workspace maps with updated attributes
+      - `:cursor`: cursor string to retrieve the next page of workspaces"
+  ([]
+    (def workspace-page (Workspace/page))
+    (def cursor (.cursor workspace-page))
+    (def workspaces (map java-to-clojure (.workspaces workspace-page)))
+    {:workspaces workspaces, :cursor cursor})
+
+  ([params]
+    (def java-params (clojure-page-to-java params))
+    (def workspace-page (Workspace/page java-params))
+    {:workspaces (map java-to-clojure (.workspaces workspace-page)), :cursor (.cursor workspace-page)})
+
+  ([params, user] 
+    (def java-params (clojure-page-to-java params))
+    (def workspace-page (Workspace/page java-params (#'starkbank.user/get-java-user user)))
+    {:workspaces (map java-to-clojure (.workspaces workspace-page)), :cursor (.cursor workspace-page)}))
 
 (defn get
   "Receive a single Workspace map previously created in the Stark Bank API by passing its id

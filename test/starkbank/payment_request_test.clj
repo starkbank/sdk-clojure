@@ -4,7 +4,8 @@
   (:require [starkbank.payment-request :as payment-request]
             [starkbank.user-test :as user]
             [clojure.java.io :as io]
-            [starkbank.utils.date :as date]))
+            [starkbank.utils.date :as date]
+            [starkbank.utils.page :as page]))
 
 (deftest create-payment-requests
   (testing "create payment-requests"
@@ -58,3 +59,10 @@
       :center-id (System/getenv "SANDBOX_CENTER_ID")})))
     (is (= 3 (count payment-requests)))
     (is (map? (first payment-requests)))))
+
+(deftest page-payment-request
+  (testing "page payment-request"
+    (user/set-test-project)
+    (def get-page (fn [params] (payment-request/page params)))
+    (def ids (page/get-ids get-page 2 {:limit 2 :center-id (System/getenv "SANDBOX_CENTER_ID")}))
+    (is (= 4 (count ids)))))

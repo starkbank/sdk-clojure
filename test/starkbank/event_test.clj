@@ -3,7 +3,15 @@
   (:require [starkbank.event :as event]
             [starkbank.event.attempt :as attempt]
             [starkbank.user-test :as user]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [starkbank.utils.page :as page]))
+
+(deftest page-events
+  (testing "page events"
+    (user/set-test-project)
+    (def get-page (fn [params] (event/page params)))
+    (def ids (page/get-ids get-page 2 {:limit 2}))
+    (is (= 4 (count ids)))))
 
 (deftest query-attempt-events
   (testing "query and attempt events"
@@ -12,6 +20,13 @@
     (def query-attempt (first (attempt/query {:limit 1 :event-ids (:id event)})))
     (def get-attempt (attempt/get (:id query-attempt)))
     (is (= (:id query-attempt) (:id get-attempt)))))
+
+(deftest page-event-attempts
+  (testing "page event-attempts"
+    (user/set-test-project)
+    (def get-page (fn [params] (attempt/page params)))
+    (def ids (page/get-ids get-page 2 {:limit 2}))
+    (is (= 4 (count ids)))))
 
 (deftest query-get-update-delete-events
   (testing "query, get, update and delete events"
