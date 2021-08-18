@@ -449,6 +449,15 @@ You can also get a specific log by its id.
 (println log)
 ```
 
+### Query Bacen institutions
+
+ You can query institutions registered by the Brazilian Central Bank for Pix and TED transactions.
+
+ ```clojure
+(def institutions (institution/query {:search "stark"}))
+(println institutions)
+ ```
+
 ### Create invoices
 
 You can create dynamic QR Code invoices to charge customers or to receive money from accounts

@@ -17,6 +17,7 @@
             [starkbank.utility-payment]
             [starkbank.payment-request]
             [starkbank.dict-key]
+            [starkbank.institution]
             [starkbank.event]
             [starkbank.webhook]
             [starkbank.workspace]))
