@@ -114,7 +114,7 @@
     - `payments` [list of UtilityPayment maps]: list of UtilityPayment maps to be created in the API
 
   ## Options:
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - list of UtilityPayment maps with updated attributes"
@@ -195,7 +195,7 @@
     - `:id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - UtilityPayment map with updated attributes"
@@ -216,10 +216,10 @@
     - `:id` [string]: UtilityPayment unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
-    - deleted UtilityPayment with updated attributes"
+    - deleted UtilityPayment map"
   ([id]
     (java-to-clojure
       (UtilityPayment/delete id)))
@@ -238,7 +238,7 @@
     - `:id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - UtilityPayment pdf file content"
@@ -327,7 +327,7 @@
     - `:id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Log map with updated attributes"

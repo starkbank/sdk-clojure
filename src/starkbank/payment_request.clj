@@ -7,7 +7,7 @@
 
   ## Parameters (required):
   - `:center-id` [string]: unique id returned when PaymentRequest is created. ex: \"5656565656565656\"
-  - `:payment` [Transfer, BrcodePayment, BoletoPayment, UtilityPayment, Transaction or map]: payment entity that should be approved and executed.
+  - `:payment` [Transfer, BrcodePayment, BoletoPayment, TaxPayment, UtilityPayment, Transaction or map]: payment entity that should be approved and executed.
   - `:type` [string]: payment type, inferred from the payment parameter if it is not a map. ex: \"transfer\", \"brcode-payment\"
 
   ## Parameters (optional):
@@ -28,6 +28,7 @@
             [starkbank.transaction]
             [starkbank.brcode-payment]
             [starkbank.boleto-payment]
+            [starkbank.tax-payment]
             [starkbank.utility-payment])
   (:use [clojure.walk]))
 
@@ -54,6 +55,7 @@
         "transaction" (#'starkbank.transaction/java-to-clojure (.payment java-object))
         "brcode-payment" (#'starkbank.brcode-payment/java-to-clojure (.payment java-object))
         "boleto-payment" (#'starkbank.boleto-payment/java-to-clojure (.payment java-object))
+        "tax-payment" (#'starkbank.tax-payment/java-to-clojure (.payment java-object))
         "utility-payment" (#'starkbank.utility-payment/java-to-clojure (.payment java-object)))
     }))
 
@@ -72,6 +74,7 @@
           "transaction" (#'starkbank.transaction/clojure-to-java payment)
           "brcode-payment" (#'starkbank.brcode-payment/clojure-to-java payment)
           "boleto-payment" (#'starkbank.boleto-payment/clojure-to-java payment)
+          "tax-payment" (#'starkbank.tax-payment/clojure-to-java payment)
           "utility-payment" (#'starkbank.utility-payment/clojure-to-java payment))
         "type" type
         "due" due
@@ -140,7 +143,7 @@
     - `requests` [list of PaymentRequest maps]: list of PaymentRequest maps to be created in the API
 
   ## Options:
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - list of PaymentRequest maps with updated attributes"

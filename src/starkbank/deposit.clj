@@ -100,7 +100,7 @@
     - `:sort` [string, default \"-created\"]: sort order considered in response. Valid options are \"created\" or \"-created\".
     - `:tags` [list of strings, default nil]: tags to filter retrieved maps. ex: [\"tony\", \"stark\"]
     - `:ids` [list of strings, default nil]: list of ids to filter retrieved maps. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - stream of Deposit maps with updated attributes"
@@ -128,7 +128,7 @@
     - `:sort` [string, default \"-created\"]: sort order considered in response. Valid options are \"created\" or \"-created\".
     - `:tags` [list of strings, default nil]: tags to filter retrieved maps. ex: [\"tony\", \"stark\"]
     - `:ids` [list of strings, default nil]: list of ids to filter retrieved maps. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - map with :deposits and :cursor:
@@ -157,7 +157,7 @@
     - `:id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Deposit map with updated attributes"
@@ -246,7 +246,7 @@
     - `:id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Log map with updated attributes"
