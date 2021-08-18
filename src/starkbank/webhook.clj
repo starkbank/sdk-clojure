@@ -68,7 +68,7 @@
     - `:subscriptions` [list of strings]: list of any non-empty combination of the available services. ex: [\"transfer\", \"boleto-payment\"]
 
   ## Parameters (optional):
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Webhook map with updated attributes"
@@ -139,7 +139,7 @@
     - `:id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Webhook map with updated attributes"
@@ -160,10 +160,10 @@
     - `:id` [string]: Webhook unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
-    - deleted Webhook with updated attributes"
+    - deleted Webhook map"
   ([id]
     (java-to-clojure
       (Webhook/delete id)))

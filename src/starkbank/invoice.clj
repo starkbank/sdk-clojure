@@ -209,7 +209,7 @@
     - `invoices` [list of Invoice maps]: list of Invoice maps to be created in the API
 
   ## Options:
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - list of Invoice maps with updated attributes"
@@ -290,7 +290,7 @@
     - `:id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Invoice map with updated attributes"
@@ -311,7 +311,7 @@
     - `:id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Invoice pdf file content"
@@ -332,7 +332,7 @@
     - `:id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Invoice QR Code png blob"
@@ -351,7 +351,7 @@
     - `:id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Invoice payment information:
@@ -476,7 +476,7 @@
     - `:id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Log map with updated attributes"
@@ -555,7 +555,7 @@
     - `:id` [string]: map unique id. ex: \"5656565656565656\"
 
   ## Options:
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - Invoice pdf file content"

@@ -18,7 +18,7 @@
       - `:account-created` [string, default nil]: creation datetime of the bank account associated with the PIX key. ex: \"2020-11-05T14:55:08.812665+00:00\"
       - `:owned` [string, default nil]: datetime since when the current owner hold this PIX key. ex : \"2020-11-05T14:55:08.812665+00:00\"     
       - `:created` [string, default nil]: creation datetime for the PIX key. ex: \"2020-11-05T14:55:08.812665+00:00\""
-    (:refer-clojure :exclude [get set update])
+    (:refer-clojure :exclude [get set update keys])
     (:import [com.starkbank DictKey])
     (:use [starkbank.user]
           [clojure.walk]))
@@ -97,7 +97,7 @@
     - `:id` [string]: DictKey object unique id and PIX key itself. ex: \"tony@starkbank.com\", \"722.461.430-04\", \"20.018.183/0001-80\", \"+5511988887777\", \"b6295ee1-f054-47d1-9e90-ee57b74f60d9\"
 
   ## Options:
-    - `:user` [Project or Organization]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
+    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:
     - DictKey object with updated attributes"
