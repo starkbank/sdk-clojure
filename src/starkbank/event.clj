@@ -5,7 +5,7 @@
 
   ## Attributes:
     - `:id` [string]: unique id returned when the event is created. ex: \"5656565656565656\"
-    - `:log` [Log]: a Log map from one the subscription services (Transfer.Log, Boleto.Log, BoletoPayment.log, TaxPayment.Log or UtilityPayment.Log)
+    - `:log` [Log]: a Log map from one of the subscribed services (Transfer.Log, Boleto.Log, BoletoPayment.log, DarfPayment.log, TaxPayment.Log or UtilityPayment.Log)
     - `:created` [string]: creation datetime for the notification event. ex: \"2020-03-26T19:32:35.418698+00:00\"
     - `:is-delivered` [bool]: true if the event has been successfully delivered to the user url. ex: false
     - `:workspace-id` [string]: ID of the Workspace that generated this event. Mostly used when multiple Workspaces have Webhooks registered to the same endpoint. ex: \"4545454545454545\"
@@ -20,6 +20,7 @@
             [starkbank.deposit]
             [starkbank.boleto-holmes]
             [starkbank.brcode-payment]
+            [starkbank.darf-payment]
             [starkbank.tax-payment]
             [starkbank.utility-payment])
   (:use [clojure.walk]))
@@ -40,6 +41,7 @@
             "boleto-holmes" (#'starkbank.boleto-holmes.log/java-to-clojure (.log java-object))
             "brcode-payment" (#'starkbank.brcode-payment.log/java-to-clojure (.log java-object))
             "boleto-payment" (#'starkbank.boleto-payment.log/java-to-clojure (.log java-object))
+            "darf-payment" (#'starkbank.darf-payment.log/java-to-clojure (.log java-object))
             "utility-payment" (#'starkbank.utility-payment.log/java-to-clojure (.log java-object))
             "tax-payment" (#'starkbank.tax-payment.log/java-to-clojure (.log java-object))
             (.log java-object))

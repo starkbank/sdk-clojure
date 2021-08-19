@@ -14,6 +14,8 @@
             [starkbank.brcode-preview]
             [starkbank.brcode-payment]
             [starkbank.boleto-payment]
+            [starkbank.darf-payment]
+            [starkbank.tax-payment]
             [starkbank.utility-payment]
             [starkbank.payment-request]
             [starkbank.dict-key]
