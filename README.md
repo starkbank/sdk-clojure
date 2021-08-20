@@ -507,8 +507,6 @@ Also, other banks will most likely only allow payment scheduling on invoices def
   (println invoice))
 ```
 
-**Note**: Instead of using Invoice objects, you can also pass each invoice element in dictionary format
-
 ### Get an invoice
 
 After its creation, information on an invoice may be retrieved by its id. 
@@ -842,20 +840,6 @@ You can also get a boleto holmes log by specifying its id.
 (println log)
 ```
 
-### Preview a BR Code payment
-
-You can confirm the information on the BR Code payment before creating it with this preview method:
-
-```clojure
-(def previews (starkbank.brcode-preview/query
-  {
-    :brcodes brcodes
-  }))
-
-(doseq [preview previews]
-  (println preview))
-```
-
 ### Pay a BR Code
 
 Paying a BR Code is also simple.
@@ -1177,8 +1161,6 @@ It is also simple to pay taxes (such as ISS and DAS) using this SDK.
 (println payments)
 ```
 
-**Note**: Instead of using TaxPayment objects, you can also pass each payment element in dictionary format
-
 ### Query tax payments
 
 To search for tax payments using filters, run:
@@ -1252,6 +1234,27 @@ If you want to get a specific payment log by its id, just run:
 resource and routes, which are all analogous to the TaxPayment resource. The ones we currently support are:
 - darf-payment, for DARFs
 
+### Preview payment information before executing the payment
+
+You can preview multiple types of payment to confirm any information before actually paying.
+If the "scheduled" parameter is not informed, today will be assumed as the intended payment date.
+Right now, the "scheduled" parameter only has effect on BrcodePreviews.
+This resource is able to preview the following types of payment:
+"brcode-payment", "boleto-payment", "utility-payment" and "tax-payment"
+
+```clojure
+(def previews
+  [
+    {:id "00020126580014br.gov.bcb.pix0136a629532e-7693-4846-852d-1bbff817b5a8520400005303986540510.005802BR5908T'Challa6009Sao Paulo62090505123456304B14A" :scheduled "2021-08-10" }
+    {:id "34191.09008 61207.727308 71444.640008 5 81310001234321" }
+  ])
+
+(def payment-previews (payment-preview/create previews))
+
+(doseq [preview payment-previews]
+  (println preview))
+```
+
 ### Create payment requests to be approved by authorized people in a cost center 
 
 You can also request payments that must pass through a specific cost center approval flow to be executed. In certain structures, this allows double checks for cash-outs and also gives time to load your account with the required amount before the payments take place. The approvals can be granted at our website and must be performed according to the rules specified in the cost center.
@@ -1282,9 +1285,6 @@ to the desired cost center page.
 (doseq [request requests]
   (println request))
 ```
-
-**Note**: Instead of using PaymentRequest objects, you can also pass each request element in dictionary format
-
 
 ### Query payment requests
 
