@@ -1,5 +1,6 @@
 (ns starkbank.brcode-preview
-    "A BrcodePreview is used to get information from a BR Code you received to check the informations before the payment.
+    "DEPRECATED
+    A BrcodePreview is used to get information from a BR Code you received to check the informations before the payment.
   
     ## Parameters (required):
       - `:id` [string]: BrcodePreview object unique id and PIX key itself. ex: \"tony@starkbank.com\", \"722.461.430-04\", \"20.018.183/0001-80\", \"+5511988887777\", \"b6295ee1-f054-47d1-9e90-ee57b74f60d9\"
@@ -23,7 +24,6 @@
 (defn- java-to-clojure
   ([java-object]
     {
-      :id (.id java-object)
       :status (.status java-object)
       :name (.name java-object)
       :tax-id (.taxId java-object)

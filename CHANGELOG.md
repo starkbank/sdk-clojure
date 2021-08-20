@@ -24,6 +24,7 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 - TaxPayment resource
 - DarfPayment resource
 - Support for scheduled invoices, which will display discounts, fine, interest, etc. on the users banking interface when dates are used instead of datetimes
+- PaymentPreview resource to preview multiple types of payments before confirmation: brcode-preview, boleto-preview, utility-preview and tax-preview
 
 ## [2.3.4] - 2021-03-04
 ### Added

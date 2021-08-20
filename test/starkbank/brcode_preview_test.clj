@@ -9,5 +9,4 @@
     (user/set-test-project)
     (def invoices (invoice/query {:limit 1 :status "created"}))
     (def brcodes [(:brcode (first invoices))])
-    (def preview (first (preview/query {:brcodes brcodes})))
-    (is (not (nil? (:id preview))))))
+    (def preview (first (preview/query {:brcodes brcodes})))))

@@ -4,6 +4,6 @@
   :license {:name "MIT"
             :url "https://opensource.org/licenses/MIT"}
   :dependencies [
-    [com.starkbank/sdk "2.7.0"]
+    [com.starkbank/sdk "2.8.0"]
     [org.clojure/clojure "1.10.1"]]
   :repl-options {:init-ns starkbank.core})
