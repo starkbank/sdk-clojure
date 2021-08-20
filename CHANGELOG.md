@@ -23,6 +23,7 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 - Institution resource to allow query of institutions recognized by the Brazilian Central Bank for Pix and TED transactions
 - TaxPayment resource
 - DarfPayment resource
+- Support for scheduled invoices, which will display discounts, fine, interest, etc. on the users banking interface when dates are used instead of datetimes
 
 ## [2.3.4] - 2021-03-04
 ### Added

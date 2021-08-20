@@ -2,6 +2,8 @@
   "When you initialize an Invoice map, the entity will not be automatically
   sent to the Stark Bank API. The 'create' function sends the maps
   to the Stark Bank API and returns the list of created maps.
+  To create scheduled Invoices, which will display the discount, interest, etc. on the final users banking interface,
+  use dates instead of datetimes on the \"due\" and \"discounts\" fields.
 
   ## Parameters (required):
     - `:amount` [integer]: Invoice value in cents. Minimum amount = 0 (any value will be accepted). ex: 1234 (= R$ 12.34)

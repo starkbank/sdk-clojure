@@ -460,12 +460,18 @@ You can also get a specific log by its id.
 
 ### Create invoices
 
-You can create dynamic QR Code invoices to charge customers or to receive money from accounts
-you have in other banks.
+You can create dynamic QR Code invoices to charge customers or to receive money from accounts you have in other banks.
+
+Since the banking system only understands value modifiers (discounts, fines and interest) when dealing with **dates** (instead of **datetimes**), these values will only show up in the end user banking interface if you use **dates** in the "due" and "discounts" fields.
+
+If you use **datetimes** instead, our system will apply the value modifiers in the same manner, but the end user will only see the final value to be paid on his interface.
+
+Also, other banks will most likely only allow payment scheduling on invoices defined with **dates** instead of **datetimes**.
 
 ```clojure
 (def invoices (starkbank.invoice/create
   [{
+    :tags [ "immediate" ]
     :amount 400000
     :due "2020-12-25T19:32:35.418698+00:00"
     :tax-id "012.345.678-90"
@@ -473,25 +479,27 @@ you have in other banks.
     :expiration 123456789
     :fine 2.5
     :interest 1.3
-    :discounts [
-      {
-        :percentage 5
-        :due "2020-12-20T19:32:35.418698+00:00"
-      }
-      {
-        :percentage 3
-        :due "2020-12-22T19:32:35.418698+00:00"
-      }
-    ]
     :descriptions [
       {
         :key "Product X"
         :value "big"
       }
     ]
-    :tags [
-      "War supply",
-      "Invoice #1234"
+  }
+  {
+    :tags [ "scheduled" ]
+    :amount 23571
+    :due "2021-11-28"
+    :taxId "012.345.678-90"
+    :name "Buzz Aldrin"
+    :expiration 123456789
+    :fine 5
+    :interest 2.5
+    :discounts [
+      {
+        :percentage 5
+        :due "2021-11-27"
+      }
     ]
   }]))
 

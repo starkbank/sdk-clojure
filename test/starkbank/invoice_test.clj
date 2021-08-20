@@ -39,8 +39,25 @@
           "War supply",
           "Invoice #1234"
         ]
-      }]))
-    (invoice/get (:id (first invoices)))
+      }
+      {
+        :amount 400000
+        :tax-id "012.345.678-90"
+        :name "Iron Bank S.A."
+        :expiration 123456789
+        :fine 2
+        :interest 1.3
+        :due (date/future-date 2)
+        :discounts [
+          {
+            :percentage 2.5
+            :due (date/future-date 2)
+          }
+        ]
+      }
+      ]))
+    (doseq [invoice invoices]
+      (is (= (:id invoice) (:id (invoice/get (:id invoice))))))
     (def file-name "temp/invoice.pdf")
     (io/make-parents file-name)
     (io/copy (invoice/pdf (:id (first invoices))) (io/file file-name))
