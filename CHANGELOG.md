@@ -13,6 +13,8 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 
 
 ## [Unreleased]
+
+## [2.5.0] - 2021-08-20
 ### Added
 - "payment" account type for Pix related resources
 - missing parameters to boleto, brcode-payment, dict-key, event, transfer and workspace resources
@@ -20,13 +22,13 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 - event.attempt sub-resource to allow retrieval of information on failed webhook event delivery attempts
 - pdf method for retrieving PDF receipts from reversed invoice logs
 - page functions as a manual-pagination alternative to queries
-- Institution resource to allow query of institutions recognized by the Brazilian Central Bank for Pix and TED transactions
-- TaxPayment resource
-- DarfPayment resource
-- Support for scheduled invoices, which will display discounts, fine, interest, etc. on the users banking interface when dates are used instead of datetimes
-- PaymentPreview resource to preview multiple types of payments before confirmation: brcode-preview, boleto-preview, utility-preview and tax-preview
+- institution resource to allow query of institutions recognized by the Brazilian Central Bank for Pix and TED transactions
+- tax-payment resource
+- darf-payment resource
+- support for scheduled invoices, which will display discounts, fine, interest, etc. on the users banking interface when dates are used instead of datetimes
+- payment-preview resource to preview multiple types of payments before confirmation: brcode-preview, boleto-preview, utility-preview and tax-preview
 
-## [2.3.4] - 2021-03-04
+## [2.4.0] - 2021-03-04
 ### Added
 - invoice.transaction-ids property to allow invoice ledger transaction look-up
 - invoice.link property to allow easy access to invoice webpage
