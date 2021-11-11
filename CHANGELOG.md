@@ -13,6 +13,8 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 
 
 ## [Unreleased]
+
+## [2.5.2] - 2021-11-10
 ### Changed
 - java sdk version to 2.8.2
 

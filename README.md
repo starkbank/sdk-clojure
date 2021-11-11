@@ -32,21 +32,21 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 
 1.1 Manually download the desired SDK version JARs found in our
 [GitHub page](https://github.com/starkbank/sdk-clojure/releases/latest)
-and add it to your `project.clj` as `:resource-paths ["resources/starkbank-2.5.1.jar"]`.
+and add it to your `project.clj` as `:resource-paths ["resources/starkbank-2.5.2.jar"]`.
 
 1.2 Using Leiningen/Boot:
 ```sh
-[starkbank/sdk "2.5.1"]
+[starkbank/sdk "2.5.2"]
 ```
 
 1.3 Using Clojure CLI/deps.edn:
 ```sh
-starkbank/sdk {:mvn/version "2.5.1"}
+starkbank/sdk {:mvn/version "2.5.2"}
 ```
 
 1.4 Using Gradle:
 ```sh
-compile 'starkbank:sdk:2.5.1'
+compile 'starkbank:sdk:2.5.2'
 ```
 
 1.5 Using Maven:
@@ -54,7 +54,7 @@ compile 'starkbank:sdk:2.5.1'
 <dependency>
   <groupId>starkbank</groupId>
   <artifactId>sdk</artifactId>
-  <version>2.5.1</version>
+  <version>2.5.2</version>
 </dependency>
 ```
 
