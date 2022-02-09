@@ -629,7 +629,9 @@ Note that this is not possible if it has been paid already.
 ## Update an invoice
 
 You can update an invoice's amount, due date and expiration by its id.
-Note that this is not possible if it has been paid already.
+If the invoice has already been paid, only the amount can be
+decreased, which will result in a payment reversal. To fully reverse 
+the invoice, pass :amount 0.
 
 ```clojure
 (def invoices (starkbank.invoice/update "6750458353811456"))
