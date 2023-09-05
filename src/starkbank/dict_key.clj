@@ -14,10 +14,7 @@
       - `:branch-code` [string, default nil]: bank account branch code associated with the PIX key. ex: \"9585\"
       - `:account-number` [string, default nil]: bank account number associated with the PIX key. ex: \"9828282578010513\"
       - `:account-type` [string, default nil]: bank account type associated with the PIX key. ex: \"checking\", \"saving\", \"salary\" or \"payment\"
-      - `:status` [string, default nil]: current PIX key status. ex: \"created\", \"registered\", \"canceled\" or \"failed\"
-      - `:account-created` [string, default nil]: creation datetime of the bank account associated with the PIX key. ex: \"2020-11-05T14:55:08.812665+00:00\"
-      - `:owned` [string, default nil]: datetime since when the current owner hold this PIX key. ex : \"2020-11-05T14:55:08.812665+00:00\"     
-      - `:created` [string, default nil]: creation datetime for the PIX key. ex: \"2020-11-05T14:55:08.812665+00:00\""
+      - `:status` [string, default nil]: current PIX key status. ex: \"created\", \"registered\", \"canceled\" or \"failed\""
     (:refer-clojure :exclude [get set update keys])
     (:import [com.starkbank DictKey])
     (:use [starkbank.user]
@@ -37,9 +34,6 @@
       :account-number (.accountNumber java-object)
       :account-type (.accountType java-object)
       :status (.status java-object)
-      :account-created (.accountCreated java-object)
-      :owned (.owned java-object)
-      :created (.created java-object)
     }))
 
 (defn- clojure-query-to-java
