@@ -13,6 +13,11 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 
 
 ## [Unreleased]
+### Removed
+- account_Created, created, owned attributes
+
+### Fixed
+- unmasked branch_code, account_number attributes
 
 ## [2.5.2] - 2021-11-10
 ### Changed

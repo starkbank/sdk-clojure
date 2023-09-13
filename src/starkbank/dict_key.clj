@@ -11,8 +11,8 @@
       - `:owner-type` [string, default nil]: PIX key owner type. ex \"naturalPerson\" or \"legalPerson\"
       - `:bank-name` [string, default nil]: bank name associated with the DICT key. ex: \"Stark Bank\"
       - `:ispb` [string, default nil]: ISPB code used for transactions. ex: \"20018183\"
-      - `:branch-code` [string, default nil]: bank account branch code associated with the PIX key. ex: \"9585\"
-      - `:account-number` [string, default nil]: bank account number associated with the PIX key. ex: \"9828282578010513\"
+      - `:branch-code` [string, default nil]: bank account branch code associated with the PIX key. ex: \"ZW5jcnlwdGVkLWJyYW5jaC1jb2Rl\"
+      - `:account-number` [string, default nil]: bank account number associated with the PIX key. ex: \"ZW5jcnlwdGVkLWFjY291bnQtbnVtYmVy\"
       - `:account-type` [string, default nil]: bank account type associated with the PIX key. ex: \"checking\", \"saving\", \"salary\" or \"payment\"
       - `:status` [string, default nil]: current PIX key status. ex: \"created\", \"registered\", \"canceled\" or \"failed\""
     (:refer-clojure :exclude [get set update keys])
