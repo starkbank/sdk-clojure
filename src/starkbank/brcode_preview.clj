@@ -10,8 +10,6 @@
       - `:name` [string]: Payment receiver name. ex: \"Tony Stark\"
       - `:tax-id` [string]: Payment receiver tax ID. ex: \"012.345.678-90\"
       - `:bank-code` [string]: Payment receiver bank code. ex: \"20018183\"
-      - `:branch-code` [string]: Payment receiver branch code. ex: \"0001\"
-      - `:account-number` [string]: Payment receiver account number. ex: \"1234567\"
       - `:account-type` [string]: Payment receiver account type. ex: \"checking\"
       - `:allow-change` [bool]: If True, the payment is able to receive amounts that are diferent from the nominal one. ex: True or False
       - `:amount` [integer]: Value in cents that this payment is expecting to receive. If 0, any value is accepted. ex: 123 (= R$1,23)
@@ -28,8 +26,6 @@
       :name (.name java-object)
       :tax-id (.taxId java-object)
       :bank-code (.bankCode java-object)
-      :branch-code (.branchCode java-object)
-      :account-number (.accountNumber java-object)
       :account-type (.accountType java-object)
       :allow-change (.allowChange java-object)
       :amount (.amount java-object)
