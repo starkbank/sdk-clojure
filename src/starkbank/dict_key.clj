@@ -1,23 +1,20 @@
 (ns starkbank.dict-key
-    "DictKey represents a PIX key registered in Bacen's DICT system.
+    "DictKey represents a Pix key registered in Bacen's DICT system.
   
     ## Parameters (optional):
-      - `:id` [string, default nil]: DictKey object unique id and PIX key itself. ex: \"tony@starkbank.com\", \"722.461.430-04\", \"20.018.183/0001-80\", \"+5511988887777\", \"b6295ee1-f054-47d1-9e90-ee57b74f60d9\"
+      - `:id` [string, default nil]: DictKey object unique id. ex: \"tony@starkbank.com\", \"722.461.430-04\", \"20.018.183/0001-80\", \"+5511988887777\", \"b6295ee1-f054-47d1-9e90-ee57b74f60d9\"
 
     ## Attributes (return-only):
-      - `:type` [string, default nil]: PIX key type. ex: \"email\", \"cpf\", \"cnpj\", \"phone\" or \"evp\"
+      - `:type` [string, default nil]: DICT key type. ex: \"email\", \"cpf\", \"cnpj\", \"phone\" or \"evp\"
       - `:name` [string, default nil]: account owner full name. ex: \"Tony Stark\"
       - `:tax-id [string, default nil]: tax ID (CPF or CNPJ) with or without formatting. ex: \"01234567890\" or \"20.018.183/0001-80\"
-      - `:owner-type` [string, default nil]: PIX key owner type. ex \"naturalPerson\" or \"legalPerson\"
+      - `:owner-type` [string, default nil]: DICT key owner type. ex \"naturalPerson\" or \"legalPerson\"
       - `:bank-name` [string, default nil]: bank name associated with the DICT key. ex: \"Stark Bank\"
       - `:ispb` [string, default nil]: ISPB code used for transactions. ex: \"20018183\"
-      - `:branch-code` [string, default nil]: bank account branch code associated with the PIX key. ex: \"9585\"
-      - `:account-number` [string, default nil]: bank account number associated with the PIX key. ex: \"9828282578010513\"
-      - `:account-type` [string, default nil]: bank account type associated with the PIX key. ex: \"checking\", \"saving\", \"salary\" or \"payment\"
-      - `:status` [string, default nil]: current PIX key status. ex: \"created\", \"registered\", \"canceled\" or \"failed\"
-      - `:account-created` [string, default nil]: creation datetime of the bank account associated with the PIX key. ex: \"2020-11-05T14:55:08.812665+00:00\"
-      - `:owned` [string, default nil]: datetime since when the current owner hold this PIX key. ex : \"2020-11-05T14:55:08.812665+00:00\"     
-      - `:created` [string, default nil]: creation datetime for the PIX key. ex: \"2020-11-05T14:55:08.812665+00:00\""
+      - `:branch-code` [string, default nil]: encrypted bank account branch code associated with the DICT key. ex: \"ZW5jcnlwdGVkLWJyYW5jaC1jb2Rl\"
+      - `:account-number` [string, default nil]: encrypted bank account number associated with the DICT key. ex: \"ZW5jcnlwdGVkLWFjY291bnQtbnVtYmVy\"
+      - `:account-type` [string, default nil]: bank account type associated with the DICT key. ex: \"checking\", \"savings\", \"salary\" or \"payment\"
+      - `:status` [string, default nil]: current DICT key status. ex: \"created\", \"registered\", \"canceled\" or \"failed\""
     (:refer-clojure :exclude [get set update keys])
     (:import [com.starkbank DictKey])
     (:use [starkbank.user]
@@ -37,9 +34,6 @@
       :account-number (.accountNumber java-object)
       :account-type (.accountType java-object)
       :status (.status java-object)
-      :account-created (.accountCreated java-object)
-      :owned (.owned java-object)
-      :created (.created java-object)
     }))
 
 (defn- clojure-query-to-java
