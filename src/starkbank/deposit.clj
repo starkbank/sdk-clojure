@@ -87,6 +87,16 @@
           "ids" (if (nil? ids) nil (into-array String ids))
         }
       ))))
+
+(defn- clojure-update-to-java
+  ([clojure-map]
+   (let [{
+     amount "amount"
+    } (stringify-keys clojure-map)]
+     (java.util.HashMap.
+      {
+        "amount" (if (nil? amount) nil (Long. amount))
+      }))))
       
 (defn query
   "Receive a stream of Deposit maps previously created in the Stark Bank API.

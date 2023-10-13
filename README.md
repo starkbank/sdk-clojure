@@ -722,6 +722,20 @@ You can get a list of created deposits given some filters.
   (println deposit))
 ```
 
+## Update a Deposit
+
+Update a deposit by passing its id to be partially or fully reversed.
+
+```clojure
+(def deposits (starkbank.deposit/update "6750458353811456"))
+  {
+    :amount 0
+  })))
+
+(doseq [deposit deposits]
+  (println deposit))
+```
+
 ## Query deposit logs
 
 Logs are pretty important to understand the life cycle of a deposit.

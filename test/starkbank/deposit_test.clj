@@ -15,6 +15,13 @@
     (def deposit (deposit/get deposit-id))
     (is (= deposit-id (:id deposit))))
 
+(deftest query-and-update-deposits
+  (testing "query and update deposits"
+    (user/set-test-project)
+    (def deposits (take 200 (deposit/query {:limit 1 :status "created"})))
+    (is (= 1 (count deposits)))
+    (deposit/update (:id (rand-nth deposits)) {:amount 0})))
+
 (deftest page-deposit
   (testing "page deposit"
     (user/set-test-project)
