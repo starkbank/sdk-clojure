@@ -9,36 +9,12 @@
     - `:name` [string]: full version of the institution name. ex: \"Stark Bank S.A.\"
     - `:spi-code` [string]: SPI code used to identify the institution on Pix transactions. ex: \"20018183\"
     - `:str-code` [string]: STR code used to identify the institution on TED transactions. ex: \"123\""
-(:refer-clojure :exclude [get set])
-  (:import [com.starkbank Institution])
-  (:use [starkbank.user]
-        [clojure.walk]))
+  (:refer-clojure :exclude [get set])
+  (:require [starkbank.utils.rest :refer [get-stream]]
+            [starkbank.settings :refer [credentials]]))
 
-(defn- java-to-clojure
-  ([java-object]
-    {
-      :display-name (.displayName java-object)
-      :name (.name java-object)
-      :spi-code (.spiCode java-object)
-      :str-code (.strCode java-object)
-    }))
-
-(defn- clojure-query-to-java
-  ([clojure-map]
-    (let [{
-        limit "limit"
-        search "search"
-        spi-codes "spi-codes"
-        str-codes "str-codes"
-      } (stringify-keys clojure-map)]
-      (java.util.HashMap.
-        {
-          "limit" (if (nil? limit) nil (Integer. limit))
-          "search" search
-          "spiCodes" (if (nil? spi-codes) nil (into-array String spi-codes))
-          "strCodes" (if (nil? str-codes) nil (into-array String str-codes))
-        }
-      ))))
+(defn- resource []
+  "institution")
 
 (defn query
   "Receive a list of Institution objects that are recognized by the Brazilian Central bank for Pix and TED transactions
@@ -53,12 +29,10 @@
   ## Return:
     - list of Institution objects with updated attributes"
   ([]
-    (map java-to-clojure (Institution/query)))
+    (-> (get-stream @credentials (resource) {})))
 
   ([params]
-    (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Institution/query java-params)))
+    (-> (get-stream @credentials (resource) params)))
 
   ([params, user] 
-    (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Institution/query java-params (#'starkbank.user/get-java-user user)))))
+    (-> (get-stream user (resource) params))))

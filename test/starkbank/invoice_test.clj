@@ -1,15 +1,16 @@
 (ns starkbank.invoice-test
-  (:use [clojure.test])
-  (:require [starkbank.invoice :as invoice]
+  (:use [clojure.test]) 
+  (:require [clojure.java.io :as io]
+            [starkbank.invoice :as invoice]
             [starkbank.invoice.log :as log]
-            [starkbank.user-test :as user]
-            [clojure.java.io :as io]
             [starkbank.utils.date :as date]
-            [starkbank.utils.page :as page]))
+            [starkbank.utils.page :as page]
+            [starkbank.utils.user :refer [set-project]]))
+
+(set-project)
 
 (deftest create-get-pdf-update-invoices
   (testing "create, get, pdf and update invoices"
-    (user/set-test-project)
     (def invoices (invoice/create
       [{
         :amount 400000
@@ -65,24 +66,24 @@
 
 (deftest query-and-cancel-invoices
   (testing "query and cancel invoices"
-    (user/set-test-project)
+    
     (def invoices (take 200 (invoice/query {:limit 50 :status "created"})))
     (is (= 50 (count invoices)))
     (invoice/update (:id (rand-nth invoices)) {:status "canceled"})))
 
 (deftest page-invoices
   (testing "page invoices"
-    (user/set-test-project)
+    
     (def get-page (fn [params] (invoice/page params)))
     (def ids (page/get-ids get-page 2 {:limit 2}))
     (is (= 4 (count ids)))))
 
 (deftest query-qrcode-payment
   (testing "query, get qrcode and get payment information"
-    (user/set-test-project)
+    
     (def invoices (take 200 (invoice/query {:limit 1 :status "paid"})))
     (def qrcode (invoice/qrcode (:id (first invoices))))
-    (is (< 1000 (.available qrcode)))
+    (is (< 1000 (.length qrcode)))
     (def file-name "temp/invoice-qrcode.png")
     (io/make-parents file-name)
     (io/copy qrcode (io/file file-name))
@@ -90,7 +91,7 @@
 
 (deftest query-get-invoice-logs
   (testing "query and get invoice logs"
-    (user/set-test-project)
+    
     (def invoice-logs (log/query {:limit 1 :types ["reversed"]}))
     (is (= 1 (count invoice-logs)))
     (def invoice-log (log/get (:id (first invoice-logs))))
@@ -104,7 +105,7 @@
 
 (deftest page-invoice-logs
   (testing "page invoice-logs"
-    (user/set-test-project)
+    
     (def get-page (fn [params] (invoice/page params)))
     (def ids (page/get-ids get-page 2 {:limit 2}))
     (is (= 4 (count ids)))))

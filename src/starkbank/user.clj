@@ -1,9 +1,9 @@
 (ns starkbank.user
   "Used to define API user."
   (:refer-clojure :exclude [set])
-  (:import [com.starkbank Project])
-  (:import [com.starkbank Organization])
-  (:use [clojure.walk]))
+  (:require [core-clojure.user.organization :as core-organization]
+            [core-clojure.user.project :as core-project]))
+
 
 (defn project
   "The Project map is an authentication entity for the SDK that is permanently
@@ -18,17 +18,8 @@
     - `environment` [string]: environment where the project is being used. ex: \"sandbox\" or \"production\"
     - `:id` [string]: unique id required to identify project. ex: \"5656565656565656\"
     - `private-key` [string]: PEM string of the private key linked to the project. ex: \"-----BEGIN PUBLIC KEY-----\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEyTIHK6jYuik6ktM9FIF3yCEYzpLjO5X/\ntqDioGM+R2RyW0QEo+1DG8BrUf4UXHSvCjtQ0yLppygz23z0yPZYfw==\n-----END PUBLIC KEY-----\""
-  ([environment id private-key] 
-    {:environment environment, :id id, :private-key private-key :type "project"}))
-
-(defn- get-java-project
-  ([project] 
-    (let [{
-        id :id
-        environment :environment
-        private-key :private-key
-      } project]
-      (Project. environment id private-key))))
+  [environment id private-key]
+  (core-project/project environment id private-key))
 
 (defn organization
   "The Organization map is an authentication entity for the SDK that
@@ -54,35 +45,10 @@
   ## Parameters (optional):
     - `:workspace-id` [string]: unique id of the accessed Workspace, if any. ex: nil or \"4848484848484848\""
   ([environment id private-key]
-   {:environment environment, :id id, :private-key private-key :workspace-id nil, :type "organization"})
+   (core-organization/organization environment id private-key))
   ([environment id private-key workspace-id]
-    {:environment environment, :id id, :private-key private-key :workspace-id workspace-id, :type "organization"}))
-
-(defn- get-java-organization
-  ([organization]
-   (let [{id :id
-          environment :environment
-          private-key :private-key
-          workspace-id :workspace-id} organization]
-     (Organization. environment id private-key workspace-id))))
-
-(defn- get-java-user
-  ([params]
-    (case (:type params)
-      "project" (get-java-project params)
-      "organization" (get-java-organization params))))
-
-(defn- try-java-user
-  ([params]
-   (try
-     (get-java-user params)
-     (catch Exception e (stringify-keys params))))
-
-  ([params, callback]
-   (try
-     (get-java-user params)
-     (catch Exception e (callback params)))))
+    (core-organization/organization environment id private-key workspace-id)))
 
 (defn organization-replace
-  ([organization, workspace-id]
-    (update organization :workspace-id #(str workspace-id %))))
+  ([organization workspace-id]
+   (core-organization/orgaization-replace organization workspace-id)))

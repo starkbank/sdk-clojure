@@ -10,55 +10,11 @@
   ## Attributes:
     - `:id` [string, default nil]: unique id returned when the webhook is created. ex: \"5656565656565656\""
   (:refer-clojure :exclude [get set])
-  (:import [com.starkbank Webhook])
-  (:use [starkbank.user]
-        [clojure.walk]))
+  (:require [starkbank.settings :refer [credentials]]
+            [starkbank.utils.rest :refer [delete-id get-id get-page get-stream post-single]]))
 
-(defn- clojure-to-java
-  ([clojure-map]
-    (let [{
-      url "url"
-      subscriptions "subscriptions"
-    }
-    (stringify-keys clojure-map)]
-      (java.util.HashMap.
-        {
-          "url" url
-          "subscriptions" (if (nil? subscriptions) nil (into-array String subscriptions))
-        }
-      ))))
-
-(defn- java-to-clojure
-  ([java-object]
-    {
-      :id (.id java-object)
-      :url (.url java-object)
-      :subscriptions (into [] (.subscriptions java-object))
-    }))
-
-(defn- clojure-query-to-java
-  ([clojure-map]
-    (let [{
-        limit "limit"
-      } (stringify-keys clojure-map)]
-      (java.util.HashMap.
-        {
-          "limit" (if (nil? limit) nil (Integer. limit))
-        }
-      ))))
-
-(defn- clojure-page-to-java
-  ([clojure-map]
-    (let [{
-        cursor "cursor"
-        limit "limit"
-      } (stringify-keys clojure-map)]
-      (java.util.HashMap.
-        {
-          "cursor" cursor
-          "limit" (if (nil? limit) nil (Integer. limit))
-        }
-      ))))
+(defn- resource []
+  "webhook")
 
 (defn create
   "Send a single Webhook subscription for creation in the Stark Bank API
@@ -73,14 +29,10 @@
   ## Return:
     - Webhook map with updated attributes"
   ([webhook-params]
-    (def java-webhook-params (clojure-to-java webhook-params))
-    (def created-java-webhook (Webhook/create java-webhook-params))
-    (java-to-clojure created-java-webhook))
+    (-> (post-single @credentials (resource) webhook-params {})))
 
   ([webhook-params, user]
-    (def java-webhook-params (clojure-to-java webhook-params))
-    (def created-java-webhook (Webhook/create java-webhook-params (#'starkbank.user/get-java-user user)))
-    (java-to-clojure created-java-webhook)))
+    (-> (post-single user (resource) webhook-params {}))))
 
 (defn query
   "Receive a stream of Webhook subcription maps previously created in the Stark Bank API.
@@ -93,15 +45,13 @@
   ## Return:
     - stream of Webhook maps with updated attributes"
   ([]
-    (map java-to-clojure (Webhook/query)))
+    (-> (get-stream @credentials (resource) {})))
 
   ([params]
-    (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Webhook/query java-params)))
+    (-> (get-stream @credentials (resource) params)))
 
   ([params, user] 
-    (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Webhook/query java-params (#'starkbank.user/get-java-user user)))))
+    (-> (get-stream user (resource) params))))
 
 (defn page
   "Receive a list of up to 100 Webhook maps previously created in the Stark Bank API and the cursor to the next page.
@@ -117,20 +67,13 @@
       - `:webhooks`: list of webhook maps with updated attributes
       - `:cursor`: cursor string to retrieve the next page of webhooks"
   ([]
-    (def webhook-page (Webhook/page))
-    (def cursor (.cursor webhook-page))
-    (def webhooks (map java-to-clojure (.webhooks webhook-page)))
-    {:webhooks webhooks, :cursor cursor})
-
+   (-> (get-page @credentials (resource) {})))
+  
   ([params]
-    (def java-params (clojure-page-to-java params))
-    (def webhook-page (Webhook/page java-params))
-    {:webhooks (map java-to-clojure (.webhooks webhook-page)), :cursor (.cursor webhook-page)})
-
-  ([params, user] 
-    (def java-params (clojure-page-to-java params))
-    (def webhook-page (Webhook/page java-params (#'starkbank.user/get-java-user user)))
-    {:webhooks (map java-to-clojure (.webhooks webhook-page)), :cursor (.cursor webhook-page)}))
+   (-> (get-page @credentials (resource) params)))
+  
+  ([params, user]
+   (-> (get-page user (resource) params))))
 
 (defn get
   "Receive a single Webhook subscription map previously created in the Stark Bank API by passing its id
@@ -144,14 +87,10 @@
   ## Return:
     - Webhook map with updated attributes"
   ([id]
-    (java-to-clojure
-      (Webhook/get id)))
+    (-> (get-id @credentials (resource) id {})))
 
   ([id, user]
-    (java-to-clojure
-      (Webhook/get
-        id
-        (#'starkbank.user/get-java-user user)))))
+    (-> (get-id user (resource) id {}))))
 
 (defn delete
   "Delete a Webhook subscription entity previously created in the Stark Bank API
@@ -165,11 +104,7 @@
   ## Return:
     - deleted Webhook map"
   ([id]
-    (java-to-clojure
-      (Webhook/delete id)))
+    (-> (delete-id @credentials (resource) id)))
 
   ([id, user]
-    (java-to-clojure
-      (Webhook/delete
-        id
-        (#'starkbank.user/get-java-user user)))))
+    (-> (delete-id user (resource) id))))

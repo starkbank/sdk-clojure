@@ -1,28 +1,30 @@
 (ns starkbank.darf-payment-test
   (:use [clojure.test])
-  (:require [starkbank.darf-payment :as payment]
+  (:require [clojure.java.io :as io]
+            [starkbank.darf-payment :as payment]
             [starkbank.darf-payment.log :as log]
             [starkbank.user-test :as user]
-            [clojure.java.io :as io]
             [starkbank.utils.date :as date]
-            [starkbank.utils.page :as page]))
+            [starkbank.utils.page :as page]
+            [starkbank.utils.user :refer [set-project]]))
+
+(set-project)
 
 (deftest create-get-pdf-delete-darf-payments
   (testing "create, get, pdf and delete darf payments"
     (user/set-test-project)
     (def payments (payment/create
-      [{
-        :description "Darf Payment Example"
-        :tags ["testing" "clojure"]
-        :due (date/future-date 1)
-        :competence "2020-04-03"
-        :fine-amount 100
-        :interest-amount "100"
-        :nominal-amount "1000"
-        :revenue-code "0201"
-        :tax-id "45678350005"
-        :scheduled (date/future-date)
-      }]))
+                   [{:description "Darf Payment Example"
+                     :tags ["testing" "clojure"]
+                     :due (date/future-date 1)
+                     :competence "2020-04-03"
+                     :fine-amount 100
+                     :interest-amount 100
+                     :nominal-amount 1000
+                     :revenue-code "0201"
+                     :tax-id "45678350005"
+                     :scheduled (date/future-date)}]
+                   ))
      (payment/get (:id (first payments)))
      (def file-name "temp/darf-payment.pdf")
      (io/make-parents file-name)

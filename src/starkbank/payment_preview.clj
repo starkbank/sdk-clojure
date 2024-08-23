@@ -11,35 +11,13 @@
   Attributes (return-only):
   - type [string]: Payment type. ex: \"brcode-payment\", \"boleto-payment\", \"utility-payment\" or \"tax-payment\"
   - payment [brcode-preview, boleto-preview, utility-preview or tax-preview]: Information preview of the informed payment."
-  
+
   (:refer-clojure :exclude [get set])
-  (:require [starkbank.brcode-preview :as brcode-preview])
-  (:import [com.starkbank PaymentPreview])
-  (:use [starkbank.user]
-        [clojure.walk]))
+  (:require [starkbank.utils.rest :refer [post-multi]]
+            [starkbank.settings :refer [credentials]]))
 
-(defn- clojure-to-java
-  ([clojure-map]
-    (let [{
-      id "id"
-      scheduled "scheduled"
-    }
-    (stringify-keys clojure-map)]
-      (PaymentPreview. (java.util.HashMap.
-        {
-          "id" id
-          "scheduled" scheduled
-        }
-      )))))
-
-(defn- java-to-clojure
-  ([java-object]
-    {
-      :id (.id java-object)
-      :scheduled (.scheduled java-object)
-      :type (.type java-object)
-      :payment (into (sorted-map) (.payment java-object))
-    }))
+(defn- resource []
+  "payment-preview")
 
 (defn create
   "Send a list of PaymentPreviews maps for creation in the Stark Bank API
@@ -53,11 +31,7 @@
   ## Return:
     - list of PaymentPreview maps with updated attributes"
   ([previews]
-    (def java-previews (map clojure-to-java previews))
-    (def created-java-previews (PaymentPreview/create java-previews))
-    (map java-to-clojure created-java-previews))
+    (-> (post-multi @credentials (resource) previews {})))
 
   ([previews, user]
-    (def java-previews (map clojure-to-java previews))
-    (def created-java-previews (PaymentPreview/create java-previews (#'starkbank.user/get-java-user user)))
-    (map java-to-clojure created-java-previews)))
+    (-> (post-multi user (resource) previews {}))))

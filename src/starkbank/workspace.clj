@@ -13,80 +13,12 @@
   ## Attributes:
     - `:id` [string, default nil]: unique id returned when the workspace is created. ex: \"5656565656565656\""
   (:refer-clojure :exclude [get set update])
-  (:import [com.starkbank Workspace])
-  (:use [starkbank.user]
-        [clojure.walk]))
+  (:require [starkbank.utils.rest :refer [get-id get-page get-stream patch-id
+                                          post-multi]]
+            [starkbank.settings :refer [credentials]]))
 
-(defn- clojure-to-java
-  ([clojure-map]
-    (let [{
-      username "username"
-      name "name"
-      allowed-tax-ids "allowed-tax-ids"
-    }
-    (stringify-keys clojure-map)]
-      (java.util.HashMap.
-        {
-          "username" username
-          "name" name
-          "allowed-tax-ids" allowed-tax-ids
-        }
-      ))))
-
-(defn- java-to-clojure
-  ([java-object]
-    {
-      :id (.id java-object)
-      :username (.username java-object)
-      :name (.name java-object)
-      :allowed-tax-ids (into [] (.allowedTaxIds java-object))
-    }))
-
-(defn- clojure-query-to-java
-  ([clojure-map]
-    (let [{
-        limit "limit"
-        username "username"
-        ids "ids"
-      } (stringify-keys clojure-map)]
-      (java.util.HashMap.
-        {
-          "limit" (if (nil? limit) nil (Integer. limit))
-          "username" username
-          "ids" (if (nil? ids) nil (into-array String ids))
-        }
-      ))))
-
-(defn- clojure-page-to-java
-  ([clojure-map]
-    (let [{
-        cursor "cursor"
-        limit "limit"
-        username "username"
-        ids "ids"
-      } (stringify-keys clojure-map)]
-      (java.util.HashMap.
-        {
-          "cursor" cursor
-          "limit" (if (nil? limit) nil (Integer. limit))
-          "username" username
-          "ids" (if (nil? ids) nil (into-array String ids))
-        }
-      ))))
-
-(defn- clojure-update-to-java
-  ([clojure-map]
-   (let [{
-     username "username"
-     name "name"
-     allowed-tax-ids "allowed-tax-ids"
-    } (stringify-keys clojure-map)]
-     (java.util.HashMap.
-      {
-        "username" username
-        "name" name
-        "allowedTaxIds" (if (nil? allowed-tax-ids) nil (into-array String allowed-tax-ids))
-      }))))
+(defn- resource []
+  )
 
 (defn create
   "Send a single Workspace for creation in the Stark Bank API
@@ -102,14 +34,10 @@
   ## Return:
     - Workspace map with updated attributes"
   ([workspace-params]
-    (def java-workspace-params (clojure-to-java workspace-params))
-    (def created-java-workspace (Workspace/create java-workspace-params))
-    (java-to-clojure created-java-workspace))
+    (-> (post-multi @credentials (resource) workspace-params {})))
 
   ([workspace-params, user]
-    (def java-workspace-params (clojure-to-java workspace-params))
-    (def created-java-workspace (Workspace/create java-workspace-params (#'starkbank.user/get-java-user user)))
-    (java-to-clojure created-java-workspace)))
+    (-> (post-multi user (resource) workspace-params {}))))
 
 (defn query
   "Receive a stream of Workspace maps previously created in the Stark Bank API.
@@ -126,15 +54,13 @@
   ## Return:
     - stream of Workspace maps with updated attributes"
   ([]
-    (map java-to-clojure (Workspace/query)))
+    (-> (get-stream @credentials (resource) {})))
 
   ([params]
-    (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Workspace/query java-params)))
+    (-> (get-stream @credentials (resource) params)))
 
   ([params, user] 
-    (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Workspace/query java-params (#'starkbank.user/get-java-user user)))))
+    (-> (get-stream user (resource) params))))
 
 (defn page
   "Receive a list of up to 100 Workspace maps previously created in the Stark Bank API and the cursor to the next page.
@@ -152,20 +78,13 @@
       - `:workspaces`: list of workspace maps with updated attributes
       - `:cursor`: cursor string to retrieve the next page of workspaces"
   ([]
-    (def workspace-page (Workspace/page))
-    (def cursor (.cursor workspace-page))
-    (def workspaces (map java-to-clojure (.workspaces workspace-page)))
-    {:workspaces workspaces, :cursor cursor})
-
+   (-> (get-page @credentials (resource) {})))
+  
   ([params]
-    (def java-params (clojure-page-to-java params))
-    (def workspace-page (Workspace/page java-params))
-    {:workspaces (map java-to-clojure (.workspaces workspace-page)), :cursor (.cursor workspace-page)})
-
-  ([params, user] 
-    (def java-params (clojure-page-to-java params))
-    (def workspace-page (Workspace/page java-params (#'starkbank.user/get-java-user user)))
-    {:workspaces (map java-to-clojure (.workspaces workspace-page)), :cursor (.cursor workspace-page)}))
+   (-> (get-page @credentials (resource) params)))
+  
+  ([params, user]
+   (-> (get-page user (resource) params))))
 
 (defn get
   "Receive a single Workspace map previously created in the Stark Bank API by passing its id
@@ -179,14 +98,10 @@
   ## Return:
     - Workspace map with updated attributes"
   ([id]
-    (java-to-clojure
-      (Workspace/get id)))
+    (-> (get-id @credentials (resource) id {})))
 
   ([id, user]
-    (java-to-clojure
-      (Workspace/get
-        id
-        (#'starkbank.user/get-java-user user)))))
+    (-> (get-id user (resource) id {}))))
 
 (defn update
   "Update a Workspace by passing id.
@@ -203,12 +118,7 @@
   ## Return:
     - target Workspace with updated attributes"
   ([id, params]
-    (java-to-clojure
-    (Workspace/update id (clojure-update-to-java params))))
+    (-> (patch-id @credentials (resource) id params)))
 
   ([id, params, user]
-    (java-to-clojure
-    (Workspace/update
-      id
-      (clojure-update-to-java params)
-      (#'starkbank.user/get-java-user user)))))
+    (-> (patch-id user (resource) id params))))

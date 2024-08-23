@@ -10,17 +10,12 @@
     - `:currency` [string, default nil]: currency of the current workspace. Expect others to be added eventually. ex: \"BRL\"
     - `:updated` [string, default nil]: update datetime for the balance. ex: \"2020-03-26T19:32:35.418698+00:00\""
   (:refer-clojure :exclude [get set])
-  (:import [com.starkbank Balance])
-  (:use [starkbank.user]))
+  (:require [starkbank.utils.rest :refer [get-page]]
+            [starkbank.settings :refer [credentials]])
+  )
 
-(defn- java-to-clojure
-  ([java-object]
-    {
-      :id (.id java-object)
-      :amount (.amount java-object)
-      :currency (.currency java-object)
-      :updated (.updated java-object)
-    }))
+(defn- resource []
+  "balance")
 
 (defn get
   "Receive the Balance entity linked to your workspace in the Stark Bank API
@@ -30,12 +25,13 @@
 
   ## Return:
     - Balance map with updated attributes"
-  ([] (->
-    (Balance/get)
-    (java-to-clojure)))
+  ([] (-> (get-page @credentials (resource) {})
+          (:content)
+          (first)
+          (:amount)))
 
-  ([user] (-> 
-    user
-    (#'starkbank.user/get-java-user)
-    (Balance/get)
-    (java-to-clojure))))
+  ([user] (-> (get-page user (resource) {})
+              (:content)
+              (first)
+              (:amount)))
+  )
