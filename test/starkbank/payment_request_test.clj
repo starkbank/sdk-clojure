@@ -1,15 +1,21 @@
 (ns starkbank.payment-request-test
   (:use [clojure.test])
   (:refer-clojure :exclude [type])
-  (:require [starkbank.payment-request :as payment-request]
-            [starkbank.user-test :as user]
-            [clojure.java.io :as io]
+  (:require [core-clojure.utils.rest :as rest]
+            [starkbank.invoice :as invoice]
+            [starkbank.payment-request :as payment-request]
             [starkbank.utils.date :as date]
-            [starkbank.utils.page :as page]))
+            [starkbank.utils.page :as page]
+            [starkbank.utils.user :refer [set-project]]))
+
+(set-project)
+  
+(def cost-center 
+  (System/getenv "SANDBOX_ID"); "9999999999999999"
+  )
 
 (deftest create-payment-requests
   (testing "create payment-requests"
-    (user/set-test-project)
     (def type (rand-nth ["transfer", "brcode-payment", "boleto-payment", "utility-payment"]))
     (def payment (case type
       "transfer" {
@@ -24,7 +30,7 @@
       "brcode-payment" {
           :tax-id "012.345.678-90"
           :description "testing clojure"
-          :brcode "00020101021226890014br.gov.bcb.pix2567invoice-h.sandbox.starkbank.com/v2/d5b00b1994454706ba90a0387ff39b7952040000530398654040.005802BR5925Afel Tec Servicos Adminis6009Sao Paulo62070503***630475CE"
+          :brcode (:brcode (first (invoice/query {:limit 1})))
           :tags ["testing" "clojure"]
         }
       "boleto-payment" {
@@ -45,24 +51,23 @@
       [{
         :type type
         :payment payment
-        :center-id (System/getenv "SANDBOX_CENTER_ID")
+        :center-id cost-center
         :tags ["testing" "clojure"]
         :due (date/future-date)
       }]))))
 
 (deftest query-payment-requests
   (testing "query payment-requests"
-    (user/set-test-project)
     (def payment-requests (take 200 (payment-request/query {
-      :limit 3
-      :status ["success"]
-      :center-id (System/getenv "SANDBOX_CENTER_ID")})))
+                                                            :limit 3
+                                                            :status ["success"]
+                                                            :center-id cost-center})))
     (is (= 3 (count payment-requests)))
     (is (map? (first payment-requests)))))
 
 (deftest page-payment-request
   (testing "page payment-request"
-    (user/set-test-project)
     (def get-page (fn [params] (payment-request/page params)))
-    (def ids (page/get-ids get-page 2 {:limit 2 :center-id (System/getenv "SANDBOX_CENTER_ID")}))
+    (def ids (page/get-ids get-page 2 {:limit 2 :center-id cost-center}))
+    (println ids)
     (is (= 4 (count ids)))))

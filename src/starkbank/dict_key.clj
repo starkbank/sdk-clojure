@@ -1,5 +1,5 @@
 (ns starkbank.dict-key
-    "DictKey represents a PIX key registered in Bacen's DICT system.
+  "DictKey represents a PIX key registered in Bacen's DICT system.
   
     ## Parameters (optional):
       - `:id` [string, default nil]: DictKey object unique id and PIX key itself. ex: \"tony@starkbank.com\", \"722.461.430-04\", \"20.018.183/0001-80\", \"+5511988887777\", \"b6295ee1-f054-47d1-9e90-ee57b74f60d9\"
@@ -18,77 +18,12 @@
       - `:account-created` [string, default nil]: creation datetime of the bank account associated with the PIX key. ex: \"2020-11-05T14:55:08.812665+00:00\"
       - `:owned` [string, default nil]: datetime since when the current owner hold this PIX key. ex : \"2020-11-05T14:55:08.812665+00:00\"     
       - `:created` [string, default nil]: creation datetime for the PIX key. ex: \"2020-11-05T14:55:08.812665+00:00\""
-    (:refer-clojure :exclude [get set update keys])
-    (:import [com.starkbank DictKey])
-    (:use [starkbank.user]
-          [clojure.walk]))
+  (:refer-clojure :exclude [get set update keys])
+  (:require [starkbank.utils.rest :refer [get-id get-page get-stream]]
+            [starkbank.settings :refer [credentials]]))
 
-(defn- java-to-clojure
-  ([java-object]
-    {
-      :id (.id java-object)
-      :type (.type java-object)
-      :name (.name java-object)
-      :tax-id (.taxId java-object)
-      :bank-name (.bankName java-object)
-      :owner-type (.ownerType java-object)
-      :ispb (.ispb java-object)
-      :branch-code (.branchCode java-object)
-      :account-number (.accountNumber java-object)
-      :account-type (.accountType java-object)
-      :status (.status java-object)
-      :account-created (.accountCreated java-object)
-      :owned (.owned java-object)
-      :created (.created java-object)
-    }))
-
-(defn- clojure-query-to-java
-  ([clojure-map]
-    (let [{
-        limit "limit"
-        after "after"
-        before "before"
-        status "status"
-        sort "sort"
-        type "type"
-        ids "ids"
-      } (stringify-keys clojure-map)]
-      (java.util.HashMap.
-        {
-          "limit" (if (nil? limit) nil (Integer. limit))
-          "after" after
-          "before" before
-          "status" (if (nil? status) nil (into-array String status))
-          "sort" sort
-          "type" type
-          "ids" (if (nil? ids) nil (into-array String ids))
-        }
-      ))))
-
-(defn- clojure-page-to-java
-  ([clojure-map]
-    (let [{
-        cursor "cursor"
-        limit "limit"
-        after "after"
-        before "before"
-        status "status"
-        sort "sort"
-        type "type"
-        ids "ids"
-      } (stringify-keys clojure-map)]
-      (java.util.HashMap.
-        {
-          "cursor" cursor
-          "limit" (if (nil? limit) nil (Integer. limit))
-          "after" after
-          "before" before
-          "status" (if (nil? status) nil (into-array String status))
-          "sort" sort
-          "type" type
-          "ids" (if (nil? ids) nil (into-array String ids))
-        }
-      ))))
+(defn- resource []
+  "dict-key")
 
 (defn get
   "Receive a single DictKey by passing its id
@@ -102,14 +37,10 @@
   ## Return:
     - DictKey object with updated attributes"
   ([id]
-    (java-to-clojure
-      (DictKey/get id)))
+    (-> (get-id @credentials (resource) id {})))
 
   ([id, user]
-    (java-to-clojure
-      (DictKey/get
-        id
-        (#'starkbank.user/get-java-user user)))))
+    (-> (get-id user (resource) id {}))))
   
 (defn query
   "Receive a stream of DictKey maps previously created in the Stark Bank API.
@@ -127,15 +58,13 @@
   ## Return:
     - stream of DictKey maps with updated attributes"
   ([]
-    (map java-to-clojure (DictKey/query)))
+    (-> (get-stream @credentials (resource) {})))
 
   ([params]
-    (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (DictKey/query java-params)))
+    (-> (get-stream @credentials (resource) params)))
 
   ([params, user] 
-    (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (DictKey/query java-params (#'starkbank.user/get-java-user user)))))
+    (-> (get-stream user (resource) params))))
 
 (defn page
   "Receive a list of up to 100 DictKey maps previously created in the Stark Bank API and the cursor to the next page.
@@ -156,17 +85,10 @@
       - `:keys`: list of key maps with updated attributes
       - `:cursor`: cursor string to retrieve the next page of keys"
   ([]
-    (def key-page (DictKey/page))
-    (def cursor (.cursor key-page))
-    (def keys (map java-to-clojure (.keys key-page)))
-    {:keys keys, :cursor cursor})
-
+   (-> (get-page @credentials (resource) {})))
+  
   ([params]
-    (def java-params (clojure-page-to-java params))
-    (def key-page (DictKey/page java-params))
-    {:keys (map java-to-clojure (.keys key-page)), :cursor (.cursor key-page)})
-
-  ([params, user] 
-    (def java-params (clojure-page-to-java params))
-    (def key-page (DictKey/page java-params (#'starkbank.user/get-java-user user)))
-    {:keys (map java-to-clojure (.keys key-page)), :cursor (.cursor key-page)}))
+   (-> (get-page @credentials (resource) params)))
+  
+  ([params, user]
+   (-> (get-page user (resource) params))))

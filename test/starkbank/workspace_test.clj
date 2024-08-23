@@ -1,10 +1,12 @@
 (ns starkbank.workspace-test
   (:refer-clojure :exclude [update])
   (:use [clojure.test])
-  (:require [starkbank.workspace :as workspace]
-            [starkbank.user :as user]
-            [clojure.java.io :as io]
-            [starkbank.utils.page :as page]))
+  (:require [starkbank.user :refer [organization-replace]]
+            [starkbank.utils.page :as page]
+            [starkbank.utils.user :refer [set-organization]]
+            [starkbank.workspace :as workspace]))
+
+(set-organization)
 
 (deftest create-workspace
   (testing "create and patch workspace"
@@ -22,7 +24,7 @@
       organization))
     (def workspace-id (:id workspace))
     (is (not (nil? workspace-id)))
-    (def workspace-get (workspace/get workspace-id (user/organization-replace organization workspace-id)))
+    (def workspace-get (workspace/get workspace-id (organization-replace organization workspace-id)))
     (is (not (nil? (:id workspace-get))))
 
     (def updated-uuid (java.util.UUID/randomUUID))

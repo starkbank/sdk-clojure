@@ -1,5 +1,5 @@
 (ns starkbank.brcode-preview
-    "DEPRECATED
+  "DEPRECATED
     A BrcodePreview is used to get information from a BR Code you received to check the informations before the payment.
   
     ## Parameters (required):
@@ -16,37 +16,13 @@
       - `:allow-change` [bool]: If True, the payment is able to receive amounts that are diferent from the nominal one. ex: True or False
       - `:amount` [integer]: Value in cents that this payment is expecting to receive. If 0, any value is accepted. ex: 123 (= R$1,23)
       - `:reconciliation-id` [string]: Reconciliation ID linked to this payment. ex: \"tx-id\", \"payment-123\""
-    (:refer-clojure :exclude [get set update])
-    (:import [com.starkbank BrcodePreview])
-    (:use [starkbank.user]
-          [clojure.walk]))
+  (:refer-clojure :exclude [get set update])
+  (:require [starkbank.utils.rest :refer [get-stream]]
+            [starkbank.settings :refer [credentials]]))
 
-(defn- java-to-clojure
-  ([java-object]
-    {
-      :status (.status java-object)
-      :name (.name java-object)
-      :tax-id (.taxId java-object)
-      :bank-code (.bankCode java-object)
-      :branch-code (.branchCode java-object)
-      :account-number (.accountNumber java-object)
-      :account-type (.accountType java-object)
-      :allow-change (.allowChange java-object)
-      :amount (.amount java-object)
-      :reconciliation-id (.reconciliationId java-object)
-    }))
+(defn- resource []
+  "brcode-preview")
 
-(defn- clojure-query-to-java
-  ([clojure-map]
-    (let [{
-        brcodes "brcodes"
-      } (stringify-keys clojure-map)]
-      (java.util.HashMap.
-        {
-          "brcodes" (into-array String brcodes)
-        }
-      ))))
-  
 (defn query
   "Receive a stream of BrcodePreview maps previously created in the Stark Bank API
 
@@ -58,9 +34,7 @@
     - stream of BrcodePreview maps with updated attributes"
 
   ([params]
-    (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (BrcodePreview/query java-params)))
+    (-> (get-stream @credentials (resource) params)))
 
   ([params, user] 
-    (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (BrcodePreview/query java-params (#'starkbank.user/get-java-user user)))))
+    (-> (get-stream user (resource) params))))

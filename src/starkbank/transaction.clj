@@ -24,90 +24,13 @@
     - `:balance` [integer, default nil]: account balance after transaction was processed. ex: 100000000 (= R$ 1,000,000.00)
     - `:created` [string, default nil]: creation datetime for the transaction. ex: \"2020-03-26T19:32:35.418698+00:00\""
   (:refer-clojure :exclude [get set])
-  (:import [com.starkbank Transaction])
-  (:use [starkbank.user]
-        [clojure.walk]))
+  (:require [starkbank.transaction :as transaction]
+            [starkbank.utils.rest :refer [get-id get-page get-stream
+                                          post-multi]]
+            [starkbank.settings :refer [credentials]]))
 
-(defn- clojure-to-java
-  ([clojure-map]
-    (let [{
-      amount "amount"
-      description "description"
-      external-id "external-id"
-      receiver-id "receiver-id"
-      tags "tags"
-    }
-    (stringify-keys clojure-map)]
-      
-      (Transaction. (java.util.HashMap.
-        {
-          "amount" (if (nil? amount) nil (Integer. amount))
-          "description" description
-          "externalId" external-id
-          "receiverId" receiver-id
-          "tags" (if (nil? tags) nil (into-array String tags))
-        }
-      )))))
-
-(defn- java-to-clojure
-  ([java-object]
-    {
-      :id (.id java-object)
-      :amount (.amount java-object)
-      :description (.description java-object)
-      :external-id (.externalId java-object)
-      :sender-id (.senderId java-object)
-      :receiver-id (.receiverId java-object)
-      :tags (into [] (.tags java-object))
-      :fee (.fee java-object)
-      :source (.source java-object)
-      :balance (.balance java-object)
-      :created (.created java-object)
-    }))
-
-(defn- clojure-query-to-java
-  ([clojure-map]
-    (let [{
-        limit "limit"
-        after "after"
-        before "before"
-        ids "ids"
-        external-ids "external-ids"
-        tags "tags"
-      } (stringify-keys clojure-map)]
-      (java.util.HashMap.
-        {
-          "limit" (if (nil? limit) nil (Integer. limit))
-          "after" after
-          "before" before
-          "ids" (if (nil? ids) nil (into-array String ids))
-          "tags" (if (nil? tags) nil (into-array String tags))
-          "externalIds" (if (nil? external-ids) nil (into-array String external-ids))
-        }
-      ))))
-
-(defn- clojure-page-to-java
-  ([clojure-map]
-    (let [{
-        cursor "cursor"
-        limit "limit"
-        after "after"
-        before "before"
-        ids "ids"
-        external-ids "external-ids"
-        tags "tags"
-      } (stringify-keys clojure-map)]
-      (java.util.HashMap.
-        {
-          "cursor" cursor
-          "limit" (if (nil? limit) nil (Integer. limit))
-          "after" after
-          "before" before
-          "ids" (if (nil? ids) nil (into-array String ids))
-          "tags" (if (nil? tags) nil (into-array String tags))
-          "externalIds" (if (nil? external-ids) nil (into-array String external-ids))
-        }
-      ))))
+(defn- resource []
+  "transaction")
 
 (defn create
   "Send a list of Transaction entities for creation in the Stark Bank API
@@ -121,14 +44,10 @@
   ## Return:
     - list of Transaction maps with updated attributes"
   ([transactions]
-    (def java-transactions (map clojure-to-java transactions))
-    (def created-java-transactions (Transaction/create java-transactions))
-    (map java-to-clojure created-java-transactions))
+    (-> (post-multi @credentials (resource) transactions {})))
 
   ([transactions, user] 
-    (def java-transactions (map clojure-to-java transactions))
-    (def created-java-transactions (Transaction/create java-transactions (#'starkbank.user/get-java-user user)))
-    (map java-to-clojure created-java-transactions)))
+    (-> (post-multi user (resource) transactions {}))))
 
 (defn query
   "Receive a stream of Transaction entities previously created in the Stark Bank API.
@@ -146,15 +65,14 @@
   ## Return:
     - stream of Transaction maps with updated attributes"
   ([]
-    (map java-to-clojure (Transaction/query)))
+    (-> (get-stream @credentials (resource) {})))
 
   ([params]
-    (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Transaction/query java-params)))
+    (-> (get-stream @credentials (resource) params)))
 
   ([params, user] 
-    (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (Transaction/query java-params (#'starkbank.user/get-java-user user)))))
+    (-> (get-stream user (resource) params)))
+  )
 
 (defn page
   "Receive a list of up to 100 Transaction maps previously created in the Stark Bank API and the cursor to the next page.
@@ -175,20 +93,14 @@
       - `:transactions`: list of transaction maps with updated attributes
       - `:cursor`: cursor string to retrieve the next page of transactions"
   ([]
-    (def transaction-page (Transaction/page))
-    (def cursor (.cursor transaction-page))
-    (def transactions (map java-to-clojure (.transactions transaction-page)))
-    {:transactions transactions, :cursor cursor})
-
+   (-> (get-page @credentials (resource) {})))
+  
   ([params]
-    (def java-params (clojure-page-to-java params))
-    (def transaction-page (Transaction/page java-params))
-    {:transactions (map java-to-clojure (.transactions transaction-page)), :cursor (.cursor transaction-page)})
-
-  ([params, user] 
-    (def java-params (clojure-page-to-java params))
-    (def transaction-page (Transaction/page java-params (#'starkbank.user/get-java-user user)))
-    {:transactions (map java-to-clojure (.transactions transaction-page)), :cursor (.cursor transaction-page)}))
+   (-> (get-page @credentials (resource) params)))
+  
+  ([params, user]
+   (-> (get-page user (resource) params)))
+  )
 
 (defn get
   "Receive a single Transaction entity previously created in the Stark Bank API by passing its id
@@ -202,11 +114,8 @@
   ## Return:
     - Transaction map with updated attributes"
   ([id]
-    (java-to-clojure
-      (Transaction/get id)))
+    (-> (get-id @credentials (resource) id {})))
 
   ([id, user]
-    (java-to-clojure
-      (Transaction/get
-        id
-        (#'starkbank.user/get-java-user user)))))
+    (-> (get-id user (resource) id {})))
+  )

@@ -13,6 +13,9 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 
 
 ## [Unreleased]
+### Added
+- Clojure core dependencies
+- Request resource
 
 ## [2.5.2] - 2021-11-10
 ### Changed

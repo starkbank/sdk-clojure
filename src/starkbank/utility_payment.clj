@@ -21,91 +21,12 @@
     - `:fee` [integer, default nil]: fee charged when a utility payment is created. ex: 200 (= R$ 2.00)
     - `:created` [string, default nil]: creation datetime for the payment. ex: \"2020-03-26T19:32:35.418698+00:00\""
   (:refer-clojure :exclude [get set])
-  (:import [com.starkbank UtilityPayment])
-  (:use [starkbank.user]
-        [clojure.walk]))
+  (:require [starkbank.utils.rest :refer [delete-id get-content get-id
+                                          get-page get-stream post-multi]]
+            [starkbank.settings :refer [credentials]]))
 
-(defn- clojure-to-java
-  ([clojure-map]
-    (let [{
-      description "description"
-      line "line"
-      bar-code "bar-code"
-      scheduled "scheduled"
-      tags "tags"
-    }
-    (stringify-keys clojure-map)]
-
-      (defn- apply-java-hashmap [x] (java.util.HashMap. x))
-      
-      (UtilityPayment. (java.util.HashMap.
-        {
-          "description" description
-          "line" line
-          "barCode" bar-code
-          "scheduled" scheduled
-          "tags" (if (nil? tags) nil (into-array String tags))
-        }
-      )))))
-
-(defn- java-to-clojure
-  ([java-object]
-    {
-      :id (.id java-object)
-      :amount (.amount java-object)
-      :description (.description java-object)
-      :line (.line java-object)
-      :bar-code (.barCode java-object)
-      :scheduled (.scheduled java-object)
-      :tags (into [] (.tags java-object))
-      :status (.status java-object)
-      :fee (.fee java-object)
-      :created (.created java-object)
-    }))
-
-(defn- clojure-query-to-java
-  ([clojure-map]
-    (let [{
-        limit "limit"
-        after "after"
-        before "before"
-        tags "tags"
-        ids "ids"
-        status "status"
-      } (stringify-keys clojure-map)]
-      (java.util.HashMap.
-        {
-          "limit" (if (nil? limit) nil (Integer. limit))
-          "after" after
-          "before" before
-          "tags" (if (nil? tags) nil (into-array String tags))
-          "ids" (if (nil? ids) nil (into-array String ids))
-          "status" status
-        }
-      ))))
-
-(defn- clojure-page-to-java
-  ([clojure-map]
-    (let [{
-        cursor "cursor"
-        limit "limit"
-        after "after"
-        before "before"
-        tags "tags"
-        ids "ids"
-        status "status"
-      } (stringify-keys clojure-map)]
-      (java.util.HashMap.
-        {
-          "cursor" cursor
-          "limit" (if (nil? limit) nil (Integer. limit))
-          "after" after
-          "before" before
-          "tags" (if (nil? tags) nil (into-array String tags))
-          "ids" (if (nil? ids) nil (into-array String ids))
-          "status" status
-        }
-      ))))
+(defn- resource []
+  "utility-payment")
 
 (defn create
   "Send a list of UtilityPayment maps for creation in the Stark Bank API
@@ -119,14 +40,10 @@
   ## Return:
     - list of UtilityPayment maps with updated attributes"
   ([payments]
-    (def java-payments (map clojure-to-java payments))
-    (def created-java-payments (UtilityPayment/create java-payments))
-    (map java-to-clojure created-java-payments))
+    (-> (post-multi @credentials (resource) payments {})))
 
   ([payments, user]
-    (def java-payments (map clojure-to-java payments))
-    (def created-java-payments (UtilityPayment/create java-payments (#'starkbank.user/get-java-user user)))
-    (map java-to-clojure created-java-payments)))
+    (-> (post-multi user (resource) payments {}))))
 
 (defn query
   "Receive a stream of UtilityPayment maps previously created in the Stark Bank API.
@@ -144,15 +61,13 @@
   ## Return:
     - stream of UtilityPayment maps with updated attributes"
   ([]
-    (map java-to-clojure (UtilityPayment/query)))
+    (-> (get-stream @credentials (resource) {})))
 
   ([params]
-    (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (UtilityPayment/query java-params)))
+    (-> (get-stream @credentials (resource) params)))
 
   ([params, user] 
-    (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (UtilityPayment/query java-params (#'starkbank.user/get-java-user user)))))
+    (-> (get-stream user (resource) params))))
 
 (defn page
   "Receive a list of up to 100 UtilityPayment maps previously created in the Stark Bank API and the cursor to the next page.
@@ -173,20 +88,13 @@
       - `:payments`: list of payment maps with updated attributes
       - `:cursor`: cursor string to retrieve the next page of payments"
   ([]
-    (def payment-page (UtilityPayment/page))
-    (def cursor (.cursor payment-page))
-    (def payments (map java-to-clojure (.payments payment-page)))
-    {:payments payments, :cursor cursor})
-
+   (-> (get-page @credentials (resource) {})))
+  
   ([params]
-    (def java-params (clojure-page-to-java params))
-    (def payment-page (UtilityPayment/page java-params))
-    {:payments (map java-to-clojure (.payments payment-page)), :cursor (.cursor payment-page)})
-
-  ([params, user] 
-    (def java-params (clojure-page-to-java params))
-    (def payment-page (UtilityPayment/page java-params (#'starkbank.user/get-java-user user)))
-    {:payments (map java-to-clojure (.payments payment-page)), :cursor (.cursor payment-page)}))
+   (-> (get-page @credentials (resource) params)))
+  
+  ([params, user]
+   (-> (get-page user (resource) params))))
 
 (defn get
   "Receive a single UtilityPayment map previously created by the Stark Bank API by passing its id
@@ -200,14 +108,10 @@
   ## Return:
     - UtilityPayment map with updated attributes"
   ([id]
-    (java-to-clojure
-      (UtilityPayment/get id)))
+    (-> (get-id @credentials (resource) id {})))
 
   ([id, user]
-    (java-to-clojure
-      (UtilityPayment/get
-        id
-        (#'starkbank.user/get-java-user user)))))
+    (-> (get-id user (resource) id {}))))
 
 (defn delete
   "Delete a UtilityPayment entity previously created in the Stark Bank API
@@ -221,14 +125,10 @@
   ## Return:
     - deleted UtilityPayment map"
   ([id]
-    (java-to-clojure
-      (UtilityPayment/delete id)))
+    (-> (delete-id @credentials (resource) id)))
 
   ([id, user]
-    (java-to-clojure
-      (UtilityPayment/delete
-        id
-        (#'starkbank.user/get-java-user user)))))
+  (-> (delete-id user (resource) id))))
 
 (defn pdf
   "Receive a single UtilityPayment pdf file generated in the Stark Bank API by passing its id.
@@ -243,158 +143,7 @@
   ## Return:
     - UtilityPayment pdf file content"
   ([id]
-    (clojure.java.io/input-stream
-      (UtilityPayment/pdf id)))
+    (-> (get-content @credentials (resource) id "pdf" {})))
 
   ([id, user]
-    (clojure.java.io/input-stream
-      (UtilityPayment/pdf
-        id
-        (#'starkbank.user/get-java-user user)))))
-
-
-(ns starkbank.utility-payment.log
-  "Every time a UtilityPayment entity is modified, a corresponding UtilityPayment.Log
-  is generated for the entity. This log is never generated by the user, but it can
-  be retrieved to check additional information on the UtilityPayment.
-
-  ## Attributes:
-    - `:id` [string]: unique id returned when the log is created. ex: \"5656565656565656\"
-    - `:payment` [UtilityPayment]: UtilityPayment entity to which the log refers to.
-    - `:errors` [list of strings]: list of errors linked to this UtilityPayment event.
-    - `:type` [string]: type of the UtilityPayment event which triggered the log creation. ex: \"processing\" or \"success\"
-    - `:created` [string]: creation datetime for the log. ex: \"2020-03-26T19:32:35.418698+00:00\""
-  (:refer-clojure :exclude [get set])
-  (:import [com.starkbank UtilityPayment$Log])
-  (:require [starkbank.utility-payment :as payment])
-  (:use [starkbank.user]
-        [clojure.walk]))
-
-(defn- java-to-clojure
-  ([java-object]
-    {
-      :id (.id java-object)
-      :created (.created java-object)
-      :errors (into [] (.errors java-object))
-      :type (.type java-object)
-      :payment (#'payment/java-to-clojure (.payment java-object))
-    }))
-
-(defn- clojure-query-to-java
-  ([clojure-map]
-    (let [{
-        limit "limit"
-        after "after"
-        before "before"
-        types "types"
-        payment-ids "payment-ids"
-      } (stringify-keys clojure-map)]
-      (java.util.HashMap.
-        {
-          "limit" (if (nil? limit) nil (Integer. limit))
-          "after" after
-          "before" before
-          "types" (if (nil? types) nil (into-array String types))
-          "paymentIds" (if (nil? payment-ids) nil (into-array String payment-ids))
-        }
-      ))))
-
-(defn- clojure-page-to-java
-  ([clojure-map]
-    (let [{
-        cursor "cursor"
-        limit "limit"
-        after "after"
-        before "before"
-        types "types"
-        payment-ids "payment-ids"
-      } (stringify-keys clojure-map)]
-      (java.util.HashMap.
-        {
-          "cursor" cursor
-          "limit" (if (nil? limit) nil (Integer. limit))
-          "after" after
-          "before" before
-          "types" (if (nil? types) nil (into-array String types))
-          "paymentIds" (if (nil? payment-ids) nil (into-array String payment-ids))
-        }
-      ))))
-
-(defn get
-  "Receive a single Log map previously created by the Stark Bank API by passing its id
-
-  ## Parameters (required):
-    - `:id` [string]: map unique id. ex: \"5656565656565656\"
-
-  ## Options:
-    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
-
-  ## Return:
-    - Log map with updated attributes"
-  ([id]
-    (java-to-clojure
-      (UtilityPayment$Log/get id)))
-
-  ([id, user]
-    (java-to-clojure
-      (UtilityPayment$Log/get
-        id
-        (#'starkbank.user/get-java-user user)))))
-
-(defn query
-  "Receive a stream of Log maps previously created in the Stark Bank API.
-  Use this function instead of page if you want to stream the objects without worrying about cursors and pagination.
-
-  ## Options:
-    - `:limit` [integer, default nil]: maximum number of entities to be retrieved. Unlimited if nil. ex: 35
-    - `:after` [string, default nil]: date filter for entities created only after specified date. ex: \"2020-3-10\"
-    - `:before` [string, default nil]: date filter for entities created only before specified date. ex: \"2020-3-10\"
-    - `:types` [list of strings, default nil]: filter retrieved entities by event types. ex: \"processing\" or \"success\"
-    - `:payment-ids` [list of strings, default nil]: list of UtilityPayment ids to filter retrieved entities. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
-
-  ## Return:
-    - stream of Log maps with updated attributes"
-  ([]
-    (map java-to-clojure (UtilityPayment$Log/query)))
-
-  ([params]
-    (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (UtilityPayment$Log/query java-params)))
-
-  ([params, user] 
-    (def java-params (clojure-query-to-java params))
-    (map java-to-clojure (UtilityPayment$Log/query java-params (#'starkbank.user/get-java-user user)))))
-
-(defn page
-  "Receive a list of up to 100 UtilityPayment.Log maps previously created in the Stark Bank API and the cursor to the next page.
-  Use this function instead of query if you want to manually page your requests.
-
-  ## Options:
-    - `:cursor` [string, default nil]: cursor returned on the previous page function call
-    - `:limit` [integer, default nil]: maximum number of entities to be retrieved. Unlimited if nil. ex: 35
-    - `:after` [string, default nil]: date filter for entities created only after specified date. ex: \"2020-3-10\"
-    - `:before` [string, default nil]: date filter for entities created only before specified date. ex: \"2020-3-10\"
-    - `:types` [list of strings, default nil]: filter retrieved entities by event types. ex: \"processing\" or \"success\"
-    - `:payment-ids` [list of strings, default nil]: list of UtilityPayment ids to filter retrieved entities. ex: [\"5656565656565656\", \"4545454545454545\"]
-    - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
-
-  ## Return:
-    - map with :logs and :cursor:
-      - `:logs`: list of log maps with updated attributes
-      - `:cursor`: cursor string to retrieve the next page of logs"
-  ([]
-    (def log-page (UtilityPayment$Log/page))
-    (def cursor (.cursor log-page))
-    (def logs (map java-to-clojure (.logs log-page)))
-    {:logs logs, :cursor cursor})
-
-  ([params]
-    (def java-params (clojure-page-to-java params))
-    (def log-page (UtilityPayment$Log/page java-params))
-    {:logs (map java-to-clojure (.logs log-page)), :cursor (.cursor log-page)})
-
-  ([params, user] 
-    (def java-params (clojure-page-to-java params))
-    (def log-page (UtilityPayment$Log/page java-params (#'starkbank.user/get-java-user user)))
-    {:logs (map java-to-clojure (.logs log-page)), :cursor (.cursor log-page)}))
+    (-> (get-content user (resource) id "pdf" {}))))
