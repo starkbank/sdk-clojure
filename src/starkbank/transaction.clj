@@ -32,8 +32,10 @@
 (defn- resource []
   "transaction")
 
-(defn create
-  "Send a list of Transaction entities for creation in the Stark Bank API
+(defn ^:deprecated create
+  "**Deprecated:** Function deprecated since v2.6.0.
+   
+   Send a list of Transaction entities for creation in the Stark Bank API
 
   ## Parameters (required):
     - `transactions` [list of Transaction entities]: list of Transaction entities to be created in the API
@@ -43,11 +45,9 @@
 
   ## Return:
     - list of Transaction maps with updated attributes"
-  ([transactions]
-    (-> (post-multi @credentials (resource) transactions {})))
-
-  ([transactions, user] 
-    (-> (post-multi user (resource) transactions {}))))
+  ([transactions](throw (ex-info "Function deprecated since v2.6.0" {})))
+  ([transactions, user](throw (ex-info "Function deprecated since v2.6.0" {})))
+  )
 
 (defn query
   "Receive a stream of Transaction entities previously created in the Stark Bank API.
