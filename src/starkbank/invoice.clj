@@ -15,9 +15,11 @@
     - `:expiration` [integer, default 5097600 (59 days)]: time interval in seconds between due date and expiration date. ex 123456789
     - `:fine` [float, default 2.0]: Invoice fine for overdue payment in %. ex: 2.5
     - `:interest` [float, default 1.0]: Invoice monthly interest for overdue payment in %. ex: 5.2
-    - `:discounts` [list of maps, default nil]: list of maps with :percentage (float) and :due (string) pairs
-    - `:tags` [list of strings, default nil]: list of strings for tagging
-    - `:descriptions` [list of maps, default nil]: list of maps with :key (string) and :value (string) pairs
+    - `:discounts` [list of maps, default nil]: list of up to 5 maps with :percentage (float) and :due (string) pairs
+    - `:rules` [list of maps, default nil]: list of rule maps for modifying Invoice behavior, each with a :key and :value pair.
+    - `:splits` [list of Split maps, default nil]: list of Split maps to indicate the receivers of the Invoice payment.
+    - `:tags` [list of strings, default nil]: list of strings for tagging. All tags will be converted to lowercase.
+    - `:descriptions` [list of maps, default nil]: list of up to 15 maps with :key (string, title) and :value (string, description) pairs
 
   ## Attributes (return-only):
     - `:fee` [integer, default nil]: fee charged by this Invoice. ex: 65 (= R$ 0.65)
@@ -46,7 +48,7 @@
   "payment")
 
 (defn create
-  "Send a list of Invoice maps for creation in the Stark Bank API
+  "Send a list of Invoice maps for creation in the Stark Bank API. You can create up to 100 Invoice maps per request.
 
   ## Parameters (required):
     - `invoices` [list of Invoice maps]: list of Invoice maps to be created in the API
@@ -131,7 +133,7 @@
     (-> (get-id user (resource) id {}))))
 
 (defn pdf
-  "Receive a single Invoice pdf file generated in the Stark Bank API by passing its id.
+  "Receive a single Invoice pdf file generated in the Stark Bank API by passing its id. The same file is available at the public :pdf URL returned on the Invoice map, which is the link you should send to your customer.
 
   ## Parameters (required):
     - `:id` [string]: map unique id. ex: \"5656565656565656\"
@@ -200,7 +202,7 @@
 
   ## Parameters (optional):
     - `:status` [string, default nil]: If the Invoice hasn't been paid yet, you may cancel it by passing \"canceled\" in the status
-    - `:amount` [integer, default nil]: If the Invoice hasn't been paid yet, you may update its amount by passing the desired amount integer
+    - `:amount` [integer, default nil]: if the Invoice hasn't been paid yet, sets the new requested amount; if it has already been paid, the amount may only be decreased, which triggers a payment reversal for the difference, and this becomes the final amount after reversal.
     - `:due` [string, default today + 2 days]: Invoice due date in UTC ISO format. ex: \"2020-11-25T17:59:26.249976+00:00\"
     - `:expiration` [DateInterval or integer, default nil]: time interval in seconds between due date and expiration date. ex 123456789
     - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.

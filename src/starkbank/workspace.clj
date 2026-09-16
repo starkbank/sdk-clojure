@@ -21,7 +21,7 @@
   )
 
 (defn create
-  "Send a single Workspace for creation in the Stark Bank API
+  "Send a single Workspace for creation in the Stark Bank API. Only Organization credentials (not Project) are able to create Workspaces.
 
   ## Parameters (required):
     - `:username` [string]: Simplified name to define the workspace URL. This name must be unique across all Stark Bank Workspaces. Ex: \"starkbankworkspace\"
@@ -113,6 +113,9 @@
     - `:username` [string]: Simplified name to define the workspace URL. This name must be unique across all Stark Bank Workspaces. Ex: \"starkbank-workspace\"
     - `:name` [string]: Full name that identifies the Workspace. This name will appear when people access the Workspace on our platform, for example. Ex: \"Stark Bank Workspace\"
     - `:allowed-tax-ids` [list of strings, default nil]: list of tax IDs that will be allowed to send Deposits to this Workspace. If empty, all are allowed. ex: [\"012.345.678-90\", \"20.018.183/0001-80\"]
+    - `:picture` [binary data, default nil]: binary buffer of the picture to set for the Workspace.
+    - `:picture-type` [string, conditionally required]: picture MIME type, required whenever :picture is informed. ex: \"image/png\" or \"image/jpeg\"
+    - `:status` [string, default nil]: used to block or activate a Workspace. ex: \"active\" or \"blocked\"
     - `:user` [Project or Organization, default nil]: Project or Organization map returned from starkbank.user/project or starkbank.user/organization. Only necessary if starkbank.settings/user has not been set.
 
   ## Return:

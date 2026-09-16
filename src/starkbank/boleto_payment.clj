@@ -13,12 +13,12 @@
 
   ## Parameters (optional):
     - `:scheduled` [string, default today]: payment scheduled date. ex: ~D[2020-03-25]
-    - `:tags` [list of strings]: list of strings for tagging
+    - `:tags` [list of strings]: list of strings for tagging. All tags will be converted to lowercase.
 
   ## Attributes (return-only):
     - `:id` [string, default nil]: unique id returned when the payment is created. ex: \"5656565656565656\"
     - `:status` [string, default nil]: current payment status. ex: \"processing\" or \"success\"
-    - `:amount` [integer, default nil]: amount automatically calculated from line or bar-code. ex: 23456 (= R$ 234.56)
+    - `:amount` [integer, default nil]: amount to be paid; if none is informed, the current boleto value will be used. ex: 23456 (= R$ 234.56)
     - `:fee` [integer, default nil]: fee charged when a boleto payment is created. ex: 200 (= R$ 2.00)
     - `:created` [string, default nil]: creation datetime for the payment. ex: \"2020-03-26T19:32:35.418698+00:00\""
   (:refer-clojure :exclude [get set])
@@ -30,7 +30,7 @@
   "boleto-payment")
 
 (defn create
-  "Send a list of BoletoPayment maps for creation in the Stark Bank API
+  "Send a list of BoletoPayment maps for creation in the Stark Bank API to pay registered boletos generated at Stark Bank or at other financial institutions, using the available balance in your Stark Bank account.
 
   ## Parameters (required):
     - `payments` [list of BoletoPayment maps]: list of BoletoPayment maps to be created in the API
@@ -117,7 +117,7 @@
   )
 
 (defn delete
-  "Delete a BoletoPayment entity previously created in the Stark Bank API
+  "Cancel a scheduled BoletoPayment entity before it starts being processed. Payments that have already been processed can still be deleted, but can no longer be cancelled.
 
   ## Parameters (required):
     - `:id` [string]: BoletoPayment unique id. ex: \"5656565656565656\"
@@ -135,8 +135,7 @@
   )
 
 (defn pdf
-  "Receive a single BoletoPayment pdf file generated in the Stark Bank API by passing its id.
-  Only valid for boleto payments with \"success\" status.
+  "Receive a single BoletoPayment pdf file generated in the Stark Bank API by its id. Only valid for boleto payments with \"success\", \"processing\" or \"created\" status.
 
   ## Parameters (required):
     - `:id` [string]: map unique id. ex: \"5656565656565656\"

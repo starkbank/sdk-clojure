@@ -1,6 +1,6 @@
 (ns starkbank.dict-key
-  "DictKey represents a PIX key registered in Bacen's DICT system.
-  
+  "DictKey represents a PIX key registered in Bacen's DICT system. Whenever a Workspace is created, an EVP (random) DICT key is automatically created and associated with it, ensuring the Invoice service always has an active DICT key to work with.
+
     ## Parameters (optional):
       - `:id` [string, default nil]: DictKey object unique id and PIX key itself. ex: \"tony@starkbank.com\", \"722.461.430-04\", \"20.018.183/0001-80\", \"+5511988887777\", \"b6295ee1-f054-47d1-9e90-ee57b74f60d9\"
 
@@ -26,7 +26,7 @@
   "dict-key")
 
 (defn get
-  "Receive a single DictKey by passing its id
+  "Receive a single DictKey by passing its id. This includes keys you do not own, so it can be used to check a key's information before creating a Transfer. Avoid looking up a key without sending a transfer afterwards: Bacen blocks users who make too many standalone (including invalid) lookups in a short timespan. The encrypted fields returned on the DictKey can be passed straight into a Transfer to create it without decrypting them yourself.
 
   ## Parameters (required):
     - `:id` [string]: DictKey object unique id and PIX key itself. ex: \"tony@starkbank.com\", \"722.461.430-04\", \"20.018.183/0001-80\", \"+5511988887777\", \"b6295ee1-f054-47d1-9e90-ee57b74f60d9\"

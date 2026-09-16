@@ -88,7 +88,7 @@
   )
 
 (defn pdf
-  "Receive a single Invoice pdf file generated in the Stark Bank API by passing its id.
+  "Receive the reversal receipt pdf file for a reversed Invoice.Log, generated whenever an Invoice is successfully reversed, by passing the log id.
 
   ## Parameters (required):
     - `:id` [string]: map unique id. ex: \"5656565656565656\"
