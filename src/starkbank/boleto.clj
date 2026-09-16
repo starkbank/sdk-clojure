@@ -16,13 +16,13 @@
 
   ## Parameters (optional):
     - `:due` [string, default today + 2 days]: Boleto due date in ISO format. ex: 2020-04-30
-    - `:fine` [float, default 0.0]: Boleto fine for overdue payment in %. ex: 2.5
-    - `:interest` [float, default 0.0]: Boleto monthly interest for overdue payment in %. ex: 5.2
+    - `:fine` [float, default 2.0]: Boleto fine for overdue payment in %. ex: 2.5
+    - `:interest` [float, default 1.0]: Boleto monthly interest for overdue payment in %. ex: 5.2
     - `:overdue-limit` [integer, default 59]: limit in days for payment after due date. ex: 7 (max: 59)
-    - `:receiver-name` [string]: receiver (Sacador Avalista) full name. ex: \"Anthony Edward Stark\"
-    - `:receiver-tax-id` [string]: receiver (Sacador Avalista) tax ID (CPF or CNPJ) with or without formatting. ex: \"01234567890\" or \"20.018.183/0001-80\"
-    - `:descriptions` [list of maps, default nil]: list of maps with :text (string) and :amount (int, optional) pairs
-    - `:discounts` [list of maps, default nil]: list of maps with :percentage (float) and :date (string) pairs
+    - `:receiver-name` [string, default nil]: receiver (Sacador Avalista) full name. If none is informed, the workspace owner's name is used; if informed, :receiver-tax-id must also be informed. ex: \"Anthony Edward Stark\"
+    - `:receiver-tax-id` [string, default nil]: receiver (Sacador Avalista) tax ID (CPF or CNPJ) with or without formatting. If none is informed, the workspace owner's tax ID is used; if informed, :receiver-name must also be informed.
+    - `:descriptions` [list of maps, default nil]: list of up to 15 maps with :text (string) and :amount (int, optional) pairs. If the \"booklet\" pdf layout is used, only the :text of the first description is shown, filling the installment cell.
+    - `:discounts` [list of maps, default nil]: list of up to 2 maps with :percentage (float) and :date (string) pairs
     - `:tags` [list of strings]: list of strings for tagging
 
   ## Attributes (return-only):
@@ -42,7 +42,7 @@
   "boleto") 
 
 (defn create
-  "Send a list of Boleto maps for creation in the Stark Bank API
+  "Send a list of Boleto maps for creation in the Stark Bank API. You can send up to 100 Boleto maps per request. If a Boleto is paid after its due date and it has a fine or interest, its amount will be updated with the paid amount; the same applies if it is paid with a discount.
 
   ## Parameters (required):
     - `boletos` [list of Boleto maps]: list of Boleto maps to be created in the API
@@ -129,7 +129,7 @@
   )
 
 (defn delete
-  "Delete a list of Boleto entities previously created in the Stark Bank API
+  "Delete a Boleto entity previously created in the Stark Bank API. A cancellation request is sent to CIP; once the boleto registration is canceled it can no longer be paid. This action cannot be undone.
 
   ## Parameters (required):
     - `:id` [string]: Boleto unique id. ex: \"5656565656565656\"
@@ -146,7 +146,7 @@
     (-> (delete-id user (resource) id))))
 
 (defn pdf
-  "Receive a single Boleto pdf file generated in the Stark Bank API by passing its id.
+  "Receive a single Boleto pdf file generated in the Stark Bank API by passing its id. This route is public and does not require authentication, but repeated requests for an invalid id will get your IP blocked for this route.
 
   ## Parameters (required):
     - `:id` [string]: map unique id. ex: \"5656565656565656\"

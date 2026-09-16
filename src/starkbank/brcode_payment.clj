@@ -9,9 +9,10 @@
       - `:description` [string]: Text to be displayed in your statement (min. 10 characters). ex: \"payment ABC\"
   
     ## Parameters (optional):
-      - `:amount` [integer, default nil]: amount automatically calculated from line or barCode. ex: 23456 (= R$ 234.56)
+      - `:amount` [integer, default nil]: amount to pay, in cents. Required only if the brcode itself carries no fixed amount (the payment fails if left unset in that case); otherwise defaults to the brcode's own amount. ex: 23456 (= R$ 234.56)
       - `:scheduled` [string, default now]: payment scheduled date or datetime. ex: \"2020-11-25T17:59:26.249976+00:00\"
-      - `:tags` [list of strings, default nil]: list of strings for tagging
+      - `:rules` [list of maps, default nil]: list of rule maps for modifying BrcodePayment behavior, each with a :key and :value pair.
+      - `:tags` [list of strings, default nil]: list of strings for tagging. All tags will be converted to lowercase.
   
     ## Attributes (return-only):
       - `:id` [string, default nil]: unique id returned when payment is created. ex: \"5656565656565656\"
@@ -30,7 +31,7 @@
   "brcode-payment")
   
 (defn create
-  "Send a list of BrcodePayment maps for creation in the Stark Bank API
+  "Send a list of BrcodePayment maps for creation in the Stark Bank API to pay registered brcodes using the available balance in your Stark Bank account. The returned amount is initially zero, since the brcode is processed asynchronously.
 
   ## Parameters (required):
     - `payments` [list of BrcodePayment maps]: list of BrcodePayment maps to be created in the API
@@ -118,8 +119,7 @@
   )
 
 (defn pdf
-  "Receive a single BrcodePayment pdf file generated in the Stark Bank API by passing its id.
-  Only valid for brcode payments with \"success\" status.
+  "Receive a single BrcodePayment pdf file generated in the Stark Bank API by passing its id. Only valid for brcode payments with \"created\", \"processing\", or \"success\" status.
 
   ## Parameters (required):
     - `:id` [string]: map unique id. ex: \"5656565656565656\"

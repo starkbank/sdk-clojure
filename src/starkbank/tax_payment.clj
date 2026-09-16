@@ -12,7 +12,7 @@
 
   ## Parameters (optional):
     - `:scheduled` [string, default today]: payment scheduled date. ex: ~D[2020-03-25]
-    - `:tags` [list of strings]: list of strings for tagging
+    - `:tags` [list of strings]: list of strings for tagging. All tags will be converted to lowercase.
 
   Attributes (return-only):
     - `:id` [string, default nil]: unique id returned when the payment is created. ex: \"5656565656565656\"
@@ -116,7 +116,7 @@
     (-> (get-id user (resource) id {}))))
 
 (defn delete
-  "Delete a TaxPayment entity previously created in the Stark Bank API
+  "Cancel a scheduled TaxPayment entity before it starts being processed. Payments that have already been processed can still be deleted, but can no longer be cancelled.
 
   ## Parameters (required):
     - `:id` [string]: UtilityPayment unique id. ex: \"5656565656565656\"
@@ -133,8 +133,7 @@
     (-> (delete-id user (resource) id))))
 
 (defn pdf
-  "Receive a single TaxPayment pdf file generated in the Stark Bank API by passing its id.
-  Only valid for tax payments with \"success\" status.
+  "Receive a single TaxPayment pdf file generated in the Stark Bank API by its id. Only valid for tax payments with \"success\", \"processing\" or \"created\" status.
 
   ## Parameters (required):
     - `:id` [string]: map unique id. ex: \"5656565656565656\"

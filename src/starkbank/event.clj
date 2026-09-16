@@ -84,7 +84,7 @@
    (-> (get-id user (resource) id {}))))
 
 (defn delete
-  "Delete a list of notification Event entities previously created in the Stark Bank API
+  "Delete a notification Event entity previously created in the Stark Bank API. This action cannot be undone.
 
   ## Parameters (required):
     - `:id` [string]: Event unique id. ex: \"5656565656565656\"

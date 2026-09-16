@@ -7,7 +7,7 @@
     - `:boleto-id` [string]: investigated boleto entity ID. ex: \"5656565656565656\"
 
   ## Parameters (optional):
-    - `:tags` [list of strings]: list of strings for tagging
+    - `:tags` [list of strings]: list of strings for tagging. All tags will be converted to lowercase.
 
   ## Attributes (return-only):
     - `:id` [string, default nil]: unique id returned when the holmes is created. ex: \"5656565656565656\"
@@ -24,7 +24,7 @@
   "boleto-holmes")
 
 (defn create
-  "Send a list of BoletoHolmes maps for creation in the Stark Bank API
+  "Send a list of BoletoHolmes maps for creation in the Stark Bank API to verify the updated status of Boletos according to CIP. Results are asynchronous and arrive in less than an hour; register a webhook to receive them instead of polling.
 
   ## Parameters (required):
     - `holmes` [list of BoletoHolmes maps]: list of BoletoHolmes maps to be created in the API

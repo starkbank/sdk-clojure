@@ -14,9 +14,10 @@
   ## Parameters (optional):
     - `:account-type` [string, \"checking\"]: receiver bank account type. This parameter only has effect on Pix Transfers. ex: \"checking\", \"savings\", \"salary\" or \"payment\"
     - `:external-id` [string, default nil]: url safe string that must be unique among all your transfers. Duplicated external-ids will cause failures. By default, this parameter will block any transfer that repeats amount and receiver information on the same date. ex: \"my-internal-id-123456\"
-    - `:scheduled` [string, default now]: date or datetime when the transfer will be processed. May be pushed to next business day if necessary. ex: \"2021-03-11T08:00:00.000000+00:00\"
+    - `:scheduled` [string, default now]: date or datetime when the transfer will be processed. Ted transfers scheduled for today are accepted until 16:00 (BRT) and pushed to the next business day afterwards; Pix transfers are available 24/7 for any date and time.
     - `:description` [string, default nil]: optional description to override default description to be shown in the bank statement. ex: \"Payment for service #1234\"
-    - `:tags` [list of strings]: list of strings for reference when searching for transfers. ex: [\"employees\", \"monthly\"]
+    - `:rules` [list of maps, default nil]: list of rule maps for modifying Transfer behavior, each with a :key and :value pair.
+    - `:tags` [list of strings]: list of strings for reference when searching for transfers. All tags will be converted to lowercase.
 
   Attributes (return-only):
     - `:id` [string, default nil]: unique id returned when the transfer is created. ex: \"5656565656565656\"
@@ -34,7 +35,7 @@
   "transfer")
 
 (defn create
-  "Send a list of Transfer maps for creation in the Stark Bank API
+  "Send a list of Transfer maps for creation in the Stark Bank API. You can create up to 100 Transfer maps per request.
 
   ## Parameters (required):
     - `transfers` [list of Transfer maps]: list of Transfer maps to be created in the API
@@ -125,7 +126,7 @@
     (-> (get-id user (resource) id {}))))
 
 (defn delete
-  "Cancel a single scheduled Transfer entity previously created in the Stark Bank API by passing its id
+  "Cancel a single scheduled Transfer entity before it starts being processed. Canceled transfers still appear in your queries.
 
   ## Parameters (required):
     - `:id` [string]: entity unique id. ex: \"5656565656565656\"

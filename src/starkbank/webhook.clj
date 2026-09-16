@@ -1,7 +1,7 @@
 (ns starkbank.webhook
   "A Webhook is used to subscribe to notification events on a user-selected endpoint.
-  Currently available services for subscription are transfer, boleto, boleto-payment,
-  and utility-payment
+  If your endpoint does not return a 200 status, delivery is retried up to three more times, at 5, 30 and 120 minute intervals, after which Stark Bank stops trying. A webhook only fires for services used in its own API version.
+  Currently available services for subscription are boleto, boleto-holmes, boleto-payment, brcode-payment, darf-payment, deposit, invoice, payment-request, tax-payment, transfer and utility-payment.
 
   ## Parameters (required):
     - `:url` [string]: Url that will be notified when an event occurs.
@@ -93,7 +93,7 @@
     (-> (get-id user (resource) id {}))))
 
 (defn delete
-  "Delete a Webhook subscription entity previously created in the Stark Bank API
+  "Delete a Webhook subscription entity previously created in the Stark Bank API. This action cannot be undone.
 
   ## Parameters (required):
     - `:id` [string]: Webhook unique id. ex: \"5656565656565656\"
