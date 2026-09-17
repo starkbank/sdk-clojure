@@ -64,7 +64,7 @@
   )
 
 (defn put-raw [user path payload query prefix throw-error]
-  (rest/patch-raw (.host settings) (.sdk-version settings) user path payload query (.api-version settings) (.language settings) (.timeout settings) prefix throw-error)
+  (rest/put-raw (.host settings) (.sdk-version settings) user path payload query (.api-version settings) (.language settings) (.timeout settings) prefix throw-error)
   )
 
 (defn delete-raw [user path prefix throw-error]
