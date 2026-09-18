@@ -14,6 +14,7 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 
 ## [Unreleased]
 ### Added
+- Transfer.Rule, Invoice.Rule, BrcodePayment.Rule, DynamicBrcode.Rule and MerchantSession.AllowedInstallment sub-resources
 - CardMethod, DynamicBrcode and CorporateRule resources
 - CorporateBalance, CorporateCard, CorporateHolder, CorporateInvoice, CorporatePurchase, CorporateTransaction and CorporateWithdrawal resources, with their Log sub-resources
 - MerchantCard, MerchantCategory, MerchantCountry, MerchantInstallment, MerchantPurchase and MerchantSession resources, with their Log sub-resources
