@@ -14,8 +14,17 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 
 ## [Unreleased]
 ### Added
+- CardMethod, DynamicBrcode and CorporateRule resources
+- CorporateBalance, CorporateCard, CorporateHolder, CorporateInvoice, CorporatePurchase, CorporateTransaction and CorporateWithdrawal resources, with their Log sub-resources
+- MerchantCard, MerchantCategory, MerchantCountry, MerchantInstallment, MerchantPurchase and MerchantSession resources, with their Log sub-resources
+- Split, SplitReceiver and SplitProfile resources, with their Log sub-resources
+- InvoicePullRequest and InvoicePullSubscription resources, with their Log sub-resources
+- VerifiedAccount and VerifiedTransfer resources, with VerifiedAccount.Log
 - Clojure core dependencies
 - Request resource
+### Fixed
+- put-raw was calling the core's patch-raw, so every PUT issued by the SDK was sent as a PATCH
+- core dependency now points at com.starkinfra/starkcore, since org.clojars.stark-mtkgs/core-clojure 0.1.0 is not published anywhere and left the project unbuildable
 
 ## [2.5.2] - 2021-11-10
 ### Changed
