@@ -1,0 +1,9 @@
+(ns starkbank.dynamic-brcode.rule
+  "The DynamicBrcode.Rule map modifies the behavior of a DynamicBrcode. Rule has no
+  endpoints of its own: pass these maps in the `:rules` key of
+  starkbank.dynamic-brcode/create, and read them back from the `:rules` key of the maps
+  it returns.
+
+  ## Parameters (required):
+    - `:key` [string]: rule to be customized, describes what DynamicBrcode behavior will be altered. ex: \"allowedTaxIds\"
+    - `:value` [list of strings]: value of the rule. ex: [\"012.345.678-90\", \"45.059.493/0001-73\"]")
