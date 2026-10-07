@@ -15,22 +15,20 @@
      :challenge-mode "disabled"
      :tags ["testing" "clojure"]}))
 
-(deftest create-get-and-purchase-merchant-session
-  (testing "create, get and purchase a merchant session"
+(deftest create-and-get-merchant-session
+  (testing "create and get a merchant session"
     (def session (create-example-session))
     (is (string? (:uuid session)))
-    (is (= (:id session) (:id (merchant-session/get (:id session)))))
-    (def purchase (merchant-session/purchase
-                    (:uuid session)
-                    {:amount 5000
-                     :installment-count 1
-                     :card-expiration "2035-01"
-                     :card-number "5448280000000007"
-                     :card-security-code "123"
-                     :holder-name "Holder Name"
-                     :funding-type "credit"}))
-    ;; post-sub-resource pode devolver o envelope; aceita as duas formas
-    (is (string? (or (:id purchase) (get-in purchase [:purchase :id]))))))
+    (is (= (:id session) (:id (merchant-session/get (:id session)))))))
+
+(deftest purchase-merchant-session-deprecated
+  (testing "purchase throws without making a request"
+    (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                          #"^Function deprecated since v2\.6\.0$"
+                          (merchant-session/purchase
+                            "0bb894a2697d41d99fe02cad2c00c9bc"
+                            {:amount 5000
+                             :funding-type "credit"})))))
 
 (deftest query-and-page-merchant-sessions
   (testing "query and page merchant sessions"
