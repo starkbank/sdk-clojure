@@ -23,6 +23,8 @@ Given a version number MAJOR.MINOR.PATCH, increment:
 - VerifiedAccount and VerifiedTransfer resources, with VerifiedAccount.Log
 - Clojure core dependencies
 - Request resource
+### Deprecated
+- MerchantSession.purchase function, since card data must be sent directly from the front-end to the Stark Bank API
 ### Fixed
 - put-raw was calling the core's patch-raw, so every PUT issued by the SDK was sent as a PATCH
 - core dependency now points at com.starkinfra/starkcore, since org.clojars.stark-mtkgs/core-clojure 0.1.0 is not published anywhere and left the project unbuildable

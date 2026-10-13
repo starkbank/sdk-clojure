@@ -25,18 +25,15 @@
     - `:updated` [string, default nil]: latest update datetime for the MerchantSession. ex: \"2020-03-10T10:30:00.000000+00:00\""
   (:refer-clojure :exclude [get])
   (:require [starkbank.utils.rest :refer [get-id get-page get-stream
-                                          post-single post-sub-resource]]
+                                          post-single]]
             [starkbank.settings :refer [credentials]]))
 
 (defn- resource []
   "merchant-session")
 
-(defn- purchase-resource []
-  "purchase")
-
 (defn create
-  "Create a session the card holder's application can use to create a new MerchantPurchase (via the 'purchase'
-  function). The session's uuid must be used for that call; after :expiration seconds, it can no longer be used.
+  "Create a session the card holder's application can use to create a new MerchantPurchase (via the
+  POST /v2/merchant-session/:uuid/purchase route). The session's uuid must be used for that call; after :expiration seconds, it can no longer be used.
 
   ## Parameters (required):
     - `session` [MerchantSession map]: MerchantSession map to be created in the API
@@ -122,8 +119,11 @@
   ([params, user]
    (-> (get-page user (resource) params))))
 
-(defn purchase
-  "Create a MerchantPurchase directly from the card holder's client application using a MerchantSession uuid
+(defn ^{:deprecated "2.6.0"} purchase
+  "Deprecated: Function deprecated since v2.6.0. Card data must be sent directly from the front-end to the
+  Stark Bank API through the POST /v2/merchant-session/:uuid/purchase route; this function always throws.
+
+  Create a MerchantPurchase directly from the card holder's client application using a MerchantSession uuid
   previously created by the merchant.
   **Note**: This function must be called from your front-end to ensure that sensitive card data does not pass
   through the back-end of your integration.
@@ -154,7 +154,7 @@
   ## Return:
     - MerchantPurchase map with updated attributes"
   ([uuid, purchase-params]
-   (-> (post-sub-resource @credentials (resource) uuid (purchase-resource) purchase-params {})))
+   (throw (ex-info "Function deprecated since v2.6.0" {:code "deprecated"})))
 
   ([uuid, purchase-params, user]
-   (-> (post-sub-resource user (resource) uuid (purchase-resource) purchase-params {}))))
+   (throw (ex-info "Function deprecated since v2.6.0" {:code "deprecated"}))))

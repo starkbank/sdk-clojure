@@ -2,28 +2,13 @@
   (:use [clojure.test])
   (:require [starkbank.merchant-purchase :as merchant-purchase]
             [starkbank.merchant-purchase.log :as log]
-            [starkbank.merchant-session :as merchant-session]
             [starkbank.utils.page :as page]
             [starkbank.utils.user :refer [set-project]]))
 
 (set-project)
 
 (defn- create-approved-card-id []
-  (def session (merchant-session/create
-                 {:allowed-funding-types ["credit" "debit"]
-                  :allowed-installments [{:total-amount 5000 :count 1}]
-                  :expiration 3600
-                  :challenge-mode "disabled"}))
-  (def purchase (merchant-session/purchase
-                  (:uuid session)
-                  {:amount 5000
-                   :installment-count 1
-                   :card-expiration "2035-01"
-                   :card-number "5448280000000007"
-                   :card-security-code "123"
-                   :holder-name "Holder Name"
-                   :funding-type "credit"}))
-  (:card-id purchase))
+  (:card-id (first (merchant-purchase/query {:limit 1 :status "confirmed"}))))
 
 (deftest create-get-and-update-merchant-purchases
   (testing "create, get and update merchant purchases"
